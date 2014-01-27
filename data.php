@@ -1,5 +1,10 @@
 <?php
 require_once 'settings.php';
+// Constants
+DEFINE("USER_PERMISSION_VIEW_SHOP", pow(2^20));
+DEFINE("USER_PERMISSION_EDIT_SHOP", pow(2^21));
+
+
 $con = mysqli_connect(DB_LOCATION, DB_USERNAME, DB_PASSWORD, DB_NAME);
 $session = 0;
 if ($_COOKIE["session"] != "")
