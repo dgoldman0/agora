@@ -1,0 +1,7 @@
+@import url("/css/bootstrap.min.css");
+
+.vender-block {
+	border-width: 1px;
+	border-color: #cccccc #aaaaaa #999999 #aaaaaa;
+	border-style: solid;
+}
