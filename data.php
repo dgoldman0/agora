@@ -4,7 +4,6 @@ require_once 'settings.php';
 DEFINE("USER_PERMISSION_VIEW_SHOP", pow(2^20));
 DEFINE("USER_PERMISSION_EDIT_SHOP", pow(2^21));
 
-
 $con = mysqli_connect(DB_LOCATION, DB_USERNAME, DB_PASSWORD, DB_NAME);
 $session = 0;
 if ($_COOKIE["session"] != "")
@@ -30,5 +29,15 @@ function getUserID()
 function isLoggedIn()
 {
 	return getUserID() != -1;
+}
+function userRoleIncludes($role)
+{
+	global $session;
+	global $con;
+	$id = getUserID();
+	if ($id != -1)
+	{
+		$sql = "SELECT 
+	}
 }
 ?>

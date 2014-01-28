@@ -1,5 +1,6 @@
 <?php
 require_once 'data.php';
+require_once 'administration.php';
 
 function createShop($name, $owner)
 {
@@ -23,7 +24,20 @@ function shopConfigView($shop = "")
 		if (userRoleIncludes(USER_PERMISSION_VIEW_SHOP))
 		{
 			include 'menu.php';
-			
+			?>
+			<div class="row">
+				displayAdminPanel();
+				<div class = "col-md-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+						</div>
+						<div class="panel-body">
+							
+						</div>
+					</div>
+				</div>
+			</div>
+			<?php
 		} else
 		{
 			// Error
@@ -38,4 +52,5 @@ function shopConfigView($shop = "")
 	}
 	echo '</div></body></html>';
 }
+shopConfigView($_POST["store"]);
 ?>
