@@ -45,7 +45,7 @@ function shopConfigView($shop = "")
 	} else
 	{
 		// Individual Shop Configuration
-		if (userRoleIncludes(USER_PERMISSION_VIEW_SHOP) || userShopRoleIncludes(S_USER_PERMISSION_VIEW_SHOP))
+		if (userRoleIncludes(USER_PERMISSION_VIEW_SHOP) || shopUserRoleIncludes($shop, S_USER_PERMISSION_VIEW_SHOP))
 		{
 			
 		}

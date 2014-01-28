@@ -2,6 +2,53 @@
 // Make sure that HTTPS is being used!
 require_once 'settings.php';
 require_once 'data.php';
+function configurationView()
+{
+?>
+<!DOCTYPE html>
+<html><head><title>Agora Configuration</title><?php include 'include.php'?></head><body>
+	<div class="container">
+		<form class="form-horizontal" action="configure.php" method="post">
+			<fieldset>
+				<legend>Agora Configuration</legend>
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="site_name">Site Name</label>
+					<div class="col-md-4">
+						<input id="site_name" name="site_name" type="text" placeholder="Site Name" class="form-control input-md">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="username">Username</label>
+					<div class="col-md-4">
+						<input id="username" name="username" type="text" placeholder="Username" class="form-control input-md">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="password1">Password</label>
+					<div class="col-md-4"><input id="password1" name="password1" type="password" placeholder="Password" class="form-control input-md"></div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="password2">Repeat Password</label>
+						<div class="col-md-4"><input id="password2" name="password2" type="password" placeholder="Repeat Password" class="form-control input-md"></div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="email">Email</label>
+               	    	<div class="col-md-4">
+ 						<input id="email" name="email" type="text" placeholder="Email" class="form-control input-md">
+               		</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="singlebutton">Create Market</label>
+					<div class="col-md-4">
+						<button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+	</body></head></html>
+	<?
+}
 if (!mysqli_connect_errno($con))
 {
 	// Check to see if the database is empty
@@ -12,50 +59,7 @@ if (!mysqli_connect_errno($con))
 		{
 			if ($_POST["site_name"] == "")
 			{
-				?>
-				<!DOCTYPE html>
-				<html><head><title>Agora Configuration</title><?php include 'include.php'?></head><body>
-				<div class="container">
-				<form class="form-horizontal" action="configure.php" method="post">
-					<fieldset>
-						<legend>Agora Configuration</legend>
-						<div class="form-group">
-							<label class="col-md-4 control-label" for="site_name">Site Name</label>
-							<div class="col-md-4">
-								<input id="site_name" name="site_name" type="text" placeholder="Site Name" class="form-control input-md">
-							</div>
-						</div>
-                        	                <div class="form-group">
-                        	                        <label class="col-md-4 control-label" for="username">Username</label>
-                        	                        <div class="col-md-4">
-                        	                                <input id="username" name="username" type="text" placeholder="Username" class="form-control input-md">
-                        	                        </div>
-                        	                </div>
-						<div class="form-group">
-							<label class="col-md-4 control-label" for="password1">Password</label>
-							<div class="col-md-4"><input id="password1" name="password1" type="password" placeholder="Password" class="form-control input-md"></div>
-						</div>
-                        	                <div class="form-group">
-                        	                        <label class="col-md-4 control-label" for="password2">Repeat Password</label>
-                        	                        <div class="col-md-4"><input id="password2" name="password2" type="password" placeholder="Repeat Password" class="form-control input-md"></div>
-                        	                </div>
-                        	                <div class="form-group">
-                        	                        <label class="col-md-4 control-label" for="email">Email</label>
-                        	                        <div class="col-md-4">
-                        	                                <input id="email" name="email" type="text" placeholder="Email" class="form-control input-md">
-                        	                        </div>
-                        	                </div>
-						<div class="form-group">
-							<label class="col-md-4 control-label" for="singlebutton">Create Market</label>
-							<div class="col-md-4">
-								<button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
-							</div>
-						</div>
-					</fieldset>
-				</form>
-				</div>
-				</body></head>
-				<?php
+				configurationView();
 			} else
 			{
 				// Validate form data and protect against SQL injection
@@ -75,9 +79,10 @@ if (!mysqli_connect_errno($con))
 
 					// Shop tables
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shops (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) UNSIGNED NOT NULL DEFAULT '', PRIMARY KEY(id));");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_users (id INT(11) UNSIGNED NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, home TINYINT(1) NOT NULL DEFUALT 0, PRIMARY KEY(id));");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_user_roles (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, shop_id INT(11) USNIGNED NOT NULL, PRIMARY KEY(id));");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_user_role_capabilities (capability INT(11) UNSIGNED NOT NULL DEFAULT 0, role_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(capability));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_users (id INT(11) UNSIGNED NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, role_id INT(11), home TINYINT(1) NOT NULL DEFUALT 0, PRIMARY KEY(id));");
+					// Should I have two separate sets of tables or just use shop_id = 0 for master roles
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_user_roles (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, shop_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_user_role_capabilities (capability INT(11) UNSIGNED NOT NULL DEFAULT 0, role_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(capability, role_id));");
 					
 					// Cart tables
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shopping_carts (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL DEFAULT '', wishlist TINYINT(1) NOT NULL DEFAULT 0, PRIMAY KEY(id);");

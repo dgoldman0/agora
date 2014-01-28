@@ -30,14 +30,31 @@ function isLoggedIn()
 {
 	return getUserID() != -1;
 }
-function userRoleIncludes($role)
+function userRoleIncludes($capability)
 {
 	global $session;
 	global $con;
 	$id = getUserID();
 	if ($id != -1)
 	{
-		$sql = "SELECT 
+		$sql = "SELECT capability, (SELECT user_role FROM users WHERE id=".$id.") as user_role FROM user_role_capabilities WHERE capability=".$capability." OR user_role = 0;";
+		$response = mysqli_query($con, $sql);
+		if (!($row = mysqli_fetch_array($result)))
+			return $row['user_role' == 0];
+		return false;
+	}
+}
+function shopUserRoleIncludes($shop, $capability)
+{	global $session;
+	global $con;
+	$id = getUserID();
+	if ($id != -1)
+	{
+		$sql = "SELECT capability, (SELECT user_role FROM users WHERE id=".$id.") as user_role FROM user_role_capabilities WHERE capability=".$capability." OR user_role = 0;";
+		$response = mysqli_query($con, $sql);
+		if (!($row = mysqli_fetch_array($result)))
+			return $row['user_role' == 0];
+		return false;
 	}
 }
 ?>

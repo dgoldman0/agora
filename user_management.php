@@ -38,15 +38,22 @@ function userConfigurationView($user = "")
 			<?php
 		} else
 		{
-			// Error
+			// Access denied
+			echo "Access Denied";
 		}
 	} else
 	{
 		// Individual User Configuration
-		if (userRoleIncludes(USER_PERMISSION_VIEW_USER) || userShopRoleIncludes(S_USER_PERMISSION_VIEW_USER))
+		if (userRoleIncludes(USER_PERMISSION_VIEW_USER) || shopUserRoleIncludes($shop, S_USER_PERMISSION_VIEW_USER))
 		{
 			
+		} else
+		{
+			// Access denied
+			echo "Shop Access Denied";
 		}
 	}
-	echo '</div></body></html>';}
+	echo '</div></body></html>';
+}
+userConfigurationView();
 ?>
