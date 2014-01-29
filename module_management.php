@@ -2,22 +2,22 @@
 require_once 'data.php';
 require_once 'administration.php';
 
-function userConfigurationView($user = "")
+function moduleConfigurationView($module = "")
 {
 	echo "<!DOCTYPE html><html><head>";
 	include 'include.php';
 	echo '</head><body><div class="container">';
-	if ($user == "")
+	if ($module == "")
 	{
-		// User Configuration - Main Screen
+		// Module Configuration - Main Screen
 		
 		// Check to see if data is set correctly...
-		if (userRoleIncludes(USER_PERMISSION_VIEW_USER))
+		if (userRoleIncludes(USER_PERMISSION_MODULES))
 		{
 			include 'menu.php';
 			$controlscript = '
 			$( "#checkall" ).click(function() {
-				$( ".usercheck" ).prop("checked", $( "#checkall" ).prop("checked"));
+				$( ".modulecheck" ).prop("checked", $( "#checkall" ).prop("checked"));
 			});
 			';
 			?>
@@ -35,13 +35,13 @@ function userConfigurationView($user = "")
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="/index.php">User Management</a>
+    <a class="navbar-brand" href="/index.php">Modules</a>
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
-      <li class="active"><a href="newuser.php">Add User</a></li>
+      <li class="active"><a href="#">Add Module</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <li class="dropdown">
@@ -55,14 +55,29 @@ function userConfigurationView($user = "")
 						</div>
 						<div class="panel-body">
 							<table class="table table-striped">
-								<tr><th><input id="checkall" type="checkbox"></th><th>Username</th><th>First</th><th>Last</th><th>Email</th><th>Role</th></tr>
+								<tr><th><input type="checkbox" id="checkall"></th><th>Module</th><th>Version</th><th>Description</th><th>Author</th><th>Site</th><th>Activity/Uninstall</th></tr>
 								<?php
-								$users = getUserList();
-								foreach ($users as $user)
+								// Get a list of all modules
+								$dirs = scandir('modules/');
+								foreach ($dirs as $dir)
 								{
-									$info = getUserInfo($user);
-									echo '<tr><td><input id="check_'.$info['id'].'" type="checkbox" class="usercheck"></td><td>'.$info['username'].'</td><td>'.$info['first'].'</td><td>'.$info['last'].'</td><td>'.$info['email'].'</td><td>'.$info['user_role'].'</td></tr>';
+									if ($dir != '.' && $dir != '..' && $dir != '...')
+									{
+										$dir = 'modules/'.$dir;
+										{
+											if (is_dir($dir))
+											{
+												// Check for *.mdx
+												$dirs2 = glob($dir.'/*.{mdx}', GLOB_BRACE);
+												if ($mdx = $dirs2[0])
+												{
+													
+												}
+											}
+										}
+									}
 								}
+//								echo '<tr><td>'.$info['username'].'</td><td>'.$info['first'].'</td><td>'.$info['last'].'</td><td>'.$info['email'].'</td><td>'.$info['user_role'].'</td></tr>';
 								?>
 							</table>
 						</div>
@@ -79,7 +94,7 @@ function userConfigurationView($user = "")
 	} else
 	{
 		// Individual User Configuration
-		if (userRoleIncludes(USER_PERMISSION_VIEW_USER) || shopUserRoleIncludes($shop, S_USER_PERMISSION_VIEW_USER))
+		if (userRoleIncludes(USER_PERMISSION_MODULES) || shopUserRoleIncludes($shop, S_USER_PERMISSION_MODULES))
 		{
 			
 		} else
@@ -90,5 +105,5 @@ function userConfigurationView($user = "")
 	}
 	echo '</div></body></html>';
 }
-userConfigurationView();
+moduleConfigurationView();
 ?>

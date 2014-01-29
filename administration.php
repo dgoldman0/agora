@@ -7,6 +7,7 @@ function displayAdminPanel()
 			<li class="sidebar-brand">Administration</li>
 			<li class="active"><a href="user_management.php">Users</a></li>
 			<li class="active"><a href="shop_management.php">Shops</a></li>
+			<li class="active"><a href="module_management.php">Modules</a></li>
 		</ul>
 	</div>
 	<?php

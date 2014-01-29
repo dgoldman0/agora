@@ -1,11 +1,11 @@
 <?php
 require_once 'settings.php';
 // Constants
-DEFINE("USER_PERMISSION_VIEW_SHOP", pow(2^20));
-DEFINE("USER_PERMISSION_EDIT_SHOP", pow(2^21));
-DEFINE("USER_PERMISSION_VIEW_USER", pow(2^30));
-DEFINE("USER_PERMISSION_EDIT_USER", pow(2^31));
-
+DEFINE("USER_PERMISSION_VIEW_SHOP", 4);
+DEFINE("USER_PERMISSION_EDIT_SHOP", 8);
+DEFINE("USER_PERMISSION_VIEW_USER", 16);
+DEFINE("USER_PERMISSION_EDIT_USER", 32);
+DEFINE("USER_PERMISSION_MODULE", 64);
 // Should I cache values that will never change like user id?
 
 $con = mysqli_connect(DB_LOCATION, DB_USERNAME, DB_PASSWORD, DB_NAME);
@@ -13,6 +13,54 @@ $session = 0;
 if ($_COOKIE["session"] != "")
 {
 	$session = $_COOKIE["session"];
+}
+class User
+{
+	protected $id, $username, $password, $user_role, $email, $first, $last;
+	function __construct($id, $username, $password, $user_role, $email, $first, $last)
+	{
+		$this->$id = $id;
+		$this->$username = $username;
+		$this->$password = $password;
+		$this->$user_role = $user_role;
+		$this->$email = $email;
+		$this->first = $first;
+		$this->last = $last;
+	}
+	function getID()
+	{
+		return $id;
+	}
+	function getUserName()
+	{
+		return $username;
+	}
+	function getPassword()
+	{
+		return $password;
+	}
+	function getUserRole()
+	{
+		return $user_role;
+	}
+	function getEmail()
+	{
+		return $email;
+	}
+	function getFirst()
+	{
+		return $first;
+	}
+	function getLast()
+	{
+		return $last;
+	}
+	function addUser($user)
+	{
+		global $con;
+		mysqli_query($con, "INSERT INTO users (username, password, user_role, email, first, last) VALUES ('".$user->$username."', SHA('".$user->$password."'), 0, '".$user->$email."', '".$user->$first."', '".$user->$last."');");
+		// Should add a check to make sure it worked!
+	}
 }
 function getUserID()
 {
@@ -34,6 +82,24 @@ function isLoggedIn()
 {
 	return getUserID() != -1;
 }
+function isAdmin($shop = "")
+{	global $con;
+
+	if ($id != -1)
+	{
+		if ($shop == '')
+		{
+			// Is the user an administrator
+			$sql = "SELECT user_role FROM users WHERE id=".$id." AND user_role=0;";
+			$response = mysqli_query($con, $sql);
+			return $row = mysqli_fetch_array($response);
+		} else
+		{
+			// Will fix later
+			return false;
+		}
+	}
+}
 function userRoleIncludes($capability)
 {
 	global $session;
@@ -53,6 +119,7 @@ function userRoleIncludes($capability)
 		return $row = mysqli_fetch_array($response);
 	}
 }
+// Combine this with userRoleIncludes: If no shop is specified, assume root
 function shopUserRoleIncludes($shop, $capability)
 {	global $session;
 	global $con;

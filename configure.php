@@ -93,6 +93,10 @@ if (!mysqli_connect_errno($con))
 
 					// Product Reviews
 					
+					// Modules
+					
+					// Templates
+					
 					// Add settings info & create administrator account
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO agora VALUES ('".$site_name."', '".$email."');");
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO users (username, password, user_role, email) VALUES ('".$username."', SHA('".$password."'), 0, '".$email."');");
