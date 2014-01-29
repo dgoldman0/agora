@@ -1,0 +1,4 @@
+1. Sessions currently only last an hour. However, it would be a lot better if the session can be extended after a notice is sent to the user.
+2. Really need to start splitting view and data properly
+3. Start putting things into different folders and files. Right now data.php contains too many different functions
+	A. Rename data.php -> connection.php

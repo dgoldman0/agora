@@ -26,13 +26,18 @@ function shopConfigView($shop = "")
 			include 'menu.php';
 			?>
 			<div class="row">
-				displayAdminPanel();
-				<div class = "col-md-6">
+				<?php displayAdminPanel();?>
+				<div class = "col-md-10">
 					<div class="panel panel-default">
 						<div class="panel-heading">
+							Shop Management
 						</div>
 						<div class="panel-body">
-							
+							<table class="table table-striped">
+								<tr><th>Shop Name</th><th>Creator</th><th>URL</th><th colspan="2">Stuff</th></tr>
+								<?php
+								?>
+							</table>
 						</div>
 					</div>
 				</div>

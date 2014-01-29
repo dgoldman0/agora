@@ -68,6 +68,7 @@ function shopUserRoleIncludes($shop, $capability)
 }
 function getUserInfo($user, $shop = 0)
 {
+	global $con;
 	$response = null;
 	if ($shop == 0)
 	{
@@ -76,10 +77,11 @@ function getUserInfo($user, $shop = 0)
 	{
 		$response = mysqli_query($con, "SELECT * FROM shop_users WHERE id=".$user." AND shop_id=".$shop.";");
 	}
-	return mysqli_fetch($response);
+	return mysqli_fetch_array($response);
 }
 function getUserList($shop = 0)
 {
+	global $con;
 	$response = null;
 	if ($shop == 0)
 	{
@@ -91,7 +93,7 @@ function getUserList($shop = 0)
 	$users = array();
 	while ($row = mysqli_fetch_array($response))
 	{
-		$users.push($row['id']);
+		array_push($users, ($row['id']));
 	}
 	return $users;
 }
