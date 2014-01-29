@@ -45,6 +45,15 @@ if ($username == '')
 					<input id="email" name="email" type="text" placeholder="Email" class="form-control input-md">
             	</div>
 			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="singlebutton">Register</label>
+				<div class="col-md-2">
+					<button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
+				</div>
+				<div class="col-md-2">
+					<a href="login.php">Already registered?</a>
+				</div>
+			</div>
 		</fieldset>
 	</form>
 </div></body></html>
@@ -55,8 +64,9 @@ if ($username == '')
 	
 	if (validatePassword($password1, $password2))
 	{
-		$user = new User($username, $password1, $_POST['email'], $_POST['first'], $_POST['last']);
+		$user = new User($username, $password1, getDefaultUserRole(), $_POST['email'], $_POST['first'], $_POST['last'], -1);
 		User::addUser($user);
+		header('Location: login.php');
 	}
 }
 ?>

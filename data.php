@@ -16,51 +16,35 @@ if ($_COOKIE["session"] != "")
 }
 class User
 {
-	protected $id, $username, $password, $user_role, $email, $first, $last;
-	function __construct($id, $username, $password, $user_role, $email, $first, $last)
+	public $id;
+	public $username;
+	public $password;
+	public $user_role;
+	public $email;
+	public $first;
+	public $last;
+	public function __construct($username, $password, $user_role, $email, $first, $last, $id)
 	{
-		$this->$id = $id;
-		$this->$username = $username;
-		$this->$password = $password;
-		$this->$user_role = $user_role;
-		$this->$email = $email;
+		$this->username = $username;
+		$this->password = $password;
+		$this->user_role = $user_role;
+		$this->email = $email;
 		$this->first = $first;
 		$this->last = $last;
+		$this->id = $id;
 	}
-	function getID()
-	{
-		return $id;
-	}
-	function getUserName()
-	{
-		return $username;
-	}
-	function getPassword()
-	{
-		return $password;
-	}
-	function getUserRole()
-	{
-		return $user_role;
-	}
-	function getEmail()
-	{
-		return $email;
-	}
-	function getFirst()
-	{
-		return $first;
-	}
-	function getLast()
-	{
-		return $last;
-	}
-	function addUser($user)
+	public static function addUser($usr)
 	{
 		global $con;
-		mysqli_query($con, "INSERT INTO users (username, password, user_role, email, first, last) VALUES ('".$user->$username."', SHA('".$user->$password."'), 0, '".$user->$email."', '".$user->$first."', '".$user->$last."');");
+		$sql = "INSERT INTO users (username, password, user_role, email, first, last) VALUES ('".$usr->username."', SHA('".$usr->password."'), ".$usr->user_role.", '".$usr->email."', '".$usr->first."', '".$usr->last."');";
+		mysqli_query($con, $sql);		
 		// Should add a check to make sure it worked!
 	}
+}
+// Will be set in database later
+function getDefaultUserRole()
+{
+	return 1;
 }
 function getUserID()
 {
@@ -163,5 +147,10 @@ function getUserList($shop = 0)
 		array_push($users, ($row['id']));
 	}
 	return $users;
+}
+function validatePassword($pass1, $pass2)
+{
+	// Will require more complex features such as, at least one number, etc, etc, etc
+	return $pass1 == $pass2;
 }
 ?>
