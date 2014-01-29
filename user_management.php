@@ -1,12 +1,6 @@
 <?php
 require_once 'data.php';
-
-function getUserInfo()
-{
-}
-function getUserList()
-{
-}
+require_once 'administration.php';
 
 function userConfigurationView($user = "")
 {
@@ -23,14 +17,24 @@ function userConfigurationView($user = "")
 			include 'menu.php';
 			?>
 			<div class="row">
-				displayAdminPane();
-				<div class = "col-md-6">
+				<?php displayAdminPanel();?>
+				<div class = "col-md-10">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							User Management
 						</div>
 						<div class="panel-body">
-							
+							<table class="table table-striped">
+								<tr><th>Username</th><th>First</th><th>Last</th>Email<td>Role</td></tr>
+								<?php
+								$users = getUserList();
+								foreach ($users as $user)
+								{
+									$info = getUserInfo($user);
+									echo '<tr><td>'.$info['username'].'</td><td>'.$info['first'].'</td><td>'.$info['last'].'</td><td>'.$info['email'].'</td><td>'.$info['user_role'].'</td></tr>';
+								}
+								?>
+							</table>
 						</div>
 					</div>
 				</div>

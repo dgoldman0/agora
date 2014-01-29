@@ -20,7 +20,7 @@ require_once 'data.php';
       <li class="active"><a href="/about.php">About</a></li>
       <li class="active"><a href="/market.php">Market</a></li>
       <li class="active"><a href="/stream.php">Stream</a></li>
-      <li class="active"><a href="/admin.php">Administration</a></li>
+      <li class="active"><a href="/admin.php">Administration</a></li> <!--Need to change this to only show with Admins-->
     </ul>
     <ul class="nav navbar-nav navbar-right">
     <form class="navbar-form navbar-left" role="search">

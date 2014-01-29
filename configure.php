@@ -2,6 +2,7 @@
 // Make sure that HTTPS is being used!
 require_once 'settings.php';
 require_once 'data.php';
+
 function configurationView()
 {
 ?>
@@ -47,7 +48,7 @@ function configurationView()
 		</form>
 	</div>
 	</body></head></html>
-	<?
+	<?php
 }
 if (!mysqli_connect_errno($con))
 {
@@ -71,28 +72,31 @@ if (!mysqli_connect_errno($con))
 				{
 					// Create system wide tables
 					mysqli_query($con, "CREATE TABLE agora (site_name varchar (255) NOT NULL default '', email varchar (255) NOT NULL DEFAULT '', PRIMARY KEY (site_name));");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE users (id INT(11) unsigned NOT NULL auto_increment, username varchar (255) NOT NULL DEFAULT '', password varchar (40), user_role INT(11) unsigned NOT NULL default '1', email VARCHAR (255) NOT NULL DEFAULT '', PRIMARY KEY (id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE users (id INT(11) unsigned NOT NULL auto_increment, username varchar (255) NOT NULL DEFAULT '', password varchar (40), user_role INT(11) unsigned NOT NULL default '1', email VARCHAR (255) NOT NULL DEFAULT '', first VARCHAR(50) NOT NULL DEFAULT '', last VARCHAR(50) NOT NULL, PRIMARY KEY (id));");
 					// Will have to do something about expired sessions
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE sessions (id VARCHAR (255) NOT NULL DEFAULT '', user INT(11), expires BIGINT(12) UNSIGNED, PRIMARY KEY(id));");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE user_roles (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, PRIMARY KEY(id));");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE user_role_capabilities (capability INT(11) UNSIGNED NOT NULL DEFAULT 0, role_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(capability, role_id));");
 
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shipping (id INT(11) NOT NULL AUTO_INCREMENT, user_id INT(11) NOT NULL DEFAULT 0, name VARCHAR (50) NOT NULL DEFAULT '', PRIMARY KEY(id);");
 					// Shop tables
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shops (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) UNSIGNED NOT NULL DEFAULT '', PRIMARY KEY(id));");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_users (id INT(11) UNSIGNED NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, role_id INT(11), home TINYINT(1) NOT NULL DEFUALT 0, PRIMARY KEY(id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shops (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL DEFAULT '', PRIMARY KEY(id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_users (id INT(11) UNSIGNED NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, role_id INT(11), home TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(id, shop_id));");
 					// Should I have two separate sets of tables or just use shop_id = 0 for master roles
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_user_roles (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, shop_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id));");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_user_role_capabilities (capability INT(11) UNSIGNED NOT NULL DEFAULT 0, role_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(capability, role_id));");
 					
 					// Cart tables
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shopping_carts (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL DEFAULT '', wishlist TINYINT(1) NOT NULL DEFAULT 0, PRIMAY KEY(id);");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shopping_carts (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL DEFAULT '', wishlist TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(id));");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE cart_items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, item_id INT(11) UNSIGNED NOT NULL, public TINYINT(1), PRIMARY KEY(id));");
 					// Invoice tables
 
+					// Product Reviews
+					
 					// Add settings info & create administrator account
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO agora VALUES ('".$site_name."', '".$email."');");
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO users (username, password, user_role, email) VALUES ('".$username."', SHA('".$password."'), 0, '".$email."');");
-					if (mysqli_error($con) == "") 
+					if (mysqli_error($con) == "")
 					{
 						// Redirect to login
 						header("Location: /login.php");
