@@ -27,7 +27,7 @@ function shopConfigView($shop = "")
 						</div>
 						<div class="panel-body">
 							<table class="table table-striped">
-								<tr><th>Shop Name</th><th>Creator</th><th>URL</th><th colspan="2">Stuff</th></tr>
+								<tr><th>Shop Name</th><th>Master</th><th>URL</th><th colspan="2">Stuff</th></tr>
 								<?php
 								?>
 							</table>

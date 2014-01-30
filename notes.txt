@@ -1,4 +1,6 @@
 1. Sessions currently only last an hour. However, it would be a lot better if the session can be extended after a notice is sent to the user.
+	A. Javascript option: whenever the page loads, check expiration for the cookie and set a timer for 5 minutes and an event handler to bring up a
+	login window frame on expiration.
 2. Really need to start splitting view and data properly
 3. Start putting things into different folders and files. Right now data.php contains too many different functions
 	A. Rename data.php -> connection.php
@@ -7,3 +9,5 @@
 	A. Related to that. I should ensure that usernames and shopnames are unique.
 6. Move JS to the end of the stream
 7. Should I have results as strings and then echo or just have PHP send it right out?
+8. Clean up headers and footers
+9. Create a float version of the login panel

@@ -35,13 +35,22 @@ function getUserID()
 	}
 	return -1;
 }
+function getServiceURL()
+{
+	mysqli_query("SELECT url FROM agora;");
+	if ($row = mysqli_fetch_array($response))
+	{
+		return $row['url'];
+	}
+}
 function isLoggedIn()
 {
 	return getUserID() != -1;
 }
-function isAdmin($shop = "")
+function isAdmin($shop = '')
 {	global $con;
 
+	$id = getUserID();
 	if ($id != -1)
 	{
 		if ($shop == '')

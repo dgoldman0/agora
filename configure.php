@@ -79,16 +79,18 @@ if (!mysqli_connect_errno($con))
 					// Create system wide tables
 					mysqli_query($con, "CREATE TABLE agora (site_name varchar (255) NOT NULL default '', email varchar (255) NOT NULL DEFAULT '', url VARCHAR(255) NOT NULL, PRIMARY KEY (site_name));");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE users (id INT(11) unsigned NOT NULL auto_increment, username varchar (50) NOT NULL DEFAULT '', password varchar (40), user_role INT(11) unsigned NOT NULL default '1', email VARCHAR (50) NOT NULL DEFAULT '', first VARCHAR(50) NOT NULL DEFAULT '', last VARCHAR(50) NOT NULL, PRIMARY KEY (id), UNIQUE KEY(username));");
+					
 					// Will have to do something about expired sessions
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE sessions (id VARCHAR (255) NOT NULL DEFAULT '', user INT(11), expires BIGINT(12) UNSIGNED, PRIMARY KEY(id));");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE user_roles (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, PRIMARY KEY(id));");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE user_role_capabilities (capability INT(11) UNSIGNED NOT NULL DEFAULT 0, role_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(capability, role_id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shipping (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, user_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, first VARCHAR(50) NOT NULL, last VARCHAR(50) NOT NULL, street1 VARCHAR(255) NOT NULL, street2 VARCHAR(255) NOT NULL, locality VARCHAR(50) NOT NULL, postal VARCHAR(20) NOT NULL, state VARCHAR(50) NOT NULL, country VARCHAR(50) NOT NULL, PRIMARY KEY(id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE billing (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, user_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, first VARCHAR(50) NOT NULL, last VARCHAR(50) NOT NULL, street1 VARCHAR(255) NOT NULL, street2 VARCHAR(255) NOT NULL, locality VARCHAR(50) NOT NULL, postal VARCHAR(20) NOT NULL, state VARCHAR(50) NOT NULL, country VARCHAR(50) NOT NULL, PRIMARY KEY(id));");
 
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shipping (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, user_id INT(11) UNSIGNED NOT NULL DEFAULT 0, name VARCHAR(50) NOT NULL DEFAULT '', PRIMARY KEY(id));");
 					// Shop tables
-
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shops (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL DEFAULT '', sylized VARCHAR(255) NOT NULL, master VARCHAR(255) NOT NULL, url VARCHAR(255) NOT NULL, PRIMARY KEY(id), UNIQUE KEY(name), UNIQUE KEY(url));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shops (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL DEFAULT '', sylized VARCHAR(255) NOT NULL, url VARCHAR(255) NOT NULL, PRIMARY KEY(id), UNIQUE KEY(name), UNIQUE KEY(url));");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_users (id INT(11) UNSIGNED NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, role_id INT(11), home TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(id, shop_id));");
+
 					// Should I have two separate sets of tables or just use shop_id = 0 for master roles
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_user_roles (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, shop_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id));");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_user_role_capabilities (capability INT(11) UNSIGNED NOT NULL DEFAULT 0, role_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(capability, role_id));");

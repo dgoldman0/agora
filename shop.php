@@ -6,17 +6,16 @@ class Shop
 {
 	private $id, $name, $stylized, $master, $url;
 	
-	public function __construct($name, $stylized, $master, $url, $id)
+	public function __construct($name, $stylized, $url, $id)
 	{
 		$this->name = $name;
 		$this->stylized = $stylized;
-		$this->master = $master;
 		$this->url = $url;
 		$this->id = $id;
 	}
 	public static function addShop($shop)
 	{
-		mysqli_query("INSERT INTO shops (name, url) VALUES ('".$shop->name."', '".$shop->url."');");
+		mysqli_query("INSERT INTO shops (name, stylized, url) VALUES ('".$shop->name."', '".$shop->stylized."', ".$shop->url."');");
 	}
 	function addShopUser($shop, $user)
 	{
@@ -26,9 +25,20 @@ class Shop
 		$response = mysqli_query("SELECT * FROM shops WHERE id=".$id.";");
 		if ($row = mysqli_fetch_array($response))
 		{
-			$shop = new Shop($row['name'], $row['stylized']. $row['master'], $row['url'], $id);
+			$shop = new Shop($row['name'], $row['stylized'], $row['url'], $id);
 		}
 		return $shop;
 	}
+}
+$shop = $_GET['shop'];
+if ($shop == "")
+{
+	header("Location: " + getServiceURL());
+} else
+{
+	include 'include/header.php';
+	include 'include/menu.php';
+	
+	include 'include/footer.php';	
 }
 ?>
