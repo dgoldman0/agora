@@ -14,33 +14,6 @@ if ($_COOKIE["session"] != "")
 {
 	$session = $_COOKIE["session"];
 }
-class User
-{
-	public $id;
-	public $username;
-	public $password;
-	public $user_role;
-	public $email;
-	public $first;
-	public $last;
-	public function __construct($username, $password, $user_role, $email, $first, $last, $id)
-	{
-		$this->username = $username;
-		$this->password = $password;
-		$this->user_role = $user_role;
-		$this->email = $email;
-		$this->first = $first;
-		$this->last = $last;
-		$this->id = $id;
-	}
-	public static function addUser($usr)
-	{
-		global $con;
-		$sql = "INSERT INTO users (username, password, user_role, email, first, last) VALUES ('".$usr->username."', SHA('".$usr->password."'), ".$usr->user_role.", '".$usr->email."', '".$usr->first."', '".$usr->last."');";
-		mysqli_query($con, $sql);		
-		// Should add a check to make sure it worked!
-	}
-}
 // Will be set in database later
 function getDefaultUserRole()
 {

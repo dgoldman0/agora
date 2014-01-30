@@ -3,3 +3,5 @@
 3. Start putting things into different folders and files. Right now data.php contains too many different functions
 	A. Rename data.php -> connection.php
 4. Should functions check authorization? If not, then it's possible for a plugin to overstep its privilages...
+5. I have been accessing users by numeric ID. Should I switch to access users and shops by name?
+	A. Related to that. I should ensure that usernames and shopnames are unique.

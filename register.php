@@ -1,6 +1,7 @@
 <?php
 require_once 'settings.php';
 require_once 'data.php';
+require_once 'user_management.php';
 
 $username = $_POST['username'];
 
@@ -20,13 +21,13 @@ if ($username == '')
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-md-4 control-label" for="email">First Name</label>
+				<label class="col-md-4 control-label" for="first">First Name</label>
            	   	<div class="col-md-4">
 					<input id="first" name="first" type="text" placeholder="First" class="form-control input-md">
             	</div>
 			</div>
 			<div class="form-group">
-				<label class="col-md-4 control-label" for="email">Last Name</label>
+				<label class="col-md-4 control-label" for="last">Last Name</label>
            	   	<div class="col-md-4">
 					<input id="last" name="last" type="text" placeholder="Last" class="form-control input-md">
             	</div>
