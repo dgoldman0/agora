@@ -1,8 +1,12 @@
 <?php
 require_once 'settings.php';
 require_once 'data.php';
-?>
-  <nav class="navbar navbar-default" role="navigation">
+require_once 'shop.php';
+function menuView($shop = null)
+{
+	$result = "";
+	$result = '
+	<nav class="navbar navbar-default" role="navigation">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -10,8 +14,15 @@ require_once 'data.php';
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="/index.php">Agora</a>
+    </button><a class="navbar-brand" href="/shop.php';
+	if (!$shop == null)
+	{
+	    $result = $result.'?shop='.$shop->getName().'">'.$shop->getStylizedName().'</a>';
+	} else
+	{
+		$result = $result.'">Agora</a>';
+	}
+	$result = $result.'
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->
@@ -34,18 +45,17 @@ require_once 'data.php';
         <ul class="dropdown-menu">
           <li><a href="/profile.php">Profile</a></li>
           <li><a href="/settings.php">Settings</a></li>
-          <li class="divider"></li>
-          <?php
-          if (isLoggedIn())
-          {
-          	echo '<li><a href="login.php?logout=true">Logout</a></li>';
-		  } else
-		  {
-			echo '<li><a href="login.php">Login</a></li>';  
-		  }
-		  ?>
-        </ul>
-      </li>
-    </ul>
-  </div><!-- /.navbar-collapse -->
-</nav>
+          <li class="divider"></li>';
+		  
+	if (isLoggedIn())
+    {
+    	$result = $result.'<li><a href="login.php?logout=true">Logout</a></li>';
+	} else
+	{
+		$result = $result.'<li><a href="login.php">Login</a></li>';  
+	}
+	$result = $result.'</ul></li></ul></div><!-- /.navbar-collapse --></nav>';
+	return $result;
+}
+echo menuView();
+?>

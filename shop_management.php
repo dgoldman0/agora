@@ -1,35 +1,7 @@
 <?php
 require_once 'data.php';
 require_once 'administration.php';
-
-class Shop
-{
-	private $id, $name, $url;
-	
-	public function __construct($name, $url, $id)
-	{
-		$this->name = $name;
-		$this->url = $url;
-		$this->id = $id;
-	}
-	public static function addShop($shop)
-	{
-		mysqli_query("INSERT INTO shops (name, url) VALUES ('".$shop->name."', '".$shop->url."');");
-	}
-	function addShopUser($shop, $user)
-	{
-	}
-	static function getShopFromID($id)
-	{
-		$response = mysqli_query("SELECT * FROM shops WHERE id=".$id.";");
-		if ($row = mysqli_fetch_array($response))
-		{
-			$shop = new Shop($row['name'], $row['url'], $id);
-		}
-		return $shop;
-	}
-}
-
+require_once 'shop.php';
 
 // View
 function shopConfigView($shop = "")
