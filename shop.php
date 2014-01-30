@@ -4,12 +4,13 @@ require_once 'data.php';
 
 class Shop
 {
-	private $id, $name, $url;
+	private $id, $name, $stylized, $master, $url;
 	
-	public function __construct($name, $stylized, $url, $id)
+	public function __construct($name, $stylized, $master, $url, $id)
 	{
 		$this->name = $name;
 		$this->stylized = $stylized;
+		$this->master = $master;
 		$this->url = $url;
 		$this->id = $id;
 	}
@@ -25,7 +26,7 @@ class Shop
 		$response = mysqli_query("SELECT * FROM shops WHERE id=".$id.";");
 		if ($row = mysqli_fetch_array($response))
 		{
-			$shop = new Shop($row['name'], $row['url'], $id);
+			$shop = new Shop($row['name'], $row['stylized']. $row['master'], $row['url'], $id);
 		}
 		return $shop;
 	}

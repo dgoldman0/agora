@@ -5,3 +5,5 @@
 4. Should functions check authorization? If not, then it's possible for a plugin to overstep its privilages...
 5. I have been accessing users by numeric ID. Should I switch to access users and shops by name?
 	A. Related to that. I should ensure that usernames and shopnames are unique.
+6. Move JS to the end of the stream
+7. Should I have results as strings and then echo or just have PHP send it right out?

@@ -3,15 +3,10 @@ require_once 'settings.php';
 require_once 'data.php';
 require_once 'user_management.php';
 
-$username = $_POST['username'];
-
-if ($username == '')
+// Varies depending on whether or not there is a user signed in and he/she has user create authorization
+function registerFormView()
 {
-?>
-<!DOCTYPE html>
-<html><head><title>Register with Agora</title><?php include 'include.php'?></head><body>
-<div class="container">
-	<form class="form-horizontal" action="register.php" method="post">
+	$result = '<form class="form-horizontal" action="register.php" method="post">
 		<fieldset>
 			<legend>Register</legend>
 			<div class="form-group">
@@ -57,6 +52,18 @@ if ($username == '')
 			</div>
 		</fieldset>
 	</form>
+	';
+}
+
+$username = $_POST['username'];
+
+if ($username == '')
+{
+?>
+<!DOCTYPE html>
+<html><head><title>Register with Agora</title><?php include 'include.php'?></head><body>
+<div class="container">
+<?php echo registerFormView();?>
 </div></body></html>
 <?php
 } else

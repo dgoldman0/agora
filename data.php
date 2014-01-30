@@ -57,6 +57,7 @@ function isAdmin($shop = "")
 		}
 	}
 }
+// Move tese into User class
 function userRoleIncludes($capability)
 {
 	global $session;
@@ -78,7 +79,8 @@ function userRoleIncludes($capability)
 }
 // Combine this with userRoleIncludes: If no shop is specified, assume root
 function shopUserRoleIncludes($shop, $capability)
-{	global $session;
+{
+	global $session;
 	global $con;
 	$id = getUserID();
 	if ($id != -1)

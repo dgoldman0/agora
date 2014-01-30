@@ -1,4 +1,4 @@
-@import url("/css/bootstrap.min.css");
+@import url("//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css");
 
 .vender-block {
 	border-width: 1px;

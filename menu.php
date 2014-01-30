@@ -14,14 +14,13 @@ function menuView($shop = null)
       <span class="sr-only">Toggle navigation</span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button><a class="navbar-brand" href="/shop.php';
+      <span class="icon-bar"></span></button><a class="navbar-brand" href="';
 	if (!$shop == null)
 	{
-	    $result = $result.'?shop='.$shop->getName().'">'.$shop->getStylizedName().'</a>';
+    	$result = $result.'shop.php.?shop='.$shop->getName().'">'.$shop->getStylizedName().'</a>';
 	} else
 	{
-		$result = $result.'">Agora</a>';
+		$result = $result.'index.php">Agora</a>';
 	}
 	$result = $result.'
   </div>

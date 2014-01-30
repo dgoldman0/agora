@@ -3,15 +3,10 @@ require_once 'settings.php';
 require_once 'data.php';
 require_once 'shop_management.php';
 
-$shopname = $_POST['shopname'];
-
-if ($shopname == '')
+function shopRegisterFormView()
 {
-?>
-<!DOCTYPE html>
-<html><head><title>Register a Shop with Agora</title><?php include 'include.php'?></head><body>
-<div class="container">
-	<form class="form-horizontal" action="registershop.php" method="post">
+	$result = '
+		<form class="form-horizontal" action="registershop.php" method="post">
 		<fieldset>
 			<legend>Register</legend>
 			<div class="form-group">
@@ -40,15 +35,26 @@ if ($shopname == '')
 			</div>
 		</fieldset>
 	</form>
+	';
+}
+
+$shopname = $_POST['shopname'];
+
+if ($shopname == '')
+{
+?>
+<!DOCTYPE html>
+<html><head><title>Register a Shop with Agora</title><?php include 'include.php'?></head><body>
+<div class="container">
+<?php shopRegisterFormView();?>
 </div></body></html>
 <?php
 } else
 {
-	$name = $_POST['name'];
 	$url = $_POST['url'];	
-	
-	$shop = new Shop($name, $url, -1);
+		
+	$shop = new Shop($shopname, $url, -1);
 	Shop::addShop($shop);
-	header('Location: shop.php?shop="'.$name.'"');
+	header('Location: shop.php?shop="'.$shopname.'"');
 }
 ?>
