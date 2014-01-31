@@ -5,7 +5,9 @@ DEFINE("USER_PERMISSION_VIEW_SHOP", 4);
 DEFINE("USER_PERMISSION_EDIT_SHOP", 8);
 DEFINE("USER_PERMISSION_VIEW_USER", 16);
 DEFINE("USER_PERMISSION_EDIT_USER", 32);
-DEFINE("USER_PERMISSION_MODULE", 64);
+DEFINE("USER_PERMISSION_EDIT_SHOP", 64);
+DEFINE("USER_PERMISSION_MODULE", 128);
+
 // Should I cache values that will never change like user id?
 
 $con = mysqli_connect(DB_LOCATION, DB_USERNAME, DB_PASSWORD, DB_NAME);
@@ -37,6 +39,7 @@ function getUserID()
 }
 function getServiceURL()
 {
+	global $con;
 	mysqli_query("SELECT url FROM agora;");
 	if ($row = mysqli_fetch_array($response))
 	{
@@ -48,7 +51,8 @@ function isLoggedIn()
 	return getUserID() != -1;
 }
 function isAdmin($shop = '')
-{	global $con;
+{
+	global $con;
 
 	$id = getUserID();
 	if ($id != -1)
@@ -101,6 +105,8 @@ function shopUserRoleIncludes($shop, $capability)
 		return false;
 	}
 }
+
+// This can basically be put into User::getUser
 function getUserInfo($user, $shop = 0)
 {
 	global $con;
@@ -136,5 +142,9 @@ function validatePassword($pass1, $pass2)
 {
 	// Will require more complex features such as, at least one number, etc, etc, etc
 	return $pass1 == $pass2;
+}
+function toURLSafe($str)
+{
+	return preg_replace('/[^\w]+/', '_', strtolower($str));
 }
 ?>

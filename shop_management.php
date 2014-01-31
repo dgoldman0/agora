@@ -1,7 +1,7 @@
 <?php
 require_once 'data.php';
-require_once 'administration.php';
 require_once 'data/shop.php';
+require_once 'administration.php';
 
 // View
 function shopConfigView($shop = "")
@@ -21,11 +21,23 @@ function shopConfigView($shop = "")
 				<div class = "col-md-10">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							Shop Management
+  <nav class="navbar navbar-default" role="navigation">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <a class="navbar-brand" href="/index.php">Shop Management</a>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse" id="shop-navigation">
+    <ul class="nav navbar-nav">
+      <li><a href="registershop.php">Add Shop</a></li>
+    </ul>
+  </div><!-- /.navbar-collapse -->
+</nav>
 						</div>
 						<div class="panel-body">
 							<table class="table table-striped">
-								<tr><th>Shop Name</th><th>Master</th><th>URL</th><th colspan="2">Stuff</th></tr>
+								<tr><th>Shop Name</th><th>Description</th><th>URL</th><th colspan="2">Stuff</th></tr>
 								<?php
 								?>
 							</table>

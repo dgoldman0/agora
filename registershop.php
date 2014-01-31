@@ -1,7 +1,9 @@
 <?php
 require_once 'settings.php';
 require_once 'data.php';
+require_once 'administration.php';
 require_once 'data/shop.php';
+require_once 'data/user.php';
 
 function shopRegisterFormView()
 {
@@ -13,6 +15,12 @@ function shopRegisterFormView()
 				<label class="col-md-4 control-label" for="username">Shop Name</label>
 				<div class="col-md-4">
 					<input id="shopname" name="shopname" type="text" placeholder="Shop Name" class="form-control input-md">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="username">Description</label>
+				<div class="col-md-4">
+					<textarea rows="4" id="short_desc" name="short_desc" class="form-control"></textarea>
 				</div>
 			</div>
 			<div class="form-group">
@@ -50,17 +58,34 @@ if ($shopname == '')
 {
 	include 'include/header.php';
 	include 'menu.php';
-	shopRegisterFormView();
+	if (userRoleIncludes(USER_PERMISSION_ADD_SHOP))
+	{
+	?>
+		<div class="row">
+		<?php displayAdminPanel();?>
+			<div class = "col-md-10">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Register Shop
+					</div>
+					<div class="panel-body">
+		<?php
+		shopRegisterFormView();
+		echo '</div></div></div></div>';
+	}
 	include 'include/footer.php';
 } else
 {
 	$url = $_POST['url'];	
-		
-	$shop = new Shop($shopname, $url, -1);
+	$short_desc = $_POST['short_desc'];
+	$stylized = $shopname;
+	$shopname = toURLSafe($shopname);
+	
+	$shop = new Shop($shopname, $stylized, $short_desc, $url, -1);
 	Shop::addShop($shop);
-	$user = getUserByName($_POST['owner']);
+	$user = User::getUserByUsername(toURLSafe($_POST['owner']));
 	$shop->addUser($user);
 	$shop->setUserRole($user, 0);
-	header('Location: shop.php?shop="'.$shopname.'"');
+	header('Location: shop.php?shop='.$shopname);
 }
 ?>

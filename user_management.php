@@ -1,46 +1,9 @@
 <?php
 require_once 'data.php';
 require_once 'administration.php';
+require_once 'data/user.php';
 
 // Move this to include/user.php
-class User
-{
-	public $id;
-	public $username;
-	public $password;
-	public $user_role;
-	public $email;
-	public $first;
-	public $last;
-	
-	function __construct($username, $password, $user_role, $email, $first, $last, $id)
-	{
-		$this->username = $username;
-		$this->password = $password;
-		$this->user_role = $user_role;
-		$this->email = $email;
-		$this->first = $first;
-		$this->last = $last;
-		$this->id = $id;
-	}
-	static function addUser($usr)
-	{
-		global $con;
-		$sql = "INSERT INTO users (username, password, user_role, email, first, last) VALUES ('".$usr->username."', SHA('".$usr->password."'), ".$usr->user_role.", '".$usr->email."', '".$usr->first."', '".$usr->last."');";
-		mysqli_query($con, $sql);		
-		// Should add a check to make sure it worked!
-	}
-	static function getUserByUsername($username)
-	{
-		$response = mysqli_query($con, "SELECT * from users WHERE username='".$username."';");
-		if ($row = mysqli_fetch_array($response))
-		{
-			$user = new $User($row['username'], $row['user_role'], $row['email'], $row['first'], $row['last'], $row['id']);
-			return $user;
-		}
-	}
-}
-
 function userConfigurationView($user = "")
 {
 	echo "<!DOCTYPE html><html><head>";
@@ -68,26 +31,13 @@ function userConfigurationView($user = "")
   <nav class="navbar navbar-default" role="navigation">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
     <a class="navbar-brand" href="/index.php">User Management</a>
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->
-  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+  <div class="collapse navbar-collapse" id="user-navigation">
     <ul class="nav navbar-nav">
-      <li><a href="newuser.php">Add User</a></li>
-    </ul>
-    <ul class="nav navbar-nav navbar-right">
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
-        <ul class="dropdown-menu">
-        </ul>
-      </li>
+      <li><a href="register.php">Add User</a></li>
     </ul>
   </div><!-- /.navbar-collapse -->
 </nav>

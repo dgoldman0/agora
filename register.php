@@ -1,12 +1,14 @@
 <?php
 require_once 'settings.php';
 require_once 'data.php';
-require_once 'user_management.php';
+require_once 'data/user.php';
+require_once 'administration.php';
 
 // Varies depending on whether or not there is a user signed in and he/she has user create authorization
 function registerFormView()
 {
-	$result = '<form class="form-horizontal" action="register.php" method="post">
+?>
+	<form class="form-horizontal" action="register.php" method="post">
 		<fieldset>
 			<legend>Register</legend>
 			<div class="form-group">
@@ -46,26 +48,48 @@ function registerFormView()
 				<div class="col-md-2">
 					<button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
 				</div>
-				<div class="col-md-2">
-					<a href="login.php">Already registered?</a>
-				</div>
+<?php
+				if (getUserID() == -1)
+				{
+					echo '<div class="col-md-2">
+						<a href="login.php">Already registered?</a>
+					</div>';
+				}
+				?>
 			</div>
 		</fieldset>
 	</form>
-	';
+<?php
 }
 
 $username = $_POST['username'];
 
+include 'include/header.php';
 if ($username == '')
 {
-?>
-<!DOCTYPE html>
-<html><head><title>Register with Agora</title><?php include 'include.php'?></head><body>
-<div class="container">
-<?php echo registerFormView();?>
-</div></body></html>
-<?php
+	$id = getUserID();
+	if ($id == -1 || userRoleIncludes(USER_PERMISSION_EDIT_USER))
+	{
+		if ($id != -1)
+		{
+			include 'menu.php';
+			?>
+			<div class="row">
+				<?php displayAdminPanel();?>
+				<div class = "col-md-10">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							Add User
+						</div>
+						<div class="panel-body">
+			<?php
+		}
+		registerFormView();
+		if ($id != -1)
+		{
+			echo '</div></div></div></div>';
+		}
+	}
 } else
 {	$password1 = $_POST['password1'];
 	$password2 = $_POST['password2'];
@@ -74,7 +98,11 @@ if ($username == '')
 	{
 		$user = new User($username, $password1, getDefaultUserRole(), $_POST['email'], $_POST['first'], $_POST['last'], -1);
 		User::addUser($user);
-		header('Location: login.php');
+		if ($getUserID() == -1)
+			header('Location: login.php');
+		else
+			header('Location: index.php');
 	}
 }
+include 'include/footer.php';
 ?>

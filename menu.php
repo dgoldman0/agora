@@ -6,6 +6,10 @@ require_once 'data/shop.php';
 $shop = $_GET['shop'];
 if ($shop == "")
 	$shop = $_POST['shop'];
+if ($shop != "")
+	$shop = Shop::getShopFromName(toURLSafe($shop));
+else 
+	$shop = null;
 ?>
 <nav class="navbar navbar-default" role="navigation">
 	<!-- Brand and toggle get grouped for better mobile display -->
@@ -16,9 +20,9 @@ if ($shop == "")
       	<span class="icon-bar"></span>
       	<span class="icon-bar"></span></button><a class="navbar-brand" href="
       	<?php
-		if (!$shop == "")
+		if (!$shop == null)
 		{
-    		echo 'shop.php.?shop='.$shop->getName().'">'.$shop->getStylizedName().'</a>';
+    		echo 'shop.php?shop='.$shop->name.'">'.$shop->stylized.'</a>';
 		} else
 		{
 			echo 'index.php">Agora</a>';
@@ -61,4 +65,4 @@ if ($shop == "")
 					echo '<li><a href="login.php">Login</a></li>'; 
 				}
 				echo '</ul></li></ul></div><!-- /.navbar-collapse --></nav>';
-				?>
+?>
