@@ -2,6 +2,7 @@
 require_once 'data.php';
 require_once 'administration.php';
 
+// Move this to include/user.php
 class User
 {
 	public $id;
@@ -11,7 +12,8 @@ class User
 	public $email;
 	public $first;
 	public $last;
-	public function __construct($username, $password, $user_role, $email, $first, $last, $id)
+	
+	function __construct($username, $password, $user_role, $email, $first, $last, $id)
 	{
 		$this->username = $username;
 		$this->password = $password;
@@ -21,14 +23,24 @@ class User
 		$this->last = $last;
 		$this->id = $id;
 	}
-	public static function addUser($usr)
+	static function addUser($usr)
 	{
 		global $con;
 		$sql = "INSERT INTO users (username, password, user_role, email, first, last) VALUES ('".$usr->username."', SHA('".$usr->password."'), ".$usr->user_role.", '".$usr->email."', '".$usr->first."', '".$usr->last."');";
 		mysqli_query($con, $sql);		
 		// Should add a check to make sure it worked!
 	}
+	static function getUserByUsername($username)
+	{
+		$response = mysqli_query($con, "SELECT * from users WHERE username='".$username."';");
+		if ($row = mysqli_fetch_array($response))
+		{
+			$user = new $User($row['username'], $row['user_role'], $row['email'], $row['first'], $row['last'], $row['id']);
+			return $user;
+		}
+	}
 }
+
 function userConfigurationView($user = "")
 {
 	echo "<!DOCTYPE html><html><head>";
@@ -68,7 +80,7 @@ function userConfigurationView($user = "")
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
-      <li class="active"><a href="newuser.php">Add User</a></li>
+      <li><a href="newuser.php">Add User</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <li class="dropdown">

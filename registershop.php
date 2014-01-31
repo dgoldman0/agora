@@ -1,11 +1,11 @@
 <?php
 require_once 'settings.php';
 require_once 'data.php';
-require_once 'shop_management.php';
+require_once 'data/shop.php';
 
 function shopRegisterFormView()
 {
-	$result = '
+?>
 		<form class="form-horizontal" action="registershop.php" method="post">
 		<fieldset>
 			<legend>Register</legend>
@@ -28,6 +28,12 @@ function shopRegisterFormView()
             	</div>
 			</div>
 			<div class="form-group">
+				<label class="col-md-4 control-label" for="email">Owner</label>
+           	   	<div class="col-md-4">
+					<input id="owner" name="owner" type="owner" placeholder="Owner's Username" class="form-control input-md">
+            	</div>
+			</div>
+			<div class="form-group">
 				<label class="col-md-4 control-label" for="singlebutton">Register</label>
 				<div class="col-md-2">
 					<button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
@@ -35,26 +41,26 @@ function shopRegisterFormView()
 			</div>
 		</fieldset>
 	</form>
-	';
+<?php
 }
 
 $shopname = $_POST['shopname'];
 
 if ($shopname == '')
 {
-?>
-<!DOCTYPE html>
-<html><head><title>Register a Shop with Agora</title><?php include 'include.php'?></head><body>
-<div class="container">
-<?php shopRegisterFormView();?>
-</div></body></html>
-<?php
+	include 'include/header.php';
+	include 'menu.php';
+	shopRegisterFormView();
+	include 'include/footer.php';
 } else
 {
 	$url = $_POST['url'];	
 		
 	$shop = new Shop($shopname, $url, -1);
 	Shop::addShop($shop);
+	$user = getUserByName($_POST['owner']);
+	$shop->addUser($user);
+	$shop->setUserRole($user, 0);
 	header('Location: shop.php?shop="'.$shopname.'"');
 }
 ?>

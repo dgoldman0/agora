@@ -81,7 +81,8 @@ if (!mysqli_connect_errno($con))
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE users (id INT(11) unsigned NOT NULL auto_increment, username varchar (50) NOT NULL DEFAULT '', password varchar (40), user_role INT(11) unsigned NOT NULL default '1', email VARCHAR (50) NOT NULL DEFAULT '', first VARCHAR(50) NOT NULL DEFAULT '', last VARCHAR(50) NOT NULL, PRIMARY KEY (id), UNIQUE KEY(username));");
 					
 					// Will have to do something about expired sessions
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE sessions (id VARCHAR (255) NOT NULL DEFAULT '', user INT(11), expires BIGINT(12) UNSIGNED, PRIMARY KEY(id));");
+					// Rename user->user_id
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE sessions (id VARCHAR (255) NOT NULL DEFAULT '', user INT(11) UNSIGNED NOT NULL, expires BIGINT(12) UNSIGNED, PRIMARY KEY(id));");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE user_roles (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, PRIMARY KEY(id));");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE user_role_capabilities (capability INT(11) UNSIGNED NOT NULL DEFAULT 0, role_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(capability, role_id));");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shipping (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, user_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, first VARCHAR(50) NOT NULL, last VARCHAR(50) NOT NULL, street1 VARCHAR(255) NOT NULL, street2 VARCHAR(255) NOT NULL, locality VARCHAR(50) NOT NULL, postal VARCHAR(20) NOT NULL, state VARCHAR(50) NOT NULL, country VARCHAR(50) NOT NULL, PRIMARY KEY(id));");
@@ -96,8 +97,8 @@ if (!mysqli_connect_errno($con))
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_user_role_capabilities (capability INT(11) UNSIGNED NOT NULL DEFAULT 0, role_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(capability, role_id));");
 					
 					// Items
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE items (id INT(11) NOT NULL AUTO_INCREMENT, shop_id INT(11) NOT NULL, name VARCHAR(50) NOT NULL, short VARCHAR(156), desc TEXT, PRIMARY KEY(id));");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE item_images (id INT(11) NOT NULL AUTO_INCREMENT, item_id INT(11) NOT NULL, image MEDIUMBLOB, alt_text VARCHAR(255), desc TEXT, PRIMARY KEY(id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, shop_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, short_desc VARCHAR(156), long_desc TEXT NOT NULL, PRIMARY KEY(id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE item_images (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, item_id INT(11) UNSIGNED NOT NULL, media_id INT(11) NOT NULL UNSIGNED, PRIMARY KEY(id));");
 										
 					// Cart & Bag tables
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shopping_carts (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, owner_id INT(11) NOT NULL, name VARCHAR(255) NOT NULL DEFAULT '', wishlist TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(id));");
@@ -108,9 +109,13 @@ if (!mysqli_connect_errno($con))
 					// Product Reviews
 					
 					// Modules
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE modules (location VARCHAR(255) NOT NULL, active TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(location))'");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE modules (location VARCHAR(255) NOT NULL, active TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(location))");
 					// Templates
 					
+					// Custom content
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE media (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, LONGBLOB NOT NULL, alt_text VARCHAR(255), long_desc TEXT NOT NULL, PRIMARY KEY(id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE pages (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, SMALLINT(5) UNSIGNED NOT NULL DEFAULT 1, content MEDIUMBLOB NOT NULL, PRIMARY KEY(id));");
+
 					// Add settings info & create administrator account
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO agora VALUES ('".$site_name."', '".$email."', '".$url."');");
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO users (username, password, user_role, email) VALUES ('".$username."', SHA('".$password."'), 0, '".$email."');");

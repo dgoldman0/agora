@@ -1,7 +1,7 @@
 <?php
 require_once 'settings.php';
 require_once 'data.php';
-require_once 'shop.php';
+require_once 'data/shop.php';
 
 $shop = $_GET['shop'];
 if ($shop == "")
@@ -29,13 +29,13 @@ if ($shop == "")
   	<!-- Collect the nav links, forms, and other content for toggling -->
   	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
   		<ul class="nav navbar-nav">
-  	    	<li class="active"><a href="/about.php">About</a></li>
-   	   		<li class="active"><a href="/market.php">Market</a></li>
-      		<li class="active"><a href="/stream.php">Stream</a></li>
+  	    	<li><a href="/about.php">About</a></li>
+   	   		<li><a href="/market.php">Market</a></li>
+      		<li><a href="/stream.php">Stream</a></li>
 			<?php
       		if (isAdmin($shop))
       		{
-      			echo '<li class="active"><a href="/admin.php">Administration</a></li> <!--Need to change this to only show with Admins-->';
+      			echo '<li><a href="/admin.php">Administration</a></li> <!--Need to change this to only show with Admins-->';
       		}
       		?>
     	</ul>
@@ -61,4 +61,4 @@ if ($shop == "")
 					echo '<li><a href="login.php">Login</a></li>'; 
 				}
 				echo '</ul></li></ul></div><!-- /.navbar-collapse --></nav>';
-?>
+				?>

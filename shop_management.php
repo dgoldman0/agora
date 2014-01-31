@@ -1,14 +1,12 @@
 <?php
 require_once 'data.php';
 require_once 'administration.php';
-require_once 'shop.php';
+require_once 'data/shop.php';
 
 // View
 function shopConfigView($shop = "")
 {
-	echo "<!DOCTYPE html><html><head>";
-	include 'include.php';
-	echo '</head><body><div class="container">';
+	include 'include/header.php';
 	if ($shop == "")
 	{
 		// Shop Configuration - Main Screen
@@ -48,7 +46,7 @@ function shopConfigView($shop = "")
 			
 		}
 	}
-	echo '</div></body></html>';
+	include 'footer.php';
 }
 shopConfigView($_POST["store"]);
 ?>
