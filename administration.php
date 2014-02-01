@@ -12,4 +12,15 @@ function displayAdminPanel()
 	</div>
 	<?php
 }
+function displayShopAdminPanel()
+{
+	?>
+	<div class="col-md-2">
+		<ul class="nav nav-list bs-docs-sidenav affix">
+			<li class="sidebar-brand">Administration</li>
+			<li class="active"><a href="item_management.php">Items</a></li>
+		</ul>
+	</div>
+	<?php
+}
 ?>

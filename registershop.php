@@ -76,6 +76,11 @@ if ($shopname == '')
 	include 'include/footer.php';
 } else
 {
+	if (!checkAllowsUserRegistration())
+	{
+		header("Location: index.php");
+		die();
+	}
 	$url = $_POST['url'];	
 	$short_desc = $_POST['short_desc'];
 	$stylized = $shopname;

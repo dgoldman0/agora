@@ -7,6 +7,7 @@ DEFINE("USER_PERMISSION_VIEW_USER", 16);
 DEFINE("USER_PERMISSION_EDIT_USER", 32);
 DEFINE("USER_PERMISSION_EDIT_SHOP", 64);
 DEFINE("USER_PERMISSION_MODULE", 128);
+DEFINE("USER_PERMISSION_EDIT_ITEMS", 256);
 
 // Should I cache values that will never change like user id?
 
@@ -15,6 +16,10 @@ $session = 0;
 if ($_COOKIE["session"] != "")
 {
 	$session = $_COOKIE["session"];
+}
+function checkAllowsUserRegistration()
+{
+	return false;
 }
 // Will be set in database later
 function getDefaultUserRole()

@@ -1,5 +1,4 @@
-@import url("//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css");
-
+@import url("http://jasny.github.io/bootstrap/dist/css/bootstrap.min.css");
 .vender-block {
 	border-width: 1px;
 	border-color: #cccccc #aaaaaa #999999 #aaaaaa;

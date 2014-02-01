@@ -65,10 +65,11 @@ function registerFormView()
 $username = $_POST['username'];
 
 include 'include/header.php';
+// Probably should reverse the order of the if statements to reduce repeating code
 if ($username == '')
 {
 	$id = getUserID();
-	if ($id == -1 || userRoleIncludes(USER_PERMISSION_EDIT_USER))
+	if (($id == -1 && checkAllowsUserRegistration()) || userRoleIncludes(USER_PERMISSION_EDIT_USER))
 	{
 		if ($id != -1)
 		{
@@ -89,19 +90,30 @@ if ($username == '')
 		{
 			echo '</div></div></div></div>';
 		}
+	} else
+	{
+		header("Location: index.php");
 	}
 } else
-{	$password1 = $_POST['password1'];
-	$password2 = $_POST['password2'];
-	
-	if (validatePassword($password1, $password2))
+{
+	if (($id == -1 && checkAllowsUserRegistration()) || userRoleIncludes(USER_PERMISSION_EDIT_USER))
 	{
-		$user = new User($username, $password1, getDefaultUserRole(), $_POST['email'], $_POST['first'], $_POST['last'], -1);
-		User::addUser($user);
-		if ($getUserID() == -1)
-			header('Location: login.php');
-		else
-			header('Location: index.php');
+		$password1 = $_POST['password1'];
+		$password2 = $_POST['password2'];
+		
+		if (validatePassword($password1, $password2))
+		{
+			$user = new User($username, $password1, getDefaultUserRole(), $_POST['email'], $_POST['first'], $_POST['last'], -1);
+			User::addUser($user);
+			if ($getUserID() == -1)
+				header('Location: login.php');
+			else
+				header('Location: index.php');
+		}
+	} else
+	{
+		header("Location: index.php");
+		die();
 	}
 }
 include 'include/footer.php';

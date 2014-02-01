@@ -29,6 +29,7 @@ class Shop
 		global $con;
 		mysqli_query($con, "UPDATE shop_users SET role_id=".$role." WHERE id=".$user->id.";");
 	}
+	// These functons probably belong in market.php->Market class
 	static function getShopFromName($name)
 	{
 		global $con;
