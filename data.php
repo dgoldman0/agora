@@ -22,6 +22,19 @@ if ($_COOKIE["session"] != "")
 	setcookie("session", $session, $expires);
 	mysqli_query($con, "UPDATE sessions SET expires='".$expires."' WHERE id='".$session."';");
 }
+$shop = $_GET['shop'];
+if ($shop == "")
+{
+	$shop = $_POST['shop'];
+}
+if ($shop != "")
+	$shop = toURLSafe($_GET['shop']);
+else
+	$shop = null;
+
+// Move all access to current shop into this
+$market = new Market($con, Shop::getShopFromName($shop), $session);
+
 function checkAllowsUserRegistration()
 {
 	return false;
@@ -116,7 +129,7 @@ function shopUserRoleIncludes($shop, $capability)
 	}
 }
 
-// This can basically be put into User::getUser
+// User::getUserByUsername & Username::getUserByID can replace this
 function getUserInfo($user, $shop = 0)
 {
 	global $con;
@@ -130,6 +143,7 @@ function getUserInfo($user, $shop = 0)
 	}
 	return mysqli_fetch_array($response);
 }
+// Duplicated in Market
 function getUserList($shop = 0)
 {
 	global $con;

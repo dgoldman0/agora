@@ -11,3 +11,4 @@
 7. Should I have results as strings and then echo or just have PHP send it right out?
 8. Clean up headers and footers
 9. Create a float version of the login panel
+10. "Shop together" feature

@@ -3,14 +3,12 @@
 require_once 'data.php';
 require_once 'data/shop.php';
 
-// Move getting the current shop, etc into data.php
-$shop = toURLSafe($_GET['shop']);
 function printItem($item)
 {
 	global $shop;
 	echo '<div class="col-md-6"><div class="panel panel-default"><div class="panel-heading"><a href="item.php?shop='.$shop->name.'&item='.$item->sku.'">'.$item->name.'</a></div><div class="panel-body"><p>'.$item->short_desc.'</p></div></div></div>';
 }
-if ($shop == "")
+if ($shop == "" || $shop == null)
 {
 	$protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 	// Check if the current URL matches any stores, of so, set store to that
@@ -18,7 +16,6 @@ if ($shop == "")
 	die();
 } else
 {
-	$shop = Shop::getShopFromName($shop);
 	if (!shop)
 	{
 		header("Location: ".getServiceURL());

@@ -33,10 +33,16 @@ else
   	<!-- Collect the nav links, forms, and other content for toggling -->
   	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
   		<ul class="nav navbar-nav">
-  	    	<li><a href="/about.php">About</a></li>
-   	   		<li><a href="/market.php">Market</a></li>
-      		<li><a href="/stream.php">Stream</a></li>
-			<?php
+  			<?php
+  			// List pages as menu items
+  			if (!$shop == null)
+			{
+				echo '<li><a href="/stream.php?shop='.$shop->name.'">Stream</a></li>';
+			} else
+			{
+				echo '<li><a href="/market.php">Market</a></li>';
+				echo '<li><a href="/stream.php">Stream</a></li>';
+	      	}
       		if (isAdmin($shop))
       		{
       			echo '<li><a href="/admin.php">Administration</a></li> <!--Need to change this to only show with Admins-->';

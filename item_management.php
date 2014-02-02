@@ -44,8 +44,12 @@ if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 				</div>
 				<div class="panel-body">
 					<table class="table table-striped">
-						<tr><th>Item</th><th>SKU</th><th>Description</th><th>Price</th></tr>
+						<tr><th><input id="checkall_master" type="checkbox"></th><th>Item</th><th>SKU</th><th>Description</th><th>List Price</th></tr>
 						<?php
+						foreach ($items as $item)
+						{
+							echo '<tr><td><input id="check_'.$item->sku.'" type="checkbox" class="checkall_slave"></td><td><a href="item.php?shop='.$shop->name.'&item='.$item->sku.'">'.$item->name.'</a></td><td>'.$item->sku.'</td><td>'.$item->short_desc.'</td><td>$0.00</td></tr>';
+						}
 						?>
 					</table>
 					</div>

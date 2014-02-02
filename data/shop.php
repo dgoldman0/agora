@@ -12,7 +12,7 @@ class Shop
 		$this->stylized = $stylized;
 		$this->short_desc = $short_desc;
 		$this->url = $url;
-		$this->id = $id; // Should I include this or have a separate role class
+		$this->id = $id;
 	}
 	static function addShop($shop)
 	{
@@ -74,15 +74,24 @@ class Shop
 		}
 		return $shops;
 	}
+	function getItemFromSKU($sku)
+	{
+		global $con;
+		$response = mysqli_query($con, "SELECT * FROM items WHERE sku='".$sku."';");
+		if ($row = mysqli_fetch_array($response))
+		{
+				return new Item($row['shop_id'], $row['name'], $row['sku'], $row['short_desc'], $row['long_desc'], $row['id']);
+		}
+	}
 	function getItemList($all_info)
 	{
 		global $con;
 		$items = array();
 		$response = null;
 		if ($all_info)
-			$response = mysqli_query($con, "SELECT * FROM items;");
+			$response = mysqli_query($con, "SELECT * FROM items WHERE shop_id=".$this->id.";");
 				else
-			$response = mysqli_query($con, "SELECT id FROM items;");
+			$response = mysqli_query($con, "SELECT id FROM items WHERE shop_id=".$this->id.";");
 		while ($row = mysqli_fetch_array($response))
 		{
 			if ($all_info)
