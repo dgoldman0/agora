@@ -37,8 +37,13 @@ function shopConfigView($shop = "")
 						</div>
 						<div class="panel-body">
 							<table class="table table-striped">
-								<tr><th>Shop Name</th><th>Description</th><th>URL</th><th colspan="2">Stuff</th></tr>
+								<tr><th><input id="checkall_master" type="checkbox"></th><th>Shop Name</th><th>Description</th><th>URL</th></tr>
 								<?php
+								$shops = Shop::getShopList(true);
+								foreach ($shops as $shop)
+								{
+									echo '<tr><td><input id="check_'.$shop->id.'" type="checkbox" class="checkall_slave"></td><td>'.$shop->stylized.'</td><td>'.$shop->short_desc.'</td><td>'.$shop->url.'</td></tr>';
+								}
 								?>
 							</table>
 						</div>
@@ -58,7 +63,7 @@ function shopConfigView($shop = "")
 			
 		}
 	}
-	include 'footer.php';
+	include 'include/footer.php';
 }
 shopConfigView($_POST["store"]);
 ?>

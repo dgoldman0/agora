@@ -6,9 +6,7 @@ require_once 'data/user.php';
 // Move this to include/user.php
 function userConfigurationView($user = "")
 {
-	echo "<!DOCTYPE html><html><head>";
-	include 'include.php';
-	echo '</head><body><div class="container">';
+	include 'include/header.php';
 	if ($user == "")
 	{
 		// User Configuration - Main Screen
@@ -17,11 +15,6 @@ function userConfigurationView($user = "")
 		if (userRoleIncludes(USER_PERMISSION_VIEW_USER))
 		{
 			include 'menu.php';
-			$controlscript = '
-			$( "#checkall" ).click(function() {
-				$( ".usercheck" ).prop("checked", $( "#checkall" ).prop("checked"));
-			});
-			';
 			?>
 			<div class="row">
 				<?php displayAdminPanel();?>
@@ -44,13 +37,13 @@ function userConfigurationView($user = "")
 						</div>
 						<div class="panel-body">
 							<table class="table table-striped">
-								<tr><th><input id="checkall" type="checkbox"></th><th>Username</th><th>First</th><th>Last</th><th>Email</th><th>Role</th></tr>
+								<tr><th><input id="checkall_master" type="checkbox"></th><th>Username</th><th>First</th><th>Last</th><th>Email</th><th>Role</th></tr>
 								<?php
 								$users = getUserList();
 								foreach ($users as $user)
 								{
 									$info = getUserInfo($user);
-									echo '<tr><td><input id="check_'.$info['id'].'" type="checkbox" class="usercheck"></td><td>'.$info['username'].'</td><td>'.$info['first'].'</td><td>'.$info['last'].'</td><td>'.$info['email'].'</td><td>'.$info['user_role'].'</td></tr>';
+									echo '<tr><td><input id="check_'.$info['id'].'" type="checkbox" class="checkall_slave"></td><td>'.$info['username'].'</td><td>'.$info['first'].'</td><td>'.$info['last'].'</td><td>'.$info['email'].'</td><td>'.$info['user_role'].'</td></tr>';
 								}
 								?>
 							</table>
@@ -58,7 +51,6 @@ function userConfigurationView($user = "")
 					</div>
 				</div>
 			</div>
-			<script><?php echo $controlscript?></script>
 			<?php
 		} else
 		{
@@ -77,7 +69,7 @@ function userConfigurationView($user = "")
 			echo "Shop Access Denied";
 		}
 	}
-	echo '</div></body></html>';
+	include 'include/footer.php';
 }
 userConfigurationView();
 ?>

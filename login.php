@@ -20,17 +20,17 @@ if ($_GET["logout"] == "true")
 		<fieldset>
 			<legend>Agora Login</legend>
 			<div class="form-group">
-				<label class="col-md-4 control-label" for="username">Username</label>
+				<label class="col-md-2 control-label" for="username">Username</label>
 				<div class="col-md-4">
 					<input id="username" name="username" type="text" placeholder="Username" class="form-control input-md">
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-md-4 control-label" for="password">Password</label>
+				<label class="col-md-2 control-label" for="password">Password</label>
 				<div class="col-md-4"><input id="password" name="password" type="password" placeholder="Password" class="form-control input-md"></div>
 			</div>
 			<div class="form-group">
-				<label class="col-md-4 control-label" for="singlebutton">Login</label>
+				<label class="col-md-2 control-label" for="singlebutton">Login</label>
 				<div class="col-md-2">
 					<button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
 				</div>
@@ -44,7 +44,7 @@ if ($_GET["logout"] == "true")
 } else
 {
 	// Validate Form Data and Check for Security Problems
-	$result = mysqli_query($con, "SELECT password=SHA('".$password."'), id FROM users where username='".$username."';");
+	$result = mysqli_query($con, "SELECT password=SHA2('".$password."', 512), id FROM users where username='".$username."';");
 	$row = mysqli_fetch_array($result);
 	$rkeys = array_keys($row);
 	if ($row[$rkeys[0]] == 1)
@@ -62,7 +62,7 @@ if ($_GET["logout"] == "true")
 		} while (mysql_errno() == 1062 || $first);
 		// Add cookie
 		echo $uuid;
-		setcookie("session", "".$uuid, "".$expires);
+		setcookie("session", $uuid, $expires);
 		// Redirect to index
 		header('Location: index.php');
 		die();

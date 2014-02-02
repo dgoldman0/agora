@@ -13,9 +13,14 @@ DEFINE("USER_PERMISSION_EDIT_ITEMS", 256);
 
 $con = mysqli_connect(DB_LOCATION, DB_USERNAME, DB_PASSWORD, DB_NAME);
 $session = 0;
+// Need to add a code snippet which will delete expired cookies now and then
 if ($_COOKIE["session"] != "")
 {
 	$session = $_COOKIE["session"];
+	// Reset expiration timer
+	$expires = time()+3600;
+	setcookie("session", $session, $expires);
+	mysqli_query($con, "UPDATE sessions SET expires='".$expires."' WHERE id='".$session."';");
 }
 function checkAllowsUserRegistration()
 {
@@ -45,7 +50,7 @@ function getUserID()
 function getServiceURL()
 {
 	global $con;
-	mysqli_query("SELECT url FROM agora;");
+	$response = mysqli_query($con, "SELECT url FROM agora;");
 	if ($row = mysqli_fetch_array($response))
 	{
 		return $row['url'];

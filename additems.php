@@ -64,30 +64,52 @@ if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 						<?php
 					} else
 					{
-						?>
-						<form class="form-horizontal" action="additem.php?shop="<?php echo $shop->name;?>? method="post">
-							<fieldset>
-								<div class="form-group">
-									<label class="col-md-4 control-label" for="first">Item Name</label>
-				           	   		<div class="col-md-4">
-										<input id="name" name="name" type="text" placeholder="Item Name" class="form-control input-md">
-            						</div>
-								</div>
-								<div class="form-group">
-									<label class="col-md-4 control-label" for="first">SKU</label>
-				           	   		<div class="col-md-4">
-										<input id="sku" name="sku" type="text" placeholder="SKU" class="form-control input-md">
-            						</div>
-								</div>
-								<div class="form-group">
-									<div class="col-md-4"></div>
-									<div class="col-md-2">
-										<button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
+						$name = $_POST['name'];
+						if ($name == "")
+						{
+							?>
+							<form class="form-horizontal" action="additems.php?shop=<?php echo $shop->name;?>" method="post">
+								<fieldset>
+									<div class="form-group">
+										<label class="col-md-2 control-label" for="name">Item Name</label>
+					           	   		<div class="col-md-6">
+											<input id="name" name="name" type="text" placeholder="Item Name" class="form-control input-md">
+	            						</div>
 									</div>
-								</div>
-							</fieldset>
-						</form>
-						<?php
+									<div class="form-group">
+										<label class="col-md-2 control-label" for="sku">SKU</label>
+					           	   		<div class="col-md-6">
+											<input id="sku" name="sku" type="text" placeholder="SKU" class="form-control input-md">
+	            						</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label" for="short_desc">Short Description</label>
+					           	   		<div class="col-md-6">
+											<input id="short_desc" name="short_desc" type="text" placeholder="Short Description (156 characters or less)..." class="form-control input-md">
+	            						</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label" for="desc">Description</label>
+										<div class="col-md-6">
+											<textarea rows="16" id="desc" name="desc" class="form-control"></textarea>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-md-2"></div>
+										<div class="col-md-2">
+											<button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
+										</div>
+									</div>
+								</fieldset>
+							</form>
+							<?php
+						} else
+						{
+							$item = new Item($shop->id, $name, $_POST['sku'], $_POST['short_desc'], $_POST['desc'], -1);
+							$shop->addItem($item);
+							header("Location: item.php?shop=".$shop->name."&item=".$item->sku);
+							die();
+						}
 					}
 					?>
 				</div>

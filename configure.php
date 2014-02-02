@@ -81,7 +81,7 @@ if (!mysqli_connect_errno($con))
 					// Create system wide tables
 					mysqli_query($con, "CREATE TABLE agora (site_name varchar (255) NOT NULL default '', email varchar (255) NOT NULL DEFAULT '', url VARCHAR(255) NOT NULL, PRIMARY KEY (site_name));");
 					// Add a stylized name column and set naming requirements similar to shop names
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE users (id INT(11) unsigned NOT NULL auto_increment, username varchar (50) NOT NULL DEFAULT '', password varchar (40), user_role INT(11) unsigned NOT NULL default '1', email VARCHAR (50) NOT NULL DEFAULT '', first VARCHAR(50) NOT NULL DEFAULT '', last VARCHAR(50) NOT NULL, PRIMARY KEY (id), UNIQUE KEY(username));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE users (id INT(11) unsigned NOT NULL auto_increment, username varchar (50) NOT NULL DEFAULT '', password varchar (255) NOT NULL, user_role INT(11) unsigned NOT NULL default '1', email VARCHAR (50) NOT NULL DEFAULT '', first VARCHAR(50) NOT NULL DEFAULT '', last VARCHAR(50) NOT NULL, PRIMARY KEY (id), UNIQUE KEY(username));");
 					
 					// Will have to do something about expired sessions
 					// Rename user->user_id
@@ -100,7 +100,7 @@ if (!mysqli_connect_errno($con))
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_user_role_capabilities (capability INT(11) UNSIGNED NOT NULL DEFAULT 0, role_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(capability, role_id));");
 					
 					// Items
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, shop_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, sku VARCHAR(50) NOT NULL, short_desc VARCHAR(156), long_desc TEXT NOT NULL, PRIMARY KEY(id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, shop_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, sku VARCHAR(50) NOT NULL, short_desc VARCHAR(156), long_desc TEXT NOT NULL, PRIMARY KEY(id), UNIQUE KEY(sku));");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE item_images (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, item_id INT(11) UNSIGNED NOT NULL, media_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id));");
 					
 					// Default shop id is 0 ie marketwide
@@ -125,7 +125,7 @@ if (!mysqli_connect_errno($con))
 
 					// Add settings info & create administrator account
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO agora VALUES ('".$site_name."', '".$email."', '".$url."');");
-					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO users (username, password, user_role, email) VALUES ('".$username."', SHA('".$password."'), 0, '".$email."');");
+					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO users (username, password, user_role, email) VALUES ('".$username."', SHA2('".$password."', 512), 0, '".$email."');");
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO item_price_categories (shop_id, description) VALUES (0, 'list');");
 					if (mysqli_error($con) == "")
 					{
@@ -150,7 +150,7 @@ if (!mysqli_connect_errno($con))
 	}
 } else
 {
-	echo "<html>Error Connecting</html>";
+	echo mysqli_connect_error();
 }
 $mysqli_close($con);
 ?>
