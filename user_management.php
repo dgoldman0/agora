@@ -6,6 +6,7 @@ require_once 'data/user.php';
 // Move this to include/user.php
 function userConfigurationView($user = "")
 {
+	global $market;
 	include 'include/header.php';
 	if ($user == "")
 	{
@@ -39,11 +40,11 @@ function userConfigurationView($user = "")
 							<table class="table table-striped">
 								<tr><th><input id="checkall_master" type="checkbox"></th><th>Username</th><th>First</th><th>Last</th><th>Email</th><th>Role</th></tr>
 								<?php
-								$users = getUserList();
+								// Change this to Market->getUserList(true)
+								$users = $market->getUserList(true);
 								foreach ($users as $user)
 								{
-									$info = getUserInfo($user);
-									echo '<tr><td><input id="check_'.$info['id'].'" type="checkbox" class="checkall_slave"></td><td>'.$info['username'].'</td><td>'.$info['first'].'</td><td>'.$info['last'].'</td><td>'.$info['email'].'</td><td>'.$info['user_role'].'</td></tr>';
+									echo '<tr><td><input id="check_'.$user->id.'" type="checkbox" class="checkall_slave"></td><td><a href="user.php?user='.$user->username.'&edit=true">'.$user->username.'</a></td><td>'.$user->first.'</td><td>'.$user->last.'</td><td>'.$user->email.'</td><td>'.$user->user_role.'</td></tr>';
 								}
 								?>
 							</table>

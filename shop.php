@@ -3,6 +3,7 @@
 require_once 'data.php';
 require_once 'data/shop.php';
 
+$shop = $market->shop;
 function printItem($item)
 {
 	global $shop;

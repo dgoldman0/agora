@@ -1,5 +1,7 @@
 <?php
 require_once 'settings.php';
+require_once 'data/market.php';
+require_once 'data/shop.php';
 // Constants
 DEFINE("USER_PERMISSION_VIEW_SHOP", 4);
 DEFINE("USER_PERMISSION_EDIT_SHOP", 8);
@@ -33,7 +35,15 @@ else
 	$shop = null;
 
 // Move all access to current shop into this
-$market = new Market($con, Shop::getShopFromName($shop), $session);
+if ($shop != null)
+{
+	$sshop = Shop::getShopFromName($shop);
+}
+else
+{
+	$sshop = null;
+}
+$market = new Market($con, $sshop, $session);
 
 function checkAllowsUserRegistration()
 {
