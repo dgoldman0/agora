@@ -24,14 +24,14 @@ class User
 	static function addUser($usr)
 	{
 		global $con;
-		$sql = "INSERT INTO users (username, password, user_role, email, first, last) VALUES ('".$usr->username."', SHA('".$usr->password."'), ".$usr->user_role.", '".$usr->email."', '".$usr->first."', '".$usr->last."');";
+		$sql = "INSERT INTO users (username, password, user_role, email, first, last) VALUES ('{$usr->username}', SHA('{$usr->password}'), {$usr->user_role}, '{$usr->email}', '{$usr->first}', '{$usr->last}');";
 		mysqli_query($con, $sql);		
 		// Should add a check to make sure it worked!
 	}
 	static function getUserByUsername($username)
 	{
 		global $con;
-		$response = mysqli_query($con, "SELECT * from users WHERE username='".$username."';");
+		$response = mysqli_query($con, "SELECT * from users WHERE username='{$username}';");
 		if ($row = mysqli_fetch_array($response))
 		{
 			$user = new User($row['username'], $row['user_role'], '', $row['email'], $row['first'], $row['last'], $row['id']);
@@ -41,7 +41,7 @@ class User
 	static function getUserByID($id)
 	{
 		global $con;
-		$response = mysqli_query($con, "SELECT * from users WHERE id='".$id."';");
+		$response = mysqli_query($con, "SELECT * from users WHERE id={$id};");
 		if ($row = mysqli_fetch_array($response))
 		{
 			$user = new User($row['username'], $row['user_role'], '', $row['email'], $row['first'], $row['last'], $row['id']);

@@ -2,6 +2,7 @@
 require_once 'settings.php';
 require_once 'data.php';
 require_once 'data/user.php';
+require_once 'data/activity.php';
 require_once 'administration.php';
 
 // Varies depending on whether or not there is a user signed in and he/she has user create authorization
@@ -105,7 +106,8 @@ if ($username == '')
 		{
 			$user = new User($username, $password1, getDefaultUserRole(), $_POST['email'], $_POST['first'], $_POST['last'], -1);
 			User::addUser($user);
-			if ($getUserID() == -1)
+			$market->addActivity(new Activity(null, mysqli_insert_id($con), 0, Activity::ACTIVITY_TYPE_NOTICE, $username." joined Agora", Activity::PRIVACY_LEVEL_PUBLIC));
+			if ($market->getUserID() == -1)
 				header('Location: login.php');
 			else
 				header('Location: index.php');

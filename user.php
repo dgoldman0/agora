@@ -19,6 +19,7 @@ function printUserA($user)
 }
 function printUserB($user)
 {
+	global $market;
 	?>
 	<div class="row">
 		<div class="col-md-4">
@@ -37,7 +38,22 @@ function printUserB($user)
 					Public Feed
 				</div>
 				<div class="panel-body">
-					
+					<?
+					$activity = $market->getActivity($user->id);
+					foreach ($activity as $act)
+					{
+						?>
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<?=$act->tstamp?>
+							</div>
+							<div class="panel-body">
+								<?=$act->content?>
+							</div>
+						</div>
+						<?
+					}
+					?>
 				</div>
 			</div>
 		</div>

@@ -50,7 +50,7 @@ class Market
 		$con = $this->con;
 		if ($session != 0)
 		{
-			$sql = "SELECT user, expires FROM sessions WHERE id='".$session."';";
+			$sql = "SELECT user, expires FROM sessions WHERE id='{$session}';";
 			$response = mysqli_query($con, $sql);
 			$row = mysqli_fetch_array($response);
 			if ($row["expires"] > time())
@@ -60,19 +60,28 @@ class Market
 		}
 		return -1;
 	}
+	// getActivity grabs the activity from a given user if from_id is not null
+	// getActivity grabs all friend activity for a given user if from_id is null
+	// grab the last x posts
 	function getActivity($from_id, $to_id = null, $privacy_level = 0)
 	{
-		$session = $this->session;
 		$con = $this->con;
 		$activity = array();
-		$sql = "SELECT * FROM activity WHERE privacy_level<=".$privacy_level." AND from_id=".$from_id;
-		if ($to_id != null) $sql = $sql." AND to_id=".$to_id;
-		$sql = $sql.";";
+		$sql = "SELECT * FROM activity WHERE privacy_level<={$privacy_level} AND from_id={$from_id}";
+		if ($to_id != null) $sql = "{$sql} AND to_id={$to_id}";
+		$sql = "{$sql};";
 		$response = mysqli_query($con, $sql);
 		while ($row = mysqli_fetch_array($response))
 		{
-			
+			array_push($activity, new Activity($row['tstamp'], $row['from_id'], $row['to_id'], $row['type'], $row['content'], $row['privacy_level'], $row['id']));
 		}
+		return $activity;
+	}
+	function addActivity($activity)
+	{
+		$con = $this->con;
+		$sql = "INSERT INTO activity (from_id, to_id, type, content, privacy_level) VALUES ({$activity->from_id}, {$activity->to_id}, {$activity->type}, '{$activity->content}', {$activity->privacy_level});";
+		$response = mysqli_query($con, $sql);
 	}
 }
 ?>
