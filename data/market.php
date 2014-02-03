@@ -4,12 +4,13 @@ require_once 'data/user.php';
 // Basically move stuff from data.php and any general market related functionality here
 class Market
 {
-	public $con, $shop, $session;
+	public $con, $shop, $session, $current_user;
 	public function __construct($con, $shop, $session)
 	{
 		$this->con = $con;
 		$this->shop = $shop;
 		$this->session = $session;
+		$this->current_user = User::getUserByID(getUserID());
 	}
 	function getUserList($all_info)
 	{
@@ -31,6 +32,22 @@ class Market
 			}
 		}
 		return $users;
+	}
+	function getUserID()
+	{
+		$session = $this->session;
+		$con = $this->con;
+		if ($session != 0)
+		{
+			$sql = "SELECT user, expires from sessions WHERE id='".$session."';";
+			$response = mysqli_query($con, $sql);
+			$row = mysqli_fetch_array($response);
+			if ($row["expires"] > time())
+			{
+				return $row["user"];
+			}
+		}
+		return -1;
 	}
 }
 ?>

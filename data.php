@@ -54,6 +54,7 @@ function getDefaultUserRole()
 {
 	return 1;
 }
+// Copied into Market->getUserID(). Replace all instances
 function getUserID()
 {
 	global $session;

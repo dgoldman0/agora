@@ -21,19 +21,19 @@ function shopConfigView($shop = "")
 				<div class = "col-md-10">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-  <nav class="navbar navbar-default" role="navigation">
-  <!-- Brand and toggle get grouped for better mobile display -->
-  <div class="navbar-header">
-    <a class="navbar-brand" href="/index.php">Shop Management</a>
-  </div>
-
-  <!-- Collect the nav links, forms, and other content for toggling -->
-  <div class="collapse navbar-collapse" id="shop-navigation">
-    <ul class="nav navbar-nav">
-      <li><a href="registershop.php">Add Shop</a></li>
-    </ul>
-  </div><!-- /.navbar-collapse -->
-</nav>
+						  <nav class="navbar navbar-default" role="navigation">
+						  <!-- Brand and toggle get grouped for better mobile display -->
+						  <div class="navbar-header">
+						    <a class="navbar-brand" href="/index.php">Shop Management</a>
+						  </div>
+						
+						  <!-- Collect the nav links, forms, and other content for toggling -->
+						  <div class="collapse navbar-collapse" id="shop-navigation">
+						    <ul class="nav navbar-nav">
+						      <li><a href="registershop.php">Add Shop</a></li>
+						    </ul>
+						  </div><!-- /.navbar-collapse -->
+						</nav>
 						</div>
 						<div class="panel-body">
 							<table class="table table-striped">
@@ -45,7 +45,7 @@ function shopConfigView($shop = "")
 									?>
 									<tr>
 										<td>
-											<input id="check_'.$shop->id.'" type="checkbox" class="checkall_slave">
+											<input id="check_'<?=$shop->id?>" type="checkbox" class="checkall_slave">
 										</td>
 										<td>
 											<?=$shop->stylized?>

@@ -47,7 +47,7 @@ if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 							?>
 							<tr>
 								<td>
-									<input id="check_'<?=$item->sku?>" type="checkbox" class="checkall_slave">
+									<input id="check_<?=$item->sku?>" type="checkbox" class="checkall_slave">
 								</td>
 								<td>
 									<a href="item.php?shop=<?=$sshop->name?>&item=<?=$item->sku?>">
