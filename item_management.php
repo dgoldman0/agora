@@ -32,8 +32,8 @@ if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 					  <!-- Collect the nav links, forms, and other content for toggling -->
 					  <div class="collapse navbar-collapse" id="shop-navigation">
 					    <ul class="nav navbar-nav">
-					      <li><a href="additems.php?shop=<?=$sshop->name;?>">Add Item</a></li>
-					      <li><a href="additems.php?shop=<?=$sshop->name;?>&multiple=yes">Add Multiple</a></li>
+					      <li><a href="additems.php?shop=<?=$sshop->name?>">Add Item</a></li>
+					      <li><a href="additems.php?shop=<?=$sshop->name?>&multiple=yes">Add Multiple</a></li>
 					    </ul>
 					  </div><!-- /.navbar-collapse -->
 					</nav>

@@ -2,14 +2,47 @@
 require_once 'data.php';
 function printUserA($user)
 {
-	echo '<div class="col-md-4"><div class="panel panel-default"><div class="panel-heading"><a href="user.php?user='.$user->username.'">'.$user->username.'</a></div><div class="panel-body"><p>'.$user->first.' '.$user->last.'</p></div></div></div>';
+	?>
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<a href="user.php?user=<?=$user->username?>">
+					<?=$user->username?>
+				</a>
+			</div>
+			<div class="panel-body">
+				<p><?=$user->first?> <?=$user->last?></p>
+			</div>
+		</div>
+	</div>
+	<?
 }
 function printUserB($user)
 {
-	echo '<div class="row">';
-	echo '	<div class="col-md-4"><div class="panel panel-default"><div class="panel-heading"><a href="user.php?user='.$user->username.'">'.$user->username.'</a></div><div class="panel-body"><p>'.$user->first.' '.$user->last.'</p></div></div></div>';
-	echo '	<div class="col-md-8><div class="panel panel-default"><div class="panel-heading"></div><div class="panel-body"><p></p></div></div>';
-	echo '</div>';	
+	?>
+	<div class="row">
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<a href="user.php?user=<?=$user->username?>"><?=$user->username?></a>
+				</div>
+				<div class="panel-body">
+					<p><?=$user->first?> <?=$user->last?></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Public Feed
+				</div>
+				<div class="panel-body">
+					
+				</div>
+			</div>
+		</div>
+	</div>	
+	<?
 }
 include 'include/header.php';
 include 'menu.php';

@@ -4,6 +4,14 @@ require_once 'data/user.php';
 // Basically move stuff from data.php and any general market related functionality here
 class Market
 {
+	const USER_PERMISSION_VIEW_SHOP		= 4;
+	const USER_PERMISSION_EDIT_SHOP		= 8;
+	const USER_PERMISSION_VIEW_USER		= 16;
+	const USER_PERMISSION_EDIT_USER		= 32;
+	const USER_PERMISSION_EDIT_SHOP		= 64;
+	const USER_PERMISSION_MODULE		= 128;
+	const USER_PERMISSION_EDIT_ITEMS	= 256;
+	
 	public $con, $shop, $session, $current_user;
 	public function __construct($con, $shop, $session)
 	{
@@ -39,7 +47,7 @@ class Market
 		$con = $this->con;
 		if ($session != 0)
 		{
-			$sql = "SELECT user, expires from sessions WHERE id='".$session."';";
+			$sql = "SELECT user, expires FROM sessions WHERE id='".$session."';";
 			$response = mysqli_query($con, $sql);
 			$row = mysqli_fetch_array($response);
 			if ($row["expires"] > time())
@@ -48,6 +56,20 @@ class Market
 			}
 		}
 		return -1;
+	}
+	function getActivity($from_id, $to_id = null, $privacy_level = 0)
+	{
+		$session = $this->session;
+		$con = $this->con;
+		$activity = array();
+		$sql = "SELECT * FROM activity WHERE privacy_level<=".$privacy_level." AND from_id=".$from_id;
+		if ($to_id != null) $sql = $sql." AND to_id=".$to_id;
+		$sql = $sql.";";
+		$response = mysqli_query($con, $sql);
+		while ($row = mysqli_fetch_array($response))
+		{
+			
+		}
 	}
 }
 ?>

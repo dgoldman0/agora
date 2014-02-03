@@ -1,7 +1,9 @@
 <?php
 require_once 'settings.php';
 require_once 'data.php';
+echo "Hello";
 require_once 'data/shop.php';
+echo "Hello";
 
 $shop = $_GET['shop'];
 if ($shop == "")
@@ -18,16 +20,21 @@ else
       	<span class="sr-only">Toggle navigation</span>
       	<span class="icon-bar"></span>
       	<span class="icon-bar"></span>
-      	<span class="icon-bar"></span></button><a class="navbar-brand" href="
-      	<?php
-		if (!$shop == null)
-		{
-    		echo 'shop.php?shop='.$shop->name.'">'.$shop->stylized.'</a>';
-		} else
-		{
-			echo 'index.php">Agora</a>';
-		}
+      	<span class="icon-bar"></span></button>
+      	<a class="navbar-brand" href="
+	      	<?
+			if (!$shop == null)
+			{
+	   			echo 'shop.php?shop=';
+	   			echo $shop->name;
+	   			echo '">';
+	   			echo $shop->stylized;
+			} else
+			{
+				echo 'index.php">Agora';
+			}
 		?>
+		</a>
   	</div>
 
   	<!-- Collect the nav links, forms, and other content for toggling -->
@@ -37,7 +44,9 @@ else
   			// List pages as menu items
   			if (!$shop == null)
 			{
-				echo '<li><a href="/stream.php?shop='.$shop->name.'">Stream</a></li>';
+				echo '<li><a href="/stream.php?shop=';
+				echo $shop->name;
+				echo '">Stream</a></li>';
 			} else
 			{
 				echo '<li><a href="/market.php">Market</a></li>';

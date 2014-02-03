@@ -2,7 +2,7 @@
 require_once 'settings.php';
 require_once 'data/market.php';
 require_once 'data/shop.php';
-// Constants
+// Constants: Move to Market class
 DEFINE("USER_PERMISSION_VIEW_SHOP", 4);
 DEFINE("USER_PERMISSION_EDIT_SHOP", 8);
 DEFINE("USER_PERMISSION_VIEW_USER", 16);
