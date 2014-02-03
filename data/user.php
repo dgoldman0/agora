@@ -41,7 +41,7 @@ class User
 	static function getUserByID($id)
 	{
 		global $con;
-		$response = mysqli_query($con, "SELECT * from users WHERE username='".$username."';");
+		$response = mysqli_query($con, "SELECT * from users WHERE id='".$id."';");
 		if ($row = mysqli_fetch_array($response))
 		{
 			$user = new User($row['username'], $row['user_role'], '', $row['email'], $row['first'], $row['last'], $row['id']);

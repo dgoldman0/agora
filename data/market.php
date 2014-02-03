@@ -10,7 +10,7 @@ class Market
 		$this->con = $con;
 		$this->shop = $shop;
 		$this->session = $session;
-		$this->current_user = User::getUserByID(getUserID());
+		$this->current_user = User::getUserByID($this->getUserID());
 	}
 	function getUserList($all_info)
 	{

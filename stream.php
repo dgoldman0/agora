@@ -25,7 +25,7 @@ function printStreamUpdate($heading, $inner)
 		<?php include 'menu.php'?>
                 <!-- Marketing area -->
                 <div class="jumbotron">
-                        <h1><?=$market->current_user->username?> Stream...</h1>
+                        <h1><?=$market->current_user->username?>'s Stream...</h1>
                 </div>
                 <!-- Content Sections -->
 		<div class="stream-container">
