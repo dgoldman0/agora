@@ -1,5 +1,6 @@
 <?php
 require_once 'data.php';
+require_once 'data/market.php';
 require_once 'administration.php';
 
 function moduleConfigurationView($module = "")

@@ -1,9 +1,7 @@
 <?php
 require_once 'settings.php';
 require_once 'data.php';
-echo "Hello";
 require_once 'data/shop.php';
-echo "Hello";
 
 $shop = $_GET['shop'];
 if ($shop == "")

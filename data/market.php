@@ -1,9 +1,11 @@
 <?php
 require_once 'data.php';
 require_once 'data/user.php';
+require_once 'data/activity.php';
 // Basically move stuff from data.php and any general market related functionality here
 class Market
 {
+	/*
 	const USER_PERMISSION_VIEW_SHOP		= 4;
 	const USER_PERMISSION_EDIT_SHOP		= 8;
 	const USER_PERMISSION_VIEW_USER		= 16;
@@ -11,7 +13,8 @@ class Market
 	const USER_PERMISSION_EDIT_SHOP		= 64;
 	const USER_PERMISSION_MODULE		= 128;
 	const USER_PERMISSION_EDIT_ITEMS	= 256;
-	
+	*/
+			
 	public $con, $shop, $session, $current_user;
 	public function __construct($con, $shop, $session)
 	{
