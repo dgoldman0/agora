@@ -9,18 +9,13 @@ if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 {
 	include 'include/header.php';
 	include 'menu.php';
-	$shop = $_GET['shop'];
-	if ($shop == "")
-	{
-		$shop = $_POST['shop'];
-	}
-	if ($shop == "")
+	$sshop = $market->shop;
+	if ($sshop == null)
 	{
 		// Display master item management
 	} else
 	{
-		$shop = Shop::getShopFromName(toURLSafe($shop));
-		$items = $shop->getItemList(true);
+		$items = $sshop->getItemList(true);
 		echo '<div class="row">';
 		displayShopAdminPanel();
 		?>
@@ -36,8 +31,8 @@ if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 					  <!-- Collect the nav links, forms, and other content for toggling -->
 					  <div class="collapse navbar-collapse" id="shop-navigation">
 					    <ul class="nav navbar-nav">
-					      <li><a href="additems.php?shop=<?php echo $shop->name;?>">Add Item</a></li>
-					      <li><a href="additems.php?shop=<?php echo $shop->name;?>&multiple=yes">Add Multiple</a></li>
+					      <li><a href="additems.php?shop=<?php echo $sshop->name;?>">Add Item</a></li>
+					      <li><a href="additems.php?shop=<?php echo $sshop->name;?>&multiple=yes">Add Multiple</a></li>
 					    </ul>
 					  </div><!-- /.navbar-collapse -->
 					</nav>
@@ -48,7 +43,25 @@ if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 						<?php
 						foreach ($items as $item)
 						{
-							echo '<tr><td><input id="check_'.$item->sku.'" type="checkbox" class="checkall_slave"></td><td><a href="item.php?shop='.$shop->name.'&item='.$item->sku.'">'.$item->name.'</a></td><td>'.$item->sku.'</td><td>'.$item->short_desc.'</td><td>$0.00</td></tr>';
+							?>
+							<tr>
+								<td>
+									<input id="check_'<?php echo $item->sku;?>" type="checkbox" class="checkall_slave">
+								</td>
+								<td>
+									<a href="item.php?shop=<?php echo $sshop->name;?>&item=<?php echo $item->sku;?>">
+										<?php echo $item->name;?>
+									</a>
+								</td>
+								<td>
+									<?php echo $item->sku;?>
+								</td>
+								<td>
+									<?php echo $item->short_desc;?>
+								</td>
+								<td>$0.00</td>
+							</tr>
+							<?php
 						}
 						?>
 					</table>
