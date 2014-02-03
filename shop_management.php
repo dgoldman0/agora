@@ -42,7 +42,22 @@ function shopConfigView($shop = "")
 								$shops = Shop::getShopList(true);
 								foreach ($shops as $shop)
 								{
-									echo '<tr><td><input id="check_'.$shop->id.'" type="checkbox" class="checkall_slave"></td><td>'.$shop->stylized.'</td><td>'.$shop->short_desc.'</td><td>'.$shop->url.'</td></tr>';
+									?>
+									<tr>
+										<td>
+											<input id="check_'.$shop->id.'" type="checkbox" class="checkall_slave">
+										</td>
+										<td>
+											<?=$shop->stylized?>
+										</td>
+										<td>
+											<?=$shop->short_desc?>
+										<td>
+											<?=$shop->url?>
+										</td>
+									</tr>
+									<?php
+									
 								}
 								?>
 							</table>

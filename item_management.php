@@ -4,6 +4,7 @@ require_once 'administration.php';
 require_once 'data/shop.php';
 require_once 'data/user.php';
 require_once 'data/item.php';
+require_once 'data/market.php';
 
 if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 {
@@ -31,8 +32,8 @@ if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 					  <!-- Collect the nav links, forms, and other content for toggling -->
 					  <div class="collapse navbar-collapse" id="shop-navigation">
 					    <ul class="nav navbar-nav">
-					      <li><a href="additems.php?shop=<?php echo $sshop->name;?>">Add Item</a></li>
-					      <li><a href="additems.php?shop=<?php echo $sshop->name;?>&multiple=yes">Add Multiple</a></li>
+					      <li><a href="additems.php?shop=<?=$sshop->name;?>">Add Item</a></li>
+					      <li><a href="additems.php?shop=<?=$sshop->name;?>&multiple=yes">Add Multiple</a></li>
 					    </ul>
 					  </div><!-- /.navbar-collapse -->
 					</nav>
@@ -46,18 +47,18 @@ if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 							?>
 							<tr>
 								<td>
-									<input id="check_'<?php echo $item->sku;?>" type="checkbox" class="checkall_slave">
+									<input id="check_'<?=$item->sku?>" type="checkbox" class="checkall_slave">
 								</td>
 								<td>
-									<a href="item.php?shop=<?php echo $sshop->name;?>&item=<?php echo $item->sku;?>">
-										<?php echo $item->name;?>
+									<a href="item.php?shop=<?=$sshop->name?>&item=<?=$item->sku?>">
+										<?=$item->name?>
 									</a>
 								</td>
 								<td>
-									<?php echo $item->sku;?>
+									<?=$item->sku?>
 								</td>
 								<td>
-									<?php echo $item->short_desc;?>
+									<?=$item->short_desc?>
 								</td>
 								<td>$0.00</td>
 							</tr>

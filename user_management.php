@@ -44,7 +44,28 @@ function userConfigurationView($user = "")
 								$users = $market->getUserList(true);
 								foreach ($users as $user)
 								{
-									echo '<tr><td><input id="check_'.$user->id.'" type="checkbox" class="checkall_slave"></td><td><a href="user.php?user='.$user->username.'&edit=true">'.$user->username.'</a></td><td>'.$user->first.'</td><td>'.$user->last.'</td><td>'.$user->email.'</td><td>'.$user->user_role.'</td></tr>';
+									?>
+									<tr>
+										<td>
+											<input id="check_<?=$user->id?>" type="checkbox" class="checkall_slave">
+										</td>
+										<td>
+											<a href="user.php?user=<?=$user->username?>&edit=true"><?=$user->username?></a>
+										</td>
+										<td>
+											<?=$user->first?>
+										</td>
+										<td>
+											<?=$user->last?>
+										</td>
+										<td>
+											<?=$user->email?>
+										</td>
+										<td>
+											<?=$user->user_role?>
+										</td>
+									</tr>
+									<?php
 								}
 								?>
 							</table>
