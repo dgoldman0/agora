@@ -8,4 +8,9 @@ function()
 	{
 		$( ".checkall_slave" ).prop("checked", $( "#checkall_master" ).prop("checked"));
 	});
+	$( "#autogenerate" ).click(function()
+	{
+		$( ".register-password-field" ).prop("disabled", $( "#autogenerate" ).prop("checked"));
+		$( "#autogenerate" ).blur();
+	});
 });

@@ -44,7 +44,7 @@ if ($_GET["logout"] == "true")
 } else
 {
 	// Validate Form Data and Check for Security Problems
-	$result = mysqli_query($con, "SELECT password=SHA2('".$password."', 512), id FROM users where username='".$username."';");
+	$result = mysqli_query($con, "SELECT password=SHA2('{$password}', 512), id FROM users where username='{$username}';");
 	$row = mysqli_fetch_array($result);
 	$rkeys = array_keys($row);
 	if ($row[$rkeys[0]] == 1)
@@ -57,7 +57,7 @@ if ($_GET["logout"] == "true")
 		{
 				$uuid = uniqid();
 				$expires = time()+3600;
-				mysqli_query($con, "INSERT INTO sessions VALUES ('".$uuid."', '".$row['id']."', '".$expires."');");
+				mysqli_query($con, "INSERT INTO sessions VALUES ('{$uuid}', '{$row['id']}', '{$expires}');");
 				$first = false;
 		} while (mysql_errno() == 1062 || $first);
 		// Add cookie

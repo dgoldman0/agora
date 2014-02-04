@@ -44,6 +44,14 @@ class Market
 		}
 		return $users;
 	}
+	function getMarketEmail()
+	{
+		$response = mysqli_query($this->con, "SELECT email FROM agora;");
+		if ($row = mysqli_fetch_array($response))
+		{
+			return $row['email'];
+		}
+	}
 	function getUserID()
 	{
 		$session = $this->session;

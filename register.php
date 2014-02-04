@@ -8,8 +8,9 @@ require_once 'administration.php';
 // Varies depending on whether or not there is a user signed in and he/she has user create authorization
 function registerFormView()
 {
+	global $market;
 ?>
-	<form class="form-horizontal" action="register.php" method="post">
+	<form class="form-horizontal" action="register.php" method="post" id="register-form">
 		<fieldset>
 			<legend>Register</legend>
 			<div class="form-group">
@@ -32,11 +33,16 @@ function registerFormView()
 			</div>
 			<div class="form-group">
 				<label class="col-md-2 control-label" for="password1">Password</label>
-				<div class="col-md-4"><input id="password1" name="password1" type="password" placeholder="Password" class="form-control input-md"></div>
+				<div class="col-md-4"><input id="password1" name="password1" type="password" placeholder="Password" class="form-control input-md register-password-field"></div>
 			</div>
 			<div class="form-group">
 				<label class="col-md-2 control-label" for="password2">Repeat Password</label>
-				<div class="col-md-4"><input id="password2" name="password2" type="password" placeholder="Repeat Password" class="form-control input-md"></div>
+				<div class="col-md-4"><input id="password2" name="password2" type="password" placeholder="Repeat Password" class="form-control input-md register-password-field"></div>
+			</div>
+			<? if ($market->getUserID() != -1){?>
+			<div class="form-group">
+				<label class="col-md-2 control-label" for="autogenerate">Autogenerate</label>
+				<div class="col-md-1"><input id="autogenerate" name="autogenerate" type="checkbox" class="form-control input-md"></div>
 			</div>
 			<div class="form-group">
 				<label class="col-md-2 control-label" for="email">Email</label>
@@ -49,15 +55,13 @@ function registerFormView()
 				<div class="col-md-2">
 					<button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
 				</div>
-<?php
-				if (getUserID() == -1)
-				{
-					echo '<div class="col-md-2">
-						<a href="login.php">Already registered?</a>
-					</div>';
-				}
-				?>
+				<? if ($market->getUserID() == -1){?>
+				<div class="col-md-2">
+					<a href="login.php">Already registered?</a>
+				</div>
+				<?}?>
 			</div>
+			<?}?>
 		</fieldset>
 	</form>
 <?php
@@ -99,14 +103,26 @@ if ($username == '')
 {
 	if (($id == -1 && checkAllowsUserRegistration()) || userRoleIncludes(USER_PERMISSION_EDIT_USER))
 	{
-		$password1 = $_POST['password1'];
-		$password2 = $_POST['password2'];
+		if ($_POST['autogenerate'] == "on")
+		{
+			// Get random password using random.org which uses atmospheric noise to create high quality "random" numbers
+			$password1 = trim(file_get_contents("http://www.random.org/strings/?num=1&len=12&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new"));
+			$password2 = $password1;
+			$message = "A user account was created for ({$username}) on Agora! Your temporary password is {$password1}.";
+		} else
+		{
+			$password1 = $_POST['password1'];
+			$password2 = $_POST['password2'];
+			$message = "Thanks for registering with Agora!";
+		}
 		
 		if (validatePassword($password1, $password2))
 		{
 			$user = new User($username, $password1, getDefaultUserRole(), $_POST['email'], $_POST['first'], $_POST['last'], -1);
 			User::addUser($user);
 			$market->addActivity(new Activity(null, mysqli_insert_id($con), 0, Activity::ACTIVITY_TYPE_NOTICE, $username." joined Agora", Activity::PRIVACY_LEVEL_PUBLIC));
+			$m_email = $market->getMarketEmail();
+			mail($user->email, "Registration", $message, "From: {$m_email}");
 			if ($market->getUserID() == -1)
 				header('Location: login.php');
 			else

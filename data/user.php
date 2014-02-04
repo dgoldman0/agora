@@ -24,7 +24,7 @@ class User
 	static function addUser($usr)
 	{
 		global $con;
-		$sql = "INSERT INTO users (username, password, user_role, email, first, last) VALUES ('{$usr->username}', SHA('{$usr->password}'), {$usr->user_role}, '{$usr->email}', '{$usr->first}', '{$usr->last}');";
+		$sql = "INSERT INTO users (username, password, user_role, email, first, last) VALUES ('{$usr->username}', SHA2('{$usr->password}', 512), {$usr->user_role}, '{$usr->email}', '{$usr->first}', '{$usr->last}');";
 		mysqli_query($con, $sql);		
 		// Should add a check to make sure it worked!
 	}
