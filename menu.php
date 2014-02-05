@@ -2,6 +2,7 @@
 require_once 'settings.php';
 require_once 'data.php';
 require_once 'data/shop.php';
+require_once 'data/page.php';
 
 ?>
 <nav class="navbar navbar-default" role="navigation">
@@ -32,16 +33,21 @@ require_once 'data/shop.php';
   			// List pages as menu items
   			if (!$market->shop == null)
 			{
-				echo "<li><a href=\"/stream.php?shop={$market->shop->name}\">Stream</a></li>";
+				echo "<li><a href=\"stream.php?shop={$market->shop->name}\">Stream</a></li>";
 			} else
 			{
-				echo '<li><a href="/market.php">Market</a></li>';
-				echo '<li><a href="/stream.php">Stream</a></li>';
+				echo '<li><a href="market.php">Market</a></li>';
+				echo '<li><a href="stream.php">Stream</a></li>';
 	      	}
-	      	echo "<li><a href=\"/user.php\">Members</a></li>";
+			// Display pages
+//			foreach ($market->getPageLinks() as $page1)
+//			{
+//				echo "<li><a href=\"page.php?perma={$page1->perma}\">{$page1->title}</a></li>";
+//			}
+	      	echo "<li><a href=\"user.php\">Members</a></li>";
       		if (isAdmin($market->shop))
       		{
-      			echo '<li><a href="/admin.php">Administration</a></li>';
+      			echo '<li><a href="admin.php">Administration</a></li>';
       		}
       		?>
     	</ul>

@@ -91,5 +91,53 @@ class Market
 		$sql = "INSERT INTO activity (from_id, to_id, type, content, privacy_level) VALUES ({$activity->from_id}, {$activity->to_id}, {$activity->type}, '{$activity->content}', {$activity->privacy_level});";
 		$response = mysqli_query($con, $sql);
 	}
+	function getPageByID($id)
+	{
+		$con = $this->con;
+		$response = mysqli_query($con, "SELECT * FROM pages WHERE id={$id};");
+		if ($row = mysqli_fetch_array($response))
+		{
+			return new Page($row['title'], $row['perma'], $row['shop_id'], $row['tstamp'], $row['content'], $row['type'], $row['id']);
+		}
+	}
+	function getPageByPerma($perma, $use_shop = true)
+	{
+		$con = $this->con;
+		$shop_id = 0;
+		if ($use_shop && $this->shop)
+			$shop_id = $this->shop->id;
+		$response = mysqli_query($con, "SELECT * FROM pages WHERE perma='{$perma}' AND shop_id={$shop_id};");
+		if ($row = mysqli_fetch_array($response))
+		{
+			return new Page($row['title'], $row['perma'], $row['shop_id'], $row['tstamp'], $row['content'], $row['type'], $row['id']);
+		}
+	}
+	function getPageLinks($use_shop = false)
+	{
+		$con = $this->con;
+		$shop_id = 0;
+		if ($use_shop && $this->shop)
+			$shop_id = $this->shop->id;
+		$response = mysqli_query($con, "SELECT perma, title FROM pages WHERE shop_id={$shop_id};");
+		$links = array();
+		while ($row = mysqli_fetch_array($response))
+		{
+			echo $row['perma'];
+			die();
+			array_push($links, new PageLink($row['perma'], $row['title']));
+		}
+		return $links;
+	}
+	function addPage($page)
+	{
+		$con = $this->con;
+		$page = $page->makeInjectionSafe();
+		$shop_id = $page->shop_id;
+		if ($shop_id == -1)
+			$shop_id = 0;
+		$sql = "INSERT INTO pages (title, perma, shop_id, content, type) VALUES ('{$page->title}', '{$page->perma}', {$shop_id}, '{$page->content}', {$page->type});";
+		$response = mysqli_query($con, $sql);
+		return mysqli_insert_id($con);
+	}
 }
 ?>

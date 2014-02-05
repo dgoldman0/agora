@@ -12,3 +12,5 @@
 8. Clean up headers and footers
 9. Create a float version of the login panel
 10. "Shop together" feature
+11. The system is in no way secure yet
+12. Add mysql_real_escape_string where it is needed

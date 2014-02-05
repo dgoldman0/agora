@@ -121,7 +121,7 @@ if (!mysqli_connect_errno($con))
 					
 					// Custom content
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE media (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL, type SMALLINT(5), data LONGBLOB NOT NULL, alt_text VARCHAR(255), long_desc TEXT NOT NULL, PRIMARY KEY(id));");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE pages (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, type SMALLINT(5) UNSIGNED NOT NULL DEFAULT 1, content MEDIUMBLOB NOT NULL, PRIMARY KEY(id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE pages (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, title VARCHAR(255) NOT NULL, perma VARCHAR(255) NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, tstamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, content MEDIUMBLOB NOT NULL, type SMALLINT(5) UNSIGNED NOT NULL DEFAULT 1, PRIMARY KEY(id));");
 
 					// Social Networking
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE friends (id INT(11) UNSIGNED NOT NULL, friend1 INT(11)UNSIGNED NOT NULL, friend2 INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id));");
