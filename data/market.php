@@ -122,8 +122,6 @@ class Market
 		$links = array();
 		while ($row = mysqli_fetch_array($response))
 		{
-			echo $row['perma'];
-			die();
 			array_push($links, new PageLink($row['perma'], $row['title']));
 		}
 		return $links;

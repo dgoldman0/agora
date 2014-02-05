@@ -9,7 +9,7 @@ function displayItem($item)
 	$media = $item->getItemImages(true);
 	?>
 	<div class="row">
-		<div class="col-md-1">
+		<div class="col-md-3">
 			<div id="images" class="carousel slide" data-ride="carousel">
 				<ol class="carousel-indicators">
 					<?php
@@ -42,9 +42,40 @@ function displayItem($item)
 				</div>
 			</div>
 		</div>
+		<div class="col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<?=$item->name?>
+				</div>
+				<div class="panel-body">
+					<div class="button-toolbar" role="toobar">
+						<div class="btn-group">
+							<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-shopping-cart" data-toggle="tooltip" data-placement="top" title="Add to Cart"></span></button>
+							<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-share" data-toggle="tooltip" data-placement="top" title="Share Item"></span></button>
+						</div>
+					</div>
+					<hr/>
+					<?=$item->short_desc?>
+					<hr/>
+					<?=$item->long_desc?>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3" style = "height: 100%;">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Product Information
+				</div>
+				<div class="panel-body">
+					Price: <br/>
+					Score: 
+				</div>
+			</div>
+		</div>
 	</div>
 	<?php
 }
+$shop = $market->shop;
 if ($shop != null)
 {
 	include 'include/header.php';

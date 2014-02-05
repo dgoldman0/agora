@@ -13,9 +13,21 @@ class Item
 		$this->long_desc = $long_desc;
 		$this->id = $id;
 	}
+	function makeInjectionSafe()
+	{
+		global $market;
+		$con = $market->con;
+		return new Item($this->shop_id,
+			mysqli_real_escape_string($con, $this->name),
+			mysqli_real_escape_string($con, $this->sku),
+			mysqli_real_escape_string($con, $this->short_desc),
+			mysqli_real_escape_string($con, $this->long_desc),
+			$this->id);
+	}
 	public function getItemImages($all_info)
 	{
-		global $con;
+		global $market;
+		$con = $market->con;
 		$images = array();
 		$response = null;
 		if ($all_info)

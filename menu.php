@@ -31,20 +31,21 @@ require_once 'data/page.php';
   		<ul class="nav navbar-nav">
   			<?php
   			// List pages as menu items
+			// Display pages
+			foreach ($market->getPageLinks(true) as $page1)
+			{
+				echo "<li><a href=\"page.php?perma={$page1->perma}\">{$page1->title}</a></li>";
+			}
+			echo '<li><a href="market.php">Market</a></li>';
   			if (!$market->shop == null)
 			{
+		      	echo "<li><a href=\"user.php?shop={$market->shop->name}\">Members</a></li>";
 				echo "<li><a href=\"stream.php?shop={$market->shop->name}\">Stream</a></li>";
 			} else
 			{
-				echo '<li><a href="market.php">Market</a></li>';
+		      	echo "<li><a href=\"user.php\">Members</a></li>";
 				echo '<li><a href="stream.php">Stream</a></li>';
 	      	}
-			// Display pages
-//			foreach ($market->getPageLinks() as $page1)
-//			{
-//				echo "<li><a href=\"page.php?perma={$page1->perma}\">{$page1->title}</a></li>";
-//			}
-	      	echo "<li><a href=\"user.php\">Members</a></li>";
       		if (isAdmin($market->shop))
       		{
       			echo '<li><a href="admin.php">Administration</a></li>';

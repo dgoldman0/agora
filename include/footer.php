@@ -5,5 +5,12 @@
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.0.1-p7/js/bootstrap.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.0.1-p7/extend/js/jasny-bootstrap.min.js"></script>
 		<script src="js/agora.js"></script>
+		<script src="js/opentip-jquery-min.js"></script>
+		<script>
+			$( document ).ready(function ()
+			{
+				
+			});
+		</script>
 	</body>
 </html>

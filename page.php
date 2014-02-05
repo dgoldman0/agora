@@ -11,7 +11,9 @@ if ($action == "save")
 	$shop_id = 0;
 	if ($market->shop)
 		$shop_id = $market->shop->id;
-	$page = new Page($_POST['title'], $_POST['perma'], $shop_id, null, $_POST['content'], 1, -1);
+	if (!$perma = $_POST['perma'])
+		$perma = toURLSafe($_POST['title']);
+	$page = new Page($_POST['title'], $perma, $shop_id, null, $_POST['content'], 1, -1);
 	$id = $market->addPage($page);
 	header("Location: page.php?id={$id}");
 } else
@@ -24,10 +26,10 @@ if ($action == "save")
 	{
 		?>
 		<div class="jumbotron">
-			<h1><?=$page->title?></h1>
+			<p><?=$page->title?></p>
 		</div>
 		<div class="container">
-			<?=$page->contents?>
+			<?=$page->content?>
 		</div>
 		<?
 	} else
@@ -44,6 +46,7 @@ if ($action == "save")
 					</fieldset>
 				</form>
 			</div>
+		</div>
 		<script>
 			tinymce.init({
 				selector: "textarea",

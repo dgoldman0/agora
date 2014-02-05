@@ -1,5 +1,6 @@
 <?php
 require_once 'data.php';
+require_once 'data/market.php';
 require_once 'data/item.php';
 
 class Shop
@@ -14,26 +15,31 @@ class Shop
 		$this->url = $url;
 		$this->id = $id;
 	}
+	// This needs to be moved into Market
 	static function addShop($shop)
 	{
-		global $con;
+		global $market;
+		$con = $market->con;
 		$sql = "INSERT INTO shops (name, stylized, short_desc, url) VALUES ('".$shop->name."', '".$shop->stylized."', '".$shop->short_desc."', '".$shop->url."');";
 		mysqli_query($con, $sql);
 	}
 	function addUser($user)
 	{
-		global $con;
+		global $market;
+		$con = $market->con;
 		mysqli_query($con, "INSERT INTO shop_users (id, shop_id) VALUES (".$user->id.", ".$this->id.");");
 	}
 	function setUserRole($user, $role)
 	{
-		global $con;
+		global $market;
+		$con = $market->con;
 		mysqli_query($con, "UPDATE shop_users SET role_id=".$role." WHERE id=".$user->id.";");
 	}
 	// These functons probably belong in market.php->Market class
 	static function getShopFromName($name)
 	{
-		global $con;
+		global $market;
+		$con = $market->con;
 		$response = mysqli_query($con, "SELECT * FROM shops WHERE name='".$name."';");
 		if ($row = mysqli_fetch_array($response))
 		{
@@ -43,7 +49,8 @@ class Shop
 	}
 	static function getShopFromID($id)
 	{
-		global $con;
+		global $market;
+		$con = $market->con;
 		$response = mysqli_query($con, "SELECT * FROM shops WHERE id=".$id.";");
 		if ($row = mysqli_fetch_array($response))
 		{
@@ -55,7 +62,8 @@ class Shop
 	// Should move this into Market class
 	static function getShopList($all_info)
 	{
-		global $con;
+		global $market;
+		$con = $market->con;
 		$shops = array();
 		$response = null;
 		if ($all_info)
@@ -76,7 +84,8 @@ class Shop
 	}
 	function getItemFromSKU($sku)
 	{
-		global $con;
+		global $market;
+		$con = $market->con;
 		$response = mysqli_query($con, "SELECT * FROM items WHERE sku='".$sku."';");
 		if ($row = mysqli_fetch_array($response))
 		{
@@ -85,7 +94,8 @@ class Shop
 	}
 	function getItemList($all_info)
 	{
-		global $con;
+		global $market;
+		$con = $market->con;
 		$items = array();
 		$response = null;
 		if ($all_info)
@@ -106,17 +116,18 @@ class Shop
 	}
 	static function shopExists($shopname)
 	{
-		global $con;
+		global $market;
+		$con = $market->con;
 		$response = mysqli_query($con, "SELECT id FROM shops WHERE name='".$shopname."';");
 		return ($row = mysqli_fetch_array($response));
 	}	
 	function addItem($item)
 	{
 		// Adds item to shop
-		global $con;
-		$sql = "INSERT INTO items (shop_id, name, sku, short_desc, long_desc) VALUES (".$this->id.", '".htmlentities($item->name, ENT_QUOTES)."', '".htmlentities($item->sku, ENT_QUOTES)."', '".htmlentities($item->short_desc, ENT_QUOTES)."', '".htmlentities($item->long_desc, ENT_QUOTES)."');";
-		echo $sql;
-		$response = mysqli_query($con, $sql);
+		global $market;
+		$con = $market->con;
+		$item = $item->makeInjectionSafe();
+		$response = mysqli_query($con, "INSERT INTO items (shop_id, name, sku, short_desc, long_desc) VALUES ({$this->id}, '{$item->name}', '{$item->sku}', '{$item->short_desc}', '{$item->long_desc}');");
 	}
 }
 ?>

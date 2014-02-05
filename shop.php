@@ -13,15 +13,10 @@ if ($shop == "" || $shop == null)
 {
 	$protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 	// Check if the current URL matches any stores, of so, set store to that
-	header("Location: ".$protocol.getServiceURL());
+//	header("Location: ".$protocol.getServiceURL());
 	die();
 } else
 {
-	if (!shop)
-	{
-		header("Location: ".getServiceURL());
-		die();
-	}
 	include 'include/header.php';
 	include 'menu.php';
     echo '<div class="jumbotron">';

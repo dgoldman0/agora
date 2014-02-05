@@ -34,6 +34,7 @@ if ($shop != "")
 else
 	$shop = null;
 
+$market = new Market($con, null, $session);
 // Move all access to current shop into this
 if ($shop != null)
 {
@@ -43,7 +44,7 @@ else
 {
 	$sshop = null;
 }
-$market = new Market($con, $sshop, $session);
+$market->shop = $sshop;
 
 function checkAllowsUserRegistration()
 {

@@ -72,25 +72,25 @@ if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 								<fieldset>
 									<div class="form-group">
 										<label class="col-md-2 control-label" for="name">Item Name</label>
-					           	   		<div class="col-md-6">
+					           	   		<div class="col-md-10">
 											<input id="name" name="name" type="text" placeholder="Item Name" class="form-control input-md">
 	            						</div>
 									</div>
 									<div class="form-group">
 										<label class="col-md-2 control-label" for="sku">SKU</label>
-					           	   		<div class="col-md-6">
+					           	   		<div class="col-md-10">
 											<input id="sku" name="sku" type="text" placeholder="SKU" class="form-control input-md">
 	            						</div>
 									</div>
 									<div class="form-group">
 										<label class="col-md-2 control-label" for="short_desc">Short Description</label>
-					           	   		<div class="col-md-6">
+					           	   		<div class="col-md-10">
 											<input id="short_desc" name="short_desc" type="text" placeholder="Short Description (156 characters or less)..." class="form-control input-md">
 	            						</div>
 									</div>
 									<div class="form-group">
 										<label class="col-md-2 control-label" for="desc">Description</label>
-										<div class="col-md-6">
+										<div class="col-md-10">
 											<textarea rows="16" id="desc" name="desc" class="form-control"></textarea>
 										</div>
 									</div>
@@ -115,6 +115,17 @@ if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 				</div>
 			</div>
 		</div>
+		<script>
+			tinymce.init({
+				selector: "textarea",
+				plugins: [
+					"advlist autolink lists link image charmap print preview anchor",
+					"searchreplace visualblocks code fullscreen",
+					"insertdatetime media table contextmenu paste"
+				],
+				toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+				autosave_ask_before_unload: false});
+		</script>
 		<?php
 		include 'include/footer.php';
 	}
