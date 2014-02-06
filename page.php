@@ -22,6 +22,7 @@ if ($action == "save")
 		$page = $market->getPageByID($id);
 	else if ($perma = $_GET['perma'])
 		$page = $market->getPageByPerma($perma);
+	$market->active=$perma;
 	if ($page)
 	{
 		?>

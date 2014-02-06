@@ -3,9 +3,11 @@ require_once 'data.php';
 require_once 'data/shop.php';
 require_once 'data/user.php';
 require_once 'data/item.php';
+require_once 'data/activity.php';
 
 function displayItem($item)
 {
+	global $shop, $market;
 	$media = $item->getItemImages(true);
 	?>
 	<div class="row">
@@ -17,9 +19,9 @@ function displayItem($item)
 					for ($i = 0; $i < c; $i++)
 					{
 						if ($i = 0)
-							echo '<li data-target="#images" data-slide-to="'.$i.'" class="active""></li>';
+							echo "<li data-target=\"#images\" data-slide-to=\"{$i}\" class=\"active\"></li>";
 						else
-							echo '<li data-target="#images" data-slide-to="'.$i.'"></li>';
+							echo "<li data-target=\"#images\" data-slide-to=\"{$i}\"></li>";
 					}
 					?>
 				</ol>
@@ -36,7 +38,7 @@ function displayItem($item)
 						{
 							echo '<div class="item">';
 						}
-						echo '<img data-src="medium.php?name='.$medium->$name.'" alt="'.$medium->alt_text.'"></div>';
+						echo "<img data-src=\"medium.php?name={$medium->$name}\" alt=\"{$medium->alt_text}\"></div>";
 					}
 					?>
 				</div>
@@ -50,8 +52,8 @@ function displayItem($item)
 				<div class="panel-body">
 					<div class="button-toolbar" role="toobar">
 						<div class="btn-group">
-							<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-shopping-cart" data-toggle="tooltip" data-placement="top" title="Add to Cart"></span></button>
-							<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-share" data-toggle="tooltip" data-placement="top" title="Share Item"></span></button>
+							<button type="button" onClick="addItem('<?=$item->sku?>', '<?=$shop->name?>');" class="btn btn-default"><span class="glyphicon glyphicon-shopping-cart" data-toggle="tooltip" data-placement="top" title="Add to Cart"></span></button>
+							<button type="button" onClick="likeItem('<?=$item->sku?>', '<?=$shop->name?>');" class="btn btn-default"><span class="glyphicon glyphicon-heart" data-toggle="tooltip" data-placement="top" title="Like"></span></button>
 						</div>
 					</div>
 					<hr/>
@@ -75,14 +77,34 @@ function displayItem($item)
 	</div>
 	<?php
 }
+// Most of this should be moved. It shouldn't be in the "view"
 $shop = $market->shop;
 if ($shop != null)
 {
-	include 'include/header.php';
-	include 'menu.php';
+	$action = $_GET['action'];
 	$sku = $_GET['item'];
-	displayItem($shop->getItemFromSKU($sku));
-	include 'include/footer.php';
+	if ($action == "like")
+	{
+		// Check if already liked, if so, remove
+		$item = $shop->getItemFromSKU($sku);
+		if ($market->alreadyLiked($item))
+		{
+			$market->removeLike($item);
+			echo "Unliked {$sku}";
+		} else
+		{
+			$act = new Activity(null, $market->getUserID(), 0, $shop->id, Activity::ACTIVITY_TYPE_LIKE, $sku, Activity::PRIVACY_LEVEL_PUBLIC);
+			$market->addActivity($act);
+			echo "Liked {$sku}";
+		}
+		die();
+	} else
+	{
+		include 'include/header.php';
+		include 'menu.php';
+		displayItem($shop->getItemFromSKU($sku));
+		include 'include/footer.php';
+	}
 } else
 {
 	header("Location: index.php");

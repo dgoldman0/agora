@@ -125,7 +125,7 @@ if (!mysqli_connect_errno($con))
 
 					// Social Networking
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE friends (id INT(11) UNSIGNED NOT NULL, friend1 INT(11)UNSIGNED NOT NULL, friend2 INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id));");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE activity (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, tstamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, from_id INT(11) UNSIGNED NOT NULL, to_id INT(11) UNSIGNED NOT NULL, type SMALLINT(5) UNSIGNED NOT NULL DEFAULT 1, content MEDIUMBLOB NOT NULL, privacy_level SMALLINT(5), PRIMARY KEY(id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE activity (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, tstamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, from_id INT(11) UNSIGNED NOT NULL, to_id INT(11) UNSIGNED NOT NULL, shop_id INT(11) UNSIGNED NOT NULL DEFAULT 0, type SMALLINT(5) UNSIGNED NOT NULL DEFAULT 1, content MEDIUMBLOB NOT NULL, privacy_level SMALLINT(5), PRIMARY KEY(id));");
 					
 					// Add settings info & create administrator account
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO agora VALUES ('".$site_name."', '".$email."', '".$url."');");

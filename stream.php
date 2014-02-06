@@ -16,6 +16,7 @@ function printStreamUpdate($heading, $inner)
 }
 include 'include/header.php';
 include 'menu.php';
+$market->active = "stream";
 ?>
                 <div class="jumbotron">
                         <h1><?=$market->current_user->username?>'s Stream...</h1>

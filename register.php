@@ -120,7 +120,10 @@ if ($username == '')
 		{
 			$user = new User($username, $password1, getDefaultUserRole(), $_POST['email'], $_POST['first'], $_POST['last'], -1);
 			User::addUser($user);
-			$market->addActivity(new Activity(null, mysqli_insert_id($con), 0, Activity::ACTIVITY_TYPE_NOTICE, $username." joined Agora", Activity::PRIVACY_LEVEL_PUBLIC));
+			$shop_id = 0;
+			if ($market->shop)
+				$shop_id = $market->shop->id;
+			$market->addActivity(new Activity(null, mysqli_insert_id($con), 0, $shop_id, Activity::ACTIVITY_TYPE_NOTICE, "{$username} joined Agora", Activity::PRIVACY_LEVEL_PUBLIC));
 			$m_email = $market->getMarketEmail();
 			mail($user->email, "Registration", $message, "From: {$m_email}");
 			if ($market->getUserID() == -1)

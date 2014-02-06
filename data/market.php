@@ -15,7 +15,7 @@ class Market
 	const USER_PERMISSION_EDIT_ITEMS	= 256;
 	*/
 			
-	public $con, $shop, $session, $current_user;
+	public $con, $shop, $session, $current_user, $active;
 	public function __construct($con, $shop, $session)
 	{
 		$this->con = $con;
@@ -71,25 +71,52 @@ class Market
 	// getActivity grabs the activity from a given user if from_id is not null
 	// getActivity grabs all friend activity for a given user if from_id is null
 	// grab the last x posts
-	function getActivity($from_id, $to_id = null, $privacy_level = 0)
+	function getActivity($params)
 	{
 		$con = $this->con;
 		$activity = array();
+		$from_id = $params['from_id'];
+		$to_id = $params['to_id'];
+		$order = $params['order'];
+		if (!$privacy_level = $params['privacy_level'])
+			$privacy_level = 0;
 		$sql = "SELECT * FROM activity WHERE privacy_level<={$privacy_level} AND from_id={$from_id}";
 		if ($to_id != null) $sql = "{$sql} AND to_id={$to_id}";
+		if ($order != null) $sql = "{$sql} ORDER BY tstamp {$order}";
 		$sql = "{$sql};";
 		$response = mysqli_query($con, $sql);
 		while ($row = mysqli_fetch_array($response))
 		{
-			array_push($activity, new Activity($row['tstamp'], $row['from_id'], $row['to_id'], $row['type'], $row['content'], $row['privacy_level'], $row['id']));
+			array_push($activity, new Activity($row['tstamp'], $row['from_id'], $row['to_id'], $row['shop_id'], $row['type'], $row['content'], $row['privacy_level'], $row['id']));
 		}
 		return $activity;
 	}
 	function addActivity($activity)
 	{
 		$con = $this->con;
-		$sql = "INSERT INTO activity (from_id, to_id, type, content, privacy_level) VALUES ({$activity->from_id}, {$activity->to_id}, {$activity->type}, '{$activity->content}', {$activity->privacy_level});";
+		$sql = "INSERT INTO activity (from_id, to_id, shop_id, type, content, privacy_level) VALUES ({$activity->from_id}, {$activity->to_id}, {$activity->shop_id}, {$activity->type}, '{$activity->content}', {$activity->privacy_level});";
 		$response = mysqli_query($con, $sql);
+	}
+	function alreadyLiked($item)
+	{
+		$con = $this->con;
+		$type = ACTIVITY::ACTIVITY_TYPE_LIKE;
+		$sql = "SELECT id FROM activity WHERE content='{$item->sku}' AND type={$type} AND shop_id={$item->shop_id};";
+		$response = mysqli_query($con, $sql);
+		if ($row = mysqli_fetch_array($response))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	function removeLike($item)
+	{
+		$con = $this->con;
+		$type = ACTIVITY::ACTIVITY_TYPE_LIKE;
+		$response = mysqli_query($con, "DELETE FROM activity WHERE content='{$item->sku}' AND type={$type} AND shop_id={$item->shop_id};");
 	}
 	function getPageByID($id)
 	{

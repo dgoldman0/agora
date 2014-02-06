@@ -9,7 +9,7 @@
 		<script>
 			$( document ).ready(function ()
 			{
-				
+				$( "#<?=$market->active?>" ).addClass("active");
 			});
 		</script>
 	</body>

@@ -39,19 +39,36 @@ function printUserB($user)
 				</div>
 				<div class="panel-body">
 					<?
-					$activity = $market->getActivity($user->id);
+					$activity = $market->getActivity(array("from_id" => $user->id, "order" => "desc"));
 					foreach ($activity as $act)
 					{
-						?>
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<?=$act->tstamp?>
+						if ($act->type == Activity::ACTIVITY_TYPE_NOTICE)
+						{
+							?>
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<?=$act->tstamp?>
+								</div>
+								<div class="panel-body">
+									<?=$act->content?>
+								</div>
 							</div>
-							<div class="panel-body">
-								<?=$act->content?>
+							<?
+						} else if ($act->type == Activity::ACTIVITY_TYPE_LIKE)
+						{
+							$shop = Shop::getShopFromID($act->shop_id);
+							$item = $shop->getItemFromSKU($act->content);
+							?>
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<?=$act->tstamp?>
+								</div>
+								<div class="panel-body">
+									<?=$user->username?> liked <a href="item.php?shop=<?=$shop->name?>&item=<?=$item->sku?>"><?=$item->name?></a>.
+								</div>
 							</div>
-						</div>
-						<?
+							<?
+						}
 					}
 					?>
 				</div>
@@ -62,6 +79,7 @@ function printUserB($user)
 }
 include 'include/header.php';
 include 'menu.php';
+$market->active="members";
 $username = $_GET['user'];
 if ($username == "")
 {

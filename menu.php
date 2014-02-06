@@ -34,21 +34,21 @@ require_once 'data/page.php';
 			// Display pages
 			foreach ($market->getPageLinks(true) as $page1)
 			{
-				echo "<li><a href=\"page.php?perma={$page1->perma}\">{$page1->title}</a></li>";
+				echo "<li id=\"{$page1->perma}\"><a href=\"page.php?perma={$page1->perma}\">{$page1->title}</a></li>";
 			}
-			echo '<li><a href="market.php">Market</a></li>';
+			echo "<li id=\"market\"><a href=\"market.php\">Market</a></li>";
   			if (!$market->shop == null)
 			{
-		      	echo "<li><a href=\"user.php?shop={$market->shop->name}\">Members</a></li>";
-				echo "<li><a href=\"stream.php?shop={$market->shop->name}\">Stream</a></li>";
+		      	echo "<li id=\"members\"><a href=\"user.php?shop={$market->shop->name}\">Members</a></li>";
+				echo "<li id=\"stream\"><a href=\"stream.php?shop={$market->shop->name}\">Stream</a></li>";
 			} else
 			{
-		      	echo "<li><a href=\"user.php\">Members</a></li>";
-				echo '<li><a href="stream.php">Stream</a></li>';
+		      	echo "<li id=\"members\"><a href=\"user.php\">Members</a></li>";
+				echo "<li id=\"stream\"><a href=\"stream.php\">Stream</a></li>";
 	      	}
       		if (isAdmin($market->shop))
       		{
-      			echo '<li><a href="admin.php">Administration</a></li>';
+      			echo "<li id=\"admin\"><a href=\"admin.php\">Administration</a></li>";
       		}
       		?>
     	</ul>
