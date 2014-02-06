@@ -19,3 +19,6 @@ function likeItem(sku, shop)
 	$.get( "item.php", {action: 'like', shop: shop, item: sku}).done(function( data ) {
     alert( "Data Loaded: " + data );});
 }
+$( document ).tooltip();
+$( "#chat" ).dialog();
+$( "#tabs" ).tabs();

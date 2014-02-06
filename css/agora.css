@@ -5,3 +5,9 @@
 	border-color: #cccccc #aaaaaa #999999 #aaaaaa;
 	border-style: solid;
 }
+#message_bar
+{
+   position: absolute;
+   bottom: 0px;
+   height:20px;
+}
