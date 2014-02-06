@@ -108,9 +108,9 @@ if (!mysqli_connect_errno($con))
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE item_prices (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, item_id INT(11) UNSIGNED NOT NULL, price_category INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id));");
 
 					// Cart & Bag tables
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shopping_carts (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, owner_id INT(11) NOT NULL, name VARCHAR(255) NOT NULL DEFAULT '', wishlist TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(id));");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shopping_bags (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, cart_id INT(11) NOT NULL, store_id INT(11) NOT NULL, name VARCHAR(255) NOT NULL DEFAULT '', wishlist TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(id));");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE bag_items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, item_id INT(11) UNSIGNED NOT NULL, public TINYINT(1), PRIMARY KEY(id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shopping_carts (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, owner_id INT(11) UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL DEFAULT '', wishlist TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shopping_bags (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, cart_id INT(11) UNSIGNED NOT NULL, store_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE bag_items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, bag_id INT(11) UNSIGNED NOT NULL, item_id INT(11) UNSIGNED NOT NULL, public TINYINT(1), PRIMARY KEY(id));");
 					// Invoice tables
 
 					// Product Reviews

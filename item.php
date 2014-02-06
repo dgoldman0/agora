@@ -52,8 +52,12 @@ function displayItem($item)
 				<div class="panel-body">
 					<div class="button-toolbar" role="toobar">
 						<div class="btn-group">
-							<button type="button" onClick="addItem('<?=$item->sku?>', '<?=$shop->name?>');" class="btn btn-default"><span class="glyphicon glyphicon-shopping-cart" title="Add to Cart"></span></button>
-							<button type="button" onClick="likeItem('<?=$item->sku?>', '<?=$shop->name?>');" class="btn btn-default"><span class="glyphicon glyphicon-heart" title="Like"></span></button>
+							<button type="button" onClick="addItem('<?=$item->sku?>', '<?=$shop->name?>');" class="btn btn-default"><span id="bagadd" class="glyphicon glyphicon-briefcase" title="Add to Bag"></span></button>
+							<? if ($market->alreadyLiked($item)) {?>
+							<button type="button" onClick="likeItem('<?=$item->sku?>', '<?=$shop->name?>');" class="btn btn-default"><span id="like" class="glyphicon glyphicon-heart-empty" title="Like"></span></button>
+							<?} else {?>
+							<button type="button" onClick="likeItem('<?=$item->sku?>', '<?=$shop->name?>');" class="btn btn-default"><span id="like" class="glyphicon glyphicon-heart" title="Like"></span></button>
+							<?}?>
 						</div>
 					</div>
 					<hr/>

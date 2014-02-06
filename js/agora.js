@@ -17,7 +17,13 @@ function()
 function likeItem(sku, shop)
 {
 	$.get( "item.php", {action: 'like', shop: shop, item: sku}).done(function( data ) {
-    alert( "Data Loaded: " + data );});
+//    alert( "Data Loaded: " + data );});
+    var like = $( "#like ");
+    like.blur();
+    if (like.attr('class') == 'glyphicon glyphicon-heart-empty')
+    	like.attr('class', 'glyphicon glyphicon-heart');
+    else
+    	like.attr('class', 'glyphicon glyphicon-heart-empty');
 }
 $( document ).tooltip();
 $( "#chat" ).dialog();
