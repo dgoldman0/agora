@@ -2,6 +2,7 @@
 require_once 'data.php';
 require_once 'data/user.php';
 require_once 'data/activity.php';
+require_once 'data/cart.php';
 // Basically move stuff from data.php and any general market related functionality here
 class Market
 {
@@ -50,6 +51,30 @@ class Market
 		if ($row = mysqli_fetch_array($response))
 		{
 			return $row['email'];
+		}
+	}
+	function createNewCart($cart)
+	{
+		$response = mysqli_query($this->con, "INSERT INTO shopping_carts (owner_id, name, wishlist, active) VALUES ({$cart->owner_id}, '{$cart->name}', {$cart->wishlist}, {$cart->active});");
+		if ($row = mysqli_fetch_array($response))
+		{
+			return mysqli_insert_id($con);
+		}
+	}
+	function getCart($cart_id)
+	{
+		$response = mysqli_query($this->con, "SELECT * FROM shopping_carts WHERE id={$cart_id};");
+		if ($row = mysqli_fetch_array($response))
+		{
+			return new Cart($row['owner_id'], $row['name'], $row['wishlist'], $row['active'], $row['id']);
+		}
+	}
+	function getBag($bag_id)
+	{
+		$response = mysqli_query($this->con, "SELECT * FROM shopping_bags WHERE id={$bag_id};");
+		if ($row = mysqli_fetch_array($response))
+		{
+			return new Bag($row['cart_id'], $row['shop_id'], $row['active'], $row['id']);
 		}
 	}
 	function getUserID()

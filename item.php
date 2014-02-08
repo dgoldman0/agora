@@ -3,51 +3,98 @@ require_once 'data.php';
 require_once 'data/shop.php';
 require_once 'data/user.php';
 require_once 'data/item.php';
+require_once 'data/cart.php';
+require_once 'data/bag.php';
 require_once 'data/activity.php';
 
 function displayItem($item)
 {
 	global $shop, $market;
-	$media = $item->getItemImages(true);
+	if ($market->getUserID() != -1)
+	{
+		$media = $item->getItemImages(true);
+		if (!$bag_id = $_GET['bag_id'])
+		{
+			if (!$cart_id = $market->current_user->getActiveCart())
+			{
+				$cart_id = $market->createNewCart(new Cart($market->current_user->id, "", 0, TRUE, -1));
+			}
+			$cart = $market->getCart($cart_id);
+			if (!$bag_id = $cart->getActiveBag($shop->id))
+			{
+				$bag_id = $cart->createNewBag(new Bag(-1, $shop->id, TRUE, -1));
+			}
+		}
+		$bag = $market->getBag($bag_id);
+	}
 	?>
 	<div class="row">
-		<div class="col-md-3">
-			<div id="images" class="carousel slide" data-ride="carousel">
-				<ol class="carousel-indicators">
-					<?php
-					$c = count($media);
-					for ($i = 0; $i < c; $i++)
-					{
-						if ($i = 0)
-							echo "<li data-target=\"#images\" data-slide-to=\"{$i}\" class=\"active\"></li>";
-						else
-							echo "<li data-target=\"#images\" data-slide-to=\"{$i}\"></li>";
-					}
-					?>
-				</ol>
-				<div class="carousel-inner">
-					<?php
-					$first = true;
-					foreach ($media as $medium)
-					{
-						if ($first)
-						{
-							$first = false;
-							echo '<div class="item active">';
-						} else
-						{
-							echo '<div class="item">';
-						}
-						echo "<img data-src=\"medium.php?name={$medium->$name}\" alt=\"{$medium->alt_text}\"></div>";
-					}
-					?>
-				</div>
-			</div>
-		</div>
-		<div class="col-sm-6">
+		<div class="col-sm-9">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<?=$item->name?>
+				</div>
+				<div class="panel-body">
+							<div id="images" class="carousel slide" data-ride="carousel">
+								<ol class="carousel-indicators">
+									<?php
+									$c = count($media);
+									if (c == 0)
+									{
+										echo "<li data-target=\"#images\" data-slide-to=\"0\" class=\"active\"></li>";
+									} else
+									{
+										for ($i = 0; $i < c; $i++)
+										{
+											if ($i = 0)
+												echo "<li data-target=\"#images\" data-slide-to=\"{$i}\" class=\"active\"></li>";
+											else
+												echo "<li data-target=\"#images\" data-slide-to=\"{$i}\"></li>";
+										}
+									}
+									?>
+								</ol>
+								<div class="carousel-inner">
+									<?php
+									if (c == 0)
+									{
+										echo "<div class=\"item active\"><img src=\"images/default.png\" alt=\"Default\"/></div>";
+									} else
+									{
+										$first = true;
+										foreach ($media as $medium)
+										{
+											if ($first)
+											{
+												$first = false;
+												echo '<div class="item active">';
+											} else
+											{
+												echo '<div class="item">';
+											}
+											echo "<img data-src=\"medium.php?name={$medium->$name}\" alt=\"{$medium->alt_text}\"></div>";
+										}
+									}
+									?>
+								</div>
+							  <!-- Controls -->
+							  <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+							    <span class="glyphicon glyphicon-chevron-left"></span>
+							  </a>
+							  <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+							    <span class="glyphicon glyphicon-chevron-right"></span>
+							  </a>
+  							</div>
+					<?=$item->short_desc?>
+					<hr/>
+					<?=$item->long_desc?>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3" style = "height: 100%;">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Product Information
 				</div>
 				<div class="panel-body">
 					<div class="button-toolbar" role="toobar">
@@ -61,20 +108,18 @@ function displayItem($item)
 						</div>
 					</div>
 					<hr/>
-					<?=$item->short_desc?>
-					<hr/>
-					<?=$item->long_desc?>
+					Price: <br/>
+					Score: 
 				</div>
 			</div>
 		</div>
 		<div class="col-sm-3" style = "height: 100%;">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					Product Information
+					Current Shopping Bag
 				</div>
 				<div class="panel-body">
-					Price: <br/>
-					Score: 
+					Items: <span id="item_count"><?=$bag->item_count?></span>
 				</div>
 			</div>
 		</div>
@@ -86,11 +131,16 @@ $shop = $market->shop;
 if ($shop != null)
 {
 	$action = $_GET['action'];
-	$sku = $_GET['item'];
+	if ($sku = $_GET['item'])
+		$item = $shop->getItemFromSKU($sku);
+	
 	if ($action == "like")
 	{
+		// Right now just die, but eventually send an error code
+		if ($market->getUserID() == -1)
+			die();
+
 		// Check if already liked, if so, remove
-		$item = $shop->getItemFromSKU($sku);
 		if ($market->alreadyLiked($item))
 		{
 			$market->removeLike($item);
@@ -102,6 +152,27 @@ if ($shop != null)
 			echo "Liked {$sku}";
 		}
 		die();
+	} else if ($action == "addtobag")
+	{
+		if ($market->getUserID() == -1)
+			die();
+
+		if (!$bag_id = $_GET['bag_id'])
+		{
+			if (!$cart_id = $market->current_user->getActiveCart())
+			{
+				$cart_id = $market->createNewCart(new Cart($market->current_user->id, "", 0, TRUE, -1));
+			}
+			$cart = $market->getCart($cart_id);
+			if (!$bag_id = $cart->getActiveBag($shop->id))
+			{
+				$bag_id = $cart->createNewBag(new Bag(-1, $shop->id, TRUE, -1));
+			}
+		}
+		$bag = $market->getBag($bag_id);
+		$bag->addItem($item);
+		$bag->item_count = $bag->item_count + 1;
+		echo json_encode(get_object_vars($bag));
 	} else
 	{
 		include 'include/header.php';

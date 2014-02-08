@@ -21,9 +21,22 @@ class User
 		$this->last = $last;
 		$this->id = $id;
 	}
+	function getActiveCart()
+	{
+		global $market;
+		$con = $market->con;
+		$sql = "SELECT id FROM shopping_carts WHERE owner_id = {$this->id} AND active=true;";
+		$response = mysqli_query($con, $sql);
+		if ($row = mysqli_fetch_array($response))
+		{
+			return $row['id'];
+		}
+	}
+	// Static functions should be moved to Market
 	static function addUser($usr)
 	{
-		global $con;
+		global $market;
+		$con = $market->con;
 		$sql = "INSERT INTO users (username, password, user_role, email, first, last) VALUES ('{$usr->username}', SHA2('{$usr->password}', 512), {$usr->user_role}, '{$usr->email}', '{$usr->first}', '{$usr->last}');";
 		mysqli_query($con, $sql);		
 		// Should add a check to make sure it worked!

@@ -5,6 +5,13 @@
 	border-color: #cccccc #aaaaaa #999999 #aaaaaa;
 	border-style: solid;
 }
+#images
+{
+	float: left;
+	margin-right: 5px;
+	width: 200px;
+	height: 200px;
+}
 #message_bar
 {
    position: absolute;
