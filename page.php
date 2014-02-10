@@ -14,7 +14,9 @@ if ($action == "save")
 		$shop_id = $market->shop->id;
 	if (!$perma = $_POST['perma'])
 		$perma = toURLSafe($_POST['title']);
-	$page = new Page($_POST['title'], $perma, $shop_id, null, $_POST['content'], 1, -1);
+	if (!$id = $_GET['id'])
+		$id = -1;
+	$page = new Page($_POST['title'], $perma, $shop_id, null, $_POST['content'], 1, $id);
 	$id = $market->addPage($page);
 	header("Location: page.php?id={$id}");
 } else
@@ -45,12 +47,13 @@ if ($action == "save")
 			$title = $page->title;
 			$content = $page->content;
 			$legend = "Edit Page";
+			$final = "&id={$page->id}";
 		}
 		?>
 		<div class="row">
 			<?displayAdminPanel();?>
 			<div class="col-md-10">
-				<form class="form-horizontal" action="page.php?action=save" method="post" id="register-form">
+				<form class="form-horizontal" action="page.php?action=save<?=$final?>" method="post" id="register-form">
 					<fieldset>
 						<legend><?=$legend?></legend>
 						<input type="text" name="title" class="form-control input-md" placeholder="<?=$placeholder?>" value="<?=$title?>" style="margin-bottom: 5px;">

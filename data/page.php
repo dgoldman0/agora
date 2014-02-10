@@ -22,7 +22,7 @@ class Page
 		$con = $market->con;
 		return new Page(mysqli_real_escape_string($con, $this->title),
 			mysqli_real_escape_string($con, $this->perma),
-			$this->id,
+			$this->shop_id,
 			$this->tstamp,
 			mysqli_real_escape_string($con, $this->content),
 			$this->type,

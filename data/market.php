@@ -152,22 +152,24 @@ class Market
 		$type = ACTIVITY::ACTIVITY_TYPE_LIKE;
 		$response = mysqli_query($con, "DELETE FROM activity WHERE content='{$item->sku}' AND type={$type} AND shop_id={$item->shop_id};");
 	}
+	// Gets the newest version by default
 	function getPageByID($id)
 	{
 		$con = $this->con;
-		$response = mysqli_query($con, "SELECT * FROM pages WHERE id={$id};");
+		$response = mysqli_query($con, "SELECT * FROM pages WHERE id={$id} ORDER BY tstamp DESC;");
 		if ($row = mysqli_fetch_array($response))
 		{
 			return new Page($row['title'], $row['perma'], $row['shop_id'], $row['tstamp'], $row['content'], $row['type'], $row['id']);
 		}
 	}
+	// Gets the newest version by default
 	function getPageByPerma($perma, $use_shop = true)
 	{
 		$con = $this->con;
 		$shop_id = 0;
 		if ($use_shop && $this->shop)
 			$shop_id = $this->shop->id;
-		$response = mysqli_query($con, "SELECT * FROM pages WHERE perma='{$perma}' AND shop_id={$shop_id};");
+		$response = mysqli_query($con, "SELECT * FROM pages WHERE perma='{$perma}' AND shop_id={$shop_id} ORDER BY tstamp DESC;");
 		if ($row = mysqli_fetch_array($response))
 		{
 			return new Page($row['title'], $row['perma'], $row['shop_id'], $row['tstamp'], $row['content'], $row['type'], $row['id']);
@@ -194,7 +196,13 @@ class Market
 		$shop_id = $page->shop_id;
 		if ($shop_id == -1)
 			$shop_id = 0;
-		$sql = "INSERT INTO pages (title, perma, shop_id, content, type) VALUES ('{$page->title}', '{$page->perma}', {$shop_id}, '{$page->content}', {$page->type});";
+		if ($page->id == -1)
+			$sql = "INSERT INTO pages (title, perma, shop_id, content, type) VALUES ('{$page->title}', '{$page->perma}', {$shop_id}, '{$page->content}', {$page->type});";
+		else
+		{
+			// Change this to only if changes are made
+			$sql = "INSERT INTO pages (id, title, perma, shop_id, content, type) VALUES ({$page->id}, '{$page->title}', '{$page->perma}', {$shop_id}, '{$page->content}', {$page->type});";
+		}
 		$response = mysqli_query($con, $sql);
 		return mysqli_insert_id($con);
 	}
