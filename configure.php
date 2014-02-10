@@ -110,7 +110,7 @@ if (!mysqli_connect_errno($con))
 					// Cart & Bag tables
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shopping_carts (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, owner_id INT(11) UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL DEFAULT '', wishlist TINYINT(1) NOT NULL DEFAULT 0, active TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(id));");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shopping_bags (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, cart_id INT(11) UNSIGNED NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, active TINYINT(1) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY(id));");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE bag_items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, bag_id INT(11) UNSIGNED NOT NULL, item_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), cnt INT(11) UNSIGNED NOT NULL DEFAULT 1, UNIQUE KEY(bag_id, item_id));");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE bag_items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, bag_id INT(11) UNSIGNED NOT NULL, item_id INT(11) UNSIGNED NOT NULL, cnt INT(11) UNSIGNED NOT NULL DEFAULT 1, PRIMARY KEY(id), UNIQUE KEY(bag_id, item_id));");
 					// Invoice tables
 
 					// Product Reviews

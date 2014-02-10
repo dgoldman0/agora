@@ -37,5 +37,41 @@ class Bag
 			return mysqli_insert_id($con);
 		}
 	}
+	function getBagItems()
+	{
+		global $market;
+		$con = $market->con;
+		$response = mysqli_query($con, "SELECT * FROM bag_items WHERE bag_id={$this->id}");
+		$items = array();
+		while ($row = mysqli_fetch_array($response))
+		{
+			$items[] = new BagItem($row['bag_id'], $row['item_id'], $row['cnt'], $row['id']);
+		}
+		return $items;
+	}
+}
+class BagItem
+{
+	public $bag_id, $item_id, $cnt, $id;
+	public function __construct($bag_id, $item_id, $cnt, $id = -1)
+	{
+		$this->bag_id = $bag_id;
+		$this->item_id = $item_id;
+		$this->cnt = $cnt;
+		$this->id = $id;
+	}
+	function getItemCount($item_id)
+	{
+		global $market;
+		$con = $market->con;
+		$response = mysqli_query($con, "SELECT cnt FROM bag_items WHERE bag_id={$this->bag_id} AND item_id={$item_id}");
+		if ($row = mysqli_fetch_array($response))
+		{
+			return $row['cnt'];
+		} else
+		{
+			return 0;
+		}
+	}
 }
 ?>

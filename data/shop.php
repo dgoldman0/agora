@@ -20,27 +20,27 @@ class Shop
 	{
 		global $market;
 		$con = $market->con;
-		$sql = "INSERT INTO shops (name, stylized, short_desc, url) VALUES ('".$shop->name."', '".$shop->stylized."', '".$shop->short_desc."', '".$shop->url."');";
+		$sql = "INSERT INTO shops (name, stylized, short_desc, url) VALUES ('{$shop->name}', '{$shop->stylized}', '{$shop->short_desc}', '{$shop->url}');";
 		mysqli_query($con, $sql);
 	}
 	function addUser($user)
 	{
 		global $market;
 		$con = $market->con;
-		mysqli_query($con, "INSERT INTO shop_users (id, shop_id) VALUES (".$user->id.", ".$this->id.");");
+		mysqli_query($con, "INSERT INTO shop_users (id, shop_id) VALUES ({$user->id}, {$this->id});");
 	}
 	function setUserRole($user, $role)
 	{
 		global $market;
 		$con = $market->con;
-		mysqli_query($con, "UPDATE shop_users SET role_id=".$role." WHERE id=".$user->id.";");
+		mysqli_query($con, "UPDATE shop_users SET role_id={$role} WHERE id={$user->id};");
 	}
 	// These functons probably belong in market.php->Market class
 	static function getShopFromName($name)
 	{
 		global $market;
 		$con = $market->con;
-		$response = mysqli_query($con, "SELECT * FROM shops WHERE name='".$name."';");
+		$response = mysqli_query($con, "SELECT * FROM shops WHERE name='{$name}';");
 		if ($row = mysqli_fetch_array($response))
 		{
 			$shop = new Shop($row['name'], $row['stylized'], $row['short_desc'], $row['url'], $row['id']);
@@ -51,7 +51,7 @@ class Shop
 	{
 		global $market;
 		$con = $market->con;
-		$response = mysqli_query($con, "SELECT * FROM shops WHERE id=".$id.";");
+		$response = mysqli_query($con, "SELECT * FROM shops WHERE id={$id};");
 		if ($row = mysqli_fetch_array($response))
 		{
 			$shop = new Shop($row['name'], $row['stylized'], $row['short_desc'], $row['url'], $id);
@@ -86,7 +86,7 @@ class Shop
 	{
 		global $market;
 		$con = $market->con;
-		$response = mysqli_query($con, "SELECT * FROM items WHERE sku='".$sku."';");
+		$response = mysqli_query($con, "SELECT * FROM items WHERE sku='{$sku}' AND shop_id={$this->id};");
 		if ($row = mysqli_fetch_array($response))
 		{
 				return new Item($row['shop_id'], $row['name'], $row['sku'], $row['short_desc'], $row['long_desc'], $row['id']);

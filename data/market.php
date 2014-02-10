@@ -45,6 +45,15 @@ class Market
 		}
 		return $users;
 	}
+	function getItemByID($id)
+	{
+		$con = $this->con;
+		$response = mysqli_query($con, "SELECT * FROM items WHERE id={$id};");
+		if ($row = mysqli_fetch_array($response))
+		{
+			return new Item($row['shop_id'], $row['name'], $row['sku'], $row['short_desc'], $row['long_desc'], $row['id']);
+		}
+	}
 	function getMarketEmail()
 	{
 		$response = mysqli_query($this->con, "SELECT email FROM agora;");
@@ -188,6 +197,28 @@ class Market
 		$sql = "INSERT INTO pages (title, perma, shop_id, content, type) VALUES ('{$page->title}', '{$page->perma}', {$shop_id}, '{$page->content}', {$page->type});";
 		$response = mysqli_query($con, $sql);
 		return mysqli_insert_id($con);
+	}
+	// This isn't even written correctly! Change this to do what it's supposed to do.
+	// Might work now after changes have been made
+	function userRoleIncludes($capability)
+	{
+		$con = $this->con;
+		$id = $this->getUserID();
+		if ($id != -1)
+		{
+			// Is the user an administrator
+			$sql = "SELECT user_role FROM users WHERE id={$id} OR user_role=0;";
+			$response = mysqli_query($con, $sql);
+			if ($row = mysqli_fetch_array($response))
+				$role = $row['user_role'];
+			if ($role = 0)
+				return true;
+	
+			// If not, does the user's role include the requested permission
+			$sql = "SELECT capability FROM user_role_capabilities WHERE capability={$capability} AND user_role={$role};";
+			$response = mysqli_query($con, $sql);
+			return $row = mysqli_fetch_array($response);
+		}
 	}
 }
 ?>

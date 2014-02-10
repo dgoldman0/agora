@@ -105,7 +105,10 @@ function isAdmin($shop = '')
 		}
 	}
 }
-// Move tese into User class
+/* Move these into User or Market class
+ * A copy is now in the Market class. Wherever you see use of this function,
+ * change the call to $market->userRoleIncludes 
+ */
 function userRoleIncludes($capability)
 {
 	global $session;

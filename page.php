@@ -6,6 +6,7 @@ include 'include/header.php';
 include 'menu.php';
 
 $action = $_GET['action'];
+// Modify to take care of revision history. Right now it just posts a new page with the same perma, which causes errors
 if ($action == "save")
 {
 	$shop_id = 0;
@@ -23,7 +24,8 @@ if ($action == "save")
 	else if ($perma = $_GET['perma'])
 		$page = $market->getPageByPerma($perma);
 	$market->active=$perma;
-	if ($page)
+	// Check edit privileges
+	if ($page && $action != "edit" || $noedit)
 	{
 		?>
 		<div class="jumbotron">
@@ -35,15 +37,24 @@ if ($action == "save")
 		<?
 	} else
 	{
+		$placeholder = "New Page";
+		$content = "";
+		$legend = "New Page";
+		if ($action == "edit" && $page)
+		{
+			$title = $page->title;
+			$content = $page->content;
+			$legend = "Edit Page";
+		}
 		?>
 		<div class="row">
 			<?displayAdminPanel();?>
 			<div class="col-md-10">
 				<form class="form-horizontal" action="page.php?action=save" method="post" id="register-form">
 					<fieldset>
-						<legend>New Page</legend>
-						<input type="text" name="title" class="form-control input-md" placeholder="Title" style="margin-bottom: 5px;">
-						<textarea name="content"></textarea>
+						<legend><?=$legend?></legend>
+						<input type="text" name="title" class="form-control input-md" placeholder="<?=$placeholder?>" value="<?=$title?>" style="margin-bottom: 5px;">
+						<textarea name="content"><?=$content?></textarea>
 					</fieldset>
 				</form>
 			</div>

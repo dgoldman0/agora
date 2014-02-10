@@ -116,7 +116,7 @@ function displayItem($item)
 		<div class="col-sm-3" style = "height: 100%;">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					Current Shopping Bag
+					<a href="cart.php" alt="Go to cart">Current Shopping Bag</a>
 				</div>
 				<div class="panel-body">
 					Items: <span id="item_count"><?=$bag->item_count?></span>

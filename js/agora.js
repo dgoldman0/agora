@@ -35,6 +35,12 @@ function likeItem(sku, shop)
     else
     	like.attr('class', 'glyphicon glyphicon-heart-empty');
 }
+function login(username, password)
+{
+	$.post( "login.php", {username: username, password: password}).done(function ( data ) {
+		
+	});
+}
 /*
 function addItem(sku, shop)
 {
@@ -45,7 +51,16 @@ function addItem(sku, shop)
 	});
 	$( "#bagadd" ).blur();
 }
+$ ( ".item_cnt" ).keypress(function(e) {
+	if (e.which = 13)
+	{
+		// Update item quantities
+		$.post( "cart.php?action=update").done(function ( data )
+		{
+			
+		});
+	}
+});
 */
 $( document ).tooltip();
-$( "#chat" ).dialog();
-$( "#tabs" ).tabs();
+$( "#login" ).dialog({width: 600, modal: true});
