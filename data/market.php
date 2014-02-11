@@ -156,7 +156,7 @@ class Market
 	function getPageByID($id)
 	{
 		$con = $this->con;
-		$response = mysqli_query($con, "SELECT * FROM pages WHERE id={$id} ORDER BY tstamp DESC;");
+		$response = mysqli_query($con, "SELECT * FROM pages WHERE id={$id} ORDER BY tstamp DESC LIMIT 1;");
 		if ($row = mysqli_fetch_array($response))
 		{
 			return new Page($row['title'], $row['perma'], $row['shop_id'], $row['tstamp'], $row['content'], $row['type'], $row['id']);
@@ -169,23 +169,26 @@ class Market
 		$shop_id = 0;
 		if ($use_shop && $this->shop)
 			$shop_id = $this->shop->id;
-		$response = mysqli_query($con, "SELECT * FROM pages WHERE perma='{$perma}' AND shop_id={$shop_id} ORDER BY tstamp DESC;");
+		$response = mysqli_query($con, "SELECT * FROM pages WHERE perma='{$perma}' AND shop_id={$shop_id} ORDER BY tstamp DESC LIMIT 1;");
 		if ($row = mysqli_fetch_array($response))
 		{
 			return new Page($row['title'], $row['perma'], $row['shop_id'], $row['tstamp'], $row['content'], $row['type'], $row['id']);
 		}
 	}
+	// This currently uses two separate queries. I want to combine this into a single query
 	function getPageLinks($use_shop = false)
 	{
 		$con = $this->con;
 		$shop_id = 0;
 		if ($use_shop && $this->shop)
 			$shop_id = $this->shop->id;
-		$response = mysqli_query($con, "SELECT perma, title FROM pages WHERE shop_id={$shop_id};");
+		$response = mysqli_query($con, "SELECT DISTINCT id FROM pages WHERE shop_id={$shop_id};");
 		$links = array();
 		while ($row = mysqli_fetch_array($response))
 		{
-			array_push($links, new PageLink($row['perma'], $row['title']));
+			$resp = mysqli_query($con, "SELECT perma, title FROM pages WHERE id={$row['id']} ORDER BY tstamp DESC LIMIT 1;");
+			if ($rrow = mysqli_fetch_array($resp))
+				$links[] = new PageLink($rrow['perma'], $rrow['title']);
 		}
 		return $links;
 	}
@@ -215,11 +218,9 @@ class Market
 		if ($id != -1)
 		{
 			// Is the user an administrator
-			$sql = "SELECT user_role FROM users WHERE id={$id} OR user_role=0;";
+			$sql = "SELECT user_role FROM users WHERE id={$id} AND user_role=0;";
 			$response = mysqli_query($con, $sql);
 			if ($row = mysqli_fetch_array($response))
-				$role = $row['user_role'];
-			if ($role = 0)
 				return true;
 	
 			// If not, does the user's role include the requested permission

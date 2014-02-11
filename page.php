@@ -27,22 +27,25 @@ if ($action == "save")
 		$page = $market->getPageByPerma($perma);
 	$market->active=$perma;
 	// Check edit privileges
-	if ($page && $action != "edit" || $noedit)
+	$edit = $market->userRoleIncludes(USER_PERMISSION_EDIT_PAGES);
+	if ($page && $action != "edit")
 	{
+		if ($edit)
+			$edittxt = " (<a href=\"page.php?perma={$page->perma}&action=edit\">Edit</a>)";
 		?>
 		<div class="jumbotron">
-			<p><?=$page->title?></p>
+			<p><?=$page->title?><?=$edittxt?></p>
 		</div>
 		<div class="container">
 			<?=$page->content?>
 		</div>
 		<?
-	} else
+	} else if ($edit)
 	{
 		$placeholder = "New Page";
 		$content = "";
 		$legend = "New Page";
-		if ($action == "edit" && $page)
+		if ($action == "edit" && $page && $edit)
 		{
 			$title = $page->title;
 			$content = $page->content;

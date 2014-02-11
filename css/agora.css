@@ -22,3 +22,5 @@ td.hidden
 {
 	display: none;
 }
+h2 {text-decoration:underline!important;font-weight: bold!important;font-style:italic!important;margin-bottom:8px!important;}
+h3 {font-style:italic!important;margin-bottom:8px!important;}

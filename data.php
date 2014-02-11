@@ -10,6 +10,7 @@ DEFINE("USER_PERMISSION_EDIT_USER", 32);
 DEFINE("USER_PERMISSION_EDIT_SHOP", 64);
 DEFINE("USER_PERMISSION_MODULE", 128);
 DEFINE("USER_PERMISSION_EDIT_ITEMS", 256);
+DEFINE("USER_PERMISSION_EDIT_PAGES", 512);
 
 // Should I cache values that will never change like user id?
 
@@ -75,7 +76,7 @@ function getUserID()
 function getServiceURL()
 {
 	global $con;
-	$response = mysqli_query($con, "SELECT url FROM agora;");
+	$response = mysqli_query($con, "SELECT url FROM shops WHERE id=0;");
 	if ($row = mysqli_fetch_array($response))
 	{
 		return $row['url'];
