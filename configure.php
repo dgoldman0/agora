@@ -92,12 +92,6 @@ if (!mysqli_connect_errno($con))
 
 					// Shop tables
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shops (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL DEFAULT '', stylized VARCHAR(255) NOT NULL, short_desc VARCHAR(156) NOT NULL DEFAULT '', url VARCHAR(255) NOT NULL, PRIMARY KEY(id), UNIQUE KEY(name), UNIQUE KEY(url)) ENGINE=InnoDB;");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_users (id INT(11) UNSIGNED NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, role_id INT(11), home TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(id, shop_id), FOREIGN KEY(shop_id) REFERENCES shops(id)) ENGINE=InnoDB;");
-
-					// Should I have two separate sets of tables or just use shop_id = 0 for master roles: Second option seems better
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_user_roles (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, shop_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_user_role_capabilities (capability INT(11) UNSIGNED NOT NULL DEFAULT 0, role_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(capability, role_id), FOREIGN KEY(role_id) REFERENCES shop_user_roles(id) ON DELETE CASCADE) ENGINE=InnoDB;");
-					
 					// Items
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, shop_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, sku VARCHAR(50) NOT NULL, short_desc VARCHAR(156), long_desc TEXT NOT NULL, PRIMARY KEY(id), UNIQUE KEY(sku), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE item_images (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, item_id INT(11) UNSIGNED NOT NULL, medium_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE, FOREIGN KEY(medium_id) REFERENCES media(id) ON DELETE CASCADE) ENGINE=InnoDB;");
@@ -105,9 +99,13 @@ if (!mysqli_connect_errno($con))
 					// Default shop id is 0 ie marketwide
 					// Should really change the name of item_price_categories to just price_categories...
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE item_price_categories (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, shop_id INT(11) UNSIGNED NOT NULL, description VARCHAR(156) NOT NULL, PRIMARY KEY(id), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE item_prices (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, item_id INT(11) UNSIGNED NOT NULL, price_category INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE, FOREIGN KEY(price_category) REFERENCES item_price_categories(id) ON DELETE CASCADE) ENGINE=InnoDB;");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE item_prices (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, item_id INT(11) UNSIGNED NOT NULL, price_category INT(11) UNSIGNED NOT NULL, currency INT(11) UNSIGNED NOT NULL, value DECIMAL(10,3) NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE, FOREIGN KEY(price_category) REFERENCES item_price_categories(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE tax_categories (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL, type SMALLINT(5) NOT NULL, value DECIMAL(6, 3), PRIMARY KEY(id)) ENGINE=InnoDB;");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE item_tax_categories (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, item_id INT(11) UNSIGNED NOT NULL, cat_id INT (11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE, FOREIGN KEY(cat_id) REFERENCES tax_categories(id) ON DELETE CASCADE) ENGINE=InnoDB;");
+					// I don't really want to cascade on delete. I want to set to 0 on delete
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE item_category_codes (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL, parent INT(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(parent) REFERENCES item_category_codes(id) ON DELETE CASCADE);");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE item_categories (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, cat_code INT(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(cat_code) REFERENCES item_category_codes(id) ON DELETE CASCADE);");
+					
 
 					// Cart & Bag tables
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shopping_carts (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, owner_id INT(11) UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL DEFAULT '', wishlist TINYINT(1) NOT NULL DEFAULT 0, active TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(owner_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE=InnoDB;");
@@ -135,7 +133,7 @@ if (!mysqli_connect_errno($con))
 					if (mysqli_error($con == "")) mysqli_query($con, "SET sql_mode='NO_AUTO_VALUE_ON_ZERO';");
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO shops (id, name, url, short_desc, stylized) VALUES (0, '{$site_name}', '{$url}', '', '{$site_name}');");
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO users (id, username, password, user_role, email) VALUES (0, '{$username}', SHA2('{$password}', 512), 0, '{$email}');");
-					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO item_price_categories (shop_id, description) VALUES (0, 'list');");
+					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO item_price_categories (id, shop_id, description) VALUES (0, 0, 'list');");
 
 					// Add procedures
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE EVENT clean ON SCHEDULE EVERY 1 HOUR DO DELETE FROM sessions WHERE expires < UNIX_TIMESTAMP();");

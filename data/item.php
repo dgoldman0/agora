@@ -1,5 +1,6 @@
 <?php
 require_once 'data.php';
+require_once 'data/price.php';
 
 class Item
 {
@@ -45,6 +46,33 @@ class Item
 			}
 		}
 		return $images;
+	}
+	public function removePrices()
+	{
+		global $market;
+		$con = $market->con;
+		$response = mysqli_query($con, "DELETE FROM item_prices WHERE item_id={$this->id};");
+	}
+	public function addPrice($price)
+	{
+		global $market;
+		$con = $market->con;
+		if ($this->id != -1)
+		{
+			$response = mysqli_query($con, "INSERT INTO item_prices (item_id, price_category, currency, value) VALUES ({$this->id}, {$price->price_category}, {$price->currency}, {$price->value});");
+		}
+	}
+	// Only selects list price right now
+	public function getPrice()
+	{
+		global $market;
+		$con = $market->con;
+		$response = mysqli_query($con, "SELECT * FROM item_prices WHERE item_id={$this->id} AND price_category=0;");
+		if ($row = mysqli_fetch_array($response))
+		{
+			return new Price($row['item_id'], $row['price_category'], $row['currency'], $row['value'], $row['id']);
+		}
+		return new Price($this->id, 0, 1, '0.000', -1);
 	}
 }
 ?>

@@ -108,7 +108,7 @@ function displayItem($item)
 						</div>
 					</div>
 					<hr/>
-					Price: <br/>
+					Price: <?=$item->getPrice()->str()?><br/>
 					Score: 
 				</div>
 			</div>

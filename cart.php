@@ -58,7 +58,7 @@ if ($action == "like")
 											<input class="item_cnt" id="cnt_<?=$item->id?>" type="text" size="1" placeholder="<?=$bagitem->getItemCount($item->id)?>" class="form-control input-md">
 										</td>
 										<td>
-											
+											<?=$item->getPrice()->str()?>
 										</td>
 									</tr>
 									<?php

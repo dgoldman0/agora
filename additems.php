@@ -4,6 +4,7 @@ require_once 'administration.php';
 require_once 'data/shop.php';
 require_once 'data/user.php';
 require_once 'data/item.php';
+require_once 'data/price.php';
 
 if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 {
@@ -67,6 +68,12 @@ if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 						$name = $_POST['name'];
 						if ($name == "")
 						{
+							if ($_GET['action']="edit")
+							{
+								$item_sku = $_GET['item'];
+								$item = $shop->getItemFromSKU($item_sku);
+								
+							}
 							?>
 							<form class="form-horizontal" action="additems.php?shop=<?php echo $shop->name;?>" method="post">
 								<fieldset>
@@ -81,6 +88,26 @@ if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 					           	   		<div class="col-md-10">
 											<input id="sku" name="sku" type="text" placeholder="SKU" class="form-control input-md">
 	            						</div>
+									</div>
+									<div class="form-group">
+										<label class="col-md-2 control-label" for="price">Price</label>
+					           	   		<div class="col-md-2">
+											<input id="price-1" name="price[]" type="text" placeholder="$0.00" class="form-control input-md">
+	            						</div>
+										<label class="col-md-1 control-label" for="price">Category</label>
+					           	   		<div class="col-md-2">
+											<select id="pcat-1" name="pcat[]" class="form-control input-md">
+												<option value="0">List</option>
+											</select>
+	            						</div>
+										<label class="col-md-1 control-label" for="price">Currency</label>
+					           	   		<div class="col-md-2">
+											<select id="pcur-1" name="pcur[]" class="form-control input-md">
+												<option value="1">USD</option>
+											</select>
+	            						</div>
+										<a href=""><label class="col-md-1 control-label" for="none">Remove</label></a>
+										<a href=""><label class="col-md-1 control-label" for="none">Add</label></a>
 									</div>
 									<div class="form-group">
 										<label class="col-md-2 control-label" for="short_desc">Short Description</label>
@@ -106,8 +133,22 @@ if (userRoleIncludes(USER_PERMISSION_EDIT_ITEMS))
 						} else
 						{
 							$item = new Item($shop->id, $name, $_POST['sku'], $_POST['short_desc'], $_POST['desc'], -1);
-							$shop->addItem($item);
-							header("Location: item.php?shop=".$shop->name."&item=".$item->sku);
+							$id = $shop->addItem($item);
+							$item = $market->getItemByID($id);
+							// Add prices for item
+							// Clear old item prices if there are any
+							$item->removePrices($item);
+							$prices = $_POST['price'];
+							$pcat = $_POST['pcat'];
+							$pcur = $_POST['pcur'];
+							$c = count($prices);
+							for ($i = 0; $i < $c; $i++)
+							{
+								$p = new Price(-1, $pcat[$i], $pcur[$i], $prices[$i], -1);
+								$item->addPrice($p);
+								$i++;
+							}
+							header("Location: item.php?shop={$shop->name}&item={$item->sku}");
 							die();
 						}
 					}
