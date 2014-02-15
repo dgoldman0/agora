@@ -79,7 +79,8 @@ if ($action == "like")
 					Cart Summary
 				</div>
 				<div class="panel-body">
-					Item Total: <?=$total?>
+					Item Total: <?=$total?><br/>
+					<button id="checkout" name="checkout" class="btn btn-primary col-md-12">Checkout</button>
 				</div>
 			</div>
 		</div>

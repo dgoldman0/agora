@@ -64,6 +64,7 @@ require_once 'data/page.php';
 	        	<ul class="dropdown-menu">
 	        		<li><a href="/profile.php">Profile</a></li>
 	          		<li><a href="/settings.php">Settings</a></li>
+			  		<?= (isLoggedIn()) ? '<li><a href="cart.php">Cart</a></li>' : ''?>
 	          		<li class="divider"></li>
 			  		<?= (isLoggedIn()) ? '<li><a href="login.php?logout=true">Logout</a></li>' : '<li><a href="login.php">Login</a></li>'?>
 				</ul>

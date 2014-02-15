@@ -111,8 +111,15 @@ if (!mysqli_connect_errno($con))
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shopping_carts (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, owner_id INT(11) UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL DEFAULT '', wishlist TINYINT(1) NOT NULL DEFAULT 0, active TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(owner_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shopping_bags (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, cart_id INT(11) UNSIGNED NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, active TINYINT(1) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(cart_id) REFERENCES shopping_carts(id) ON DELETE CASCADE, FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE bag_items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, bag_id INT(11) UNSIGNED NOT NULL, item_id INT(11) UNSIGNED NOT NULL, cnt INT(11) UNSIGNED NOT NULL DEFAULT 1, PRIMARY KEY(id), UNIQUE KEY(bag_id, item_id), FOREIGN KEY(bag_id) REFERENCES shopping_bags(id) ON DELETE CASCADE, FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE) ENGINE=InnoDB;");
-					// Invoice tables
+					
+					// Payment tables
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE payment_info (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL DEFAULT '', user_id INT(11) UNSIGNED NOT NULL, payment_type SMALLINT(5) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE);");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE credit_cards (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, piid INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), uri VARCHAR(255) NOT NULL, FOREIGN KEY(piid) REFERENCES payment_info(id) ON DELETE CASCADE);");
 
+					// Order & Invoice tables
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE orders (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, user_id INT(11) UNSIGNED NOT NULL, placed_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(id), FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE=InnoDB;");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE invoices (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, order_id INT(11) UNSIGNED NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(order_id) REFERENCES orders(id) ON DELETE CASCADE, FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE invoice_items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, invoice_id INT(11) UNSIGNED NOT NULL, item_id INT(11) UNSIGNED NOT NULL, cnt INT(11) UNSIGNED NOT NULL DEFAULT 1, price DECIMAL(10, 3) NOT NULL DEFAULT 0, PRIMARY KEY(id), UNIQUE KEY(invoice_id, item_id), FOREIGN KEY(invoice_id) REFERENCES invoices(id) ON DELETE CASCADE, FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					// Product Reviews
 					
 					// Modules
@@ -121,7 +128,7 @@ if (!mysqli_connect_errno($con))
 					
 					// Custom content
 					// Need to add shop_id for media
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE media (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL, type SMALLINT(5), data LONGBLOB NOT NULL, alt_text VARCHAR(255), long_desc TEXT NOT NULL, PRIMARY KEY(id)) ENGINE=InnoDB;");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE media (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, uploaded_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP, name VARCHAR(255) NOT NULL, type SMALLINT(5), data LONGBLOB NOT NULL, alt_text VARCHAR(255), long_desc TEXT NOT NULL, PRIMARY KEY(id)) ENGINE=InnoDB;");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE pages (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, title VARCHAR(255) NOT NULL, perma VARCHAR(255) NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, tstamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, content MEDIUMBLOB NOT NULL, type SMALLINT(5) UNSIGNED NOT NULL DEFAULT 1, PRIMARY KEY(id), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 
 					// Social Networking
@@ -145,7 +152,7 @@ if (!mysqli_connect_errno($con))
 						die();
 					} else
 					{
-						echo "SQL Error: ".mysqli_error($con);
+						echo "SQL Error: {mysqli_error($con)}";
 					}
 				} else
 				{

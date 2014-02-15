@@ -1,9 +1,10 @@
 <?
 class Medium
 {
-	public $name, $type, $data, $alt_text, $long_desc, $id;
-	public function __construct($name, $type, $data, $alt_text, $long_desc, $id)
+	public $uploaded_on, $name, $type, $data, $alt_text, $long_desc, $id;
+	public function __construct($uploaded_on, $name, $type, $data, $alt_text, $long_desc, $id)
 	{
+		$this->uploaded_on = $uploaded_on;
 		$this->name = $name;
 		$this->type = $type;
 		$this->data = $data;

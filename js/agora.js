@@ -62,5 +62,14 @@ $ ( ".item_cnt" ).keypress(function(e) {
 	}
 });
 */
+function displayCheckout()
+{
+	
+}
 $( document ).tooltip();
 $( "#login" ).dialog({width: 600, modal: true});
+$( "#checkout" ).click(function ()
+{
+	// Process checkout request
+	displayCheckout();
+});
