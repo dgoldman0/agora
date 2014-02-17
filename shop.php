@@ -19,16 +19,22 @@ if ($shop == "" || $shop == null)
 {
 	include 'include/header.php';
 	include 'menu.php';
-    echo '<div class="jumbotron">';
-	echo $shop->short_desc;
-    echo '</div>';
-	$items = $shop->getItemList(true);
-	echo '<div class="row">';
-	foreach ($items as $item)
+	if ($shop->shop_type == 0)
 	{
-		printItem($item);
+	    echo '<div class="jumbotron">';
+		echo $shop->short_desc;
+	    echo '</div>';
+		$items = $shop->getItemList(true);
+		echo '<div class="row">';
+		foreach ($items as $item)
+		{
+			printItem($item);
+		}
+		echo '</div>';
+	} else if ($shop->shop_type == 1)
+	{
+		// Display restaurant data
 	}
-	echo '</div>';
 	include 'include/footer.php';
 }
 ?>

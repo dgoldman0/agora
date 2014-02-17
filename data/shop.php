@@ -5,14 +5,15 @@ require_once 'data/item.php';
 
 class Shop
 {
-	public $id, $name, $stylized, $short_desc, $url;
+	public $id, $name, $stylized, $short_desc, $url, $shop_type;
 	
-	public function __construct($name, $stylized, $short_desc, $url, $id)
+	public function __construct($name, $stylized, $short_desc, $url, $shop_type, $id)
 	{
 		$this->name = $name;
 		$this->stylized = $stylized;
 		$this->short_desc = $short_desc;
 		$this->url = $url;
+		$this->shop_type = $shop_type;
 		$this->id = $id;
 	}
 	// This needs to be moved into Market
@@ -20,7 +21,7 @@ class Shop
 	{
 		global $market;
 		$con = $market->con;
-		$sql = "INSERT INTO shops (name, stylized, short_desc, url) VALUES ('{$shop->name}', '{$shop->stylized}', '{$shop->short_desc}', '{$shop->url}');";
+		$sql = "INSERT INTO shops (name, stylized, short_desc, url, shop_type) VALUES ('{$shop->name}', '{$shop->stylized}', '{$shop->short_desc}', {$shop->shop_type}, '{$shop->url}');";
 		mysqli_query($con, $sql);
 	}
 	function addUser($user)
@@ -43,7 +44,7 @@ class Shop
 		$response = mysqli_query($con, "SELECT * FROM shops WHERE name='{$name}';");
 		if ($row = mysqli_fetch_array($response))
 		{
-			$shop = new Shop($row['name'], $row['stylized'], $row['short_desc'], $row['url'], $row['id']);
+			$shop = new Shop($row['name'], $row['stylized'], $row['short_desc'], $row['url'], $row['shop_type'], $row['id']);
 			return $shop;
 		}
 	}
@@ -74,7 +75,7 @@ class Shop
 		{
 			if ($all_info)
 			{
-				array_push($shops, new Shop($row['name'], $row['stylized'], $row['short_desc'], $row['url'], $row['id']));
+				array_push($shops, new Shop($row['name'], $row['stylized'], $row['short_desc'], $row['url'], $row['shop_type'], $row['id']));
 			} else
 			{
 				array_push($shops, $row['id']);

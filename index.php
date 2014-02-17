@@ -2,7 +2,6 @@
 
 include 'include/header.php';
 include 'menu.php';
-echo $test;
 ?>
                 <!-- Marketing area -->
                 <div class="jumbotron">

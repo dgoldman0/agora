@@ -91,7 +91,10 @@ if (!mysqli_connect_errno($con))
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE billing (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, user_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, first VARCHAR(50) NOT NULL, last VARCHAR(50) NOT NULL, street1 VARCHAR(255) NOT NULL, street2 VARCHAR(255) NOT NULL, locality VARCHAR(50) NOT NULL, postal VARCHAR(20) NOT NULL, state VARCHAR(50) NOT NULL, country VARCHAR(50) NOT NULL, PRIMARY KEY(id), FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 
 					// Shop tables
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shops (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL DEFAULT '', stylized VARCHAR(255) NOT NULL, short_desc VARCHAR(156) NOT NULL DEFAULT '', url VARCHAR(255) NOT NULL, PRIMARY KEY(id), UNIQUE KEY(name), UNIQUE KEY(url)) ENGINE=InnoDB;");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_types (id SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT, title VARCHAR(255) NOT NULL, description LONGBLOB NOT NULL, PRIMARY KEY(id)) ENGINE=InnoDB;");
+					// Need on delete change to different shop type?
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shops (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL DEFAULT '', stylized VARCHAR(255) NOT NULL, short_desc VARCHAR(156) NOT NULL DEFAULT '', url VARCHAR(255) NOT NULL, shop_type SMALLINT(5) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(shop_type) REFERENCES shop_types(id), UNIQUE KEY(name), UNIQUE KEY(url)) ENGINE=InnoDB;");
+					
 					// Items
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, shop_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, sku VARCHAR(50) NOT NULL, short_desc VARCHAR(156), long_desc TEXT NOT NULL, PRIMARY KEY(id), UNIQUE KEY(sku), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE item_images (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, item_id INT(11) UNSIGNED NOT NULL, medium_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE, FOREIGN KEY(medium_id) REFERENCES media(id) ON DELETE CASCADE) ENGINE=InnoDB;");
@@ -130,6 +133,8 @@ if (!mysqli_connect_errno($con))
 					// Need to add shop_id for media
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE media (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, uploaded_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP, name VARCHAR(255) NOT NULL, type SMALLINT(5), data LONGBLOB NOT NULL, alt_text VARCHAR(255), long_desc TEXT NOT NULL, PRIMARY KEY(id)) ENGINE=InnoDB;");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE pages (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, title VARCHAR(255) NOT NULL, perma VARCHAR(255) NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, tstamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, content MEDIUMBLOB NOT NULL, type SMALLINT(5) UNSIGNED NOT NULL DEFAULT 1, PRIMARY KEY(id), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE restaurant_menus (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, title VARCHAR(255) NOT NULL, description LONGBLOB NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(id), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE restaurant_menu_items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, menu_id INT(11) UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL, description LONGBLOB NOT NULL, PRIMARY KEY(id), FOREIGN KEY(menu_id) REFERENCES restaurant_menus(id)) ENGINE=InnoDB;");
 
 					// Social Networking
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE friends (id INT(11) UNSIGNED NOT NULL, friend1 INT(11)UNSIGNED NOT NULL, friend2 INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(friend1) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY(friend2) REFERENCES users(id) ON DELETE CASCADE) ENGINE=InnoDB;");
@@ -138,6 +143,8 @@ if (!mysqli_connect_errno($con))
 					
 					// Add settings info & create administrator account
 					if (mysqli_error($con == "")) mysqli_query($con, "SET sql_mode='NO_AUTO_VALUE_ON_ZERO';");
+					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO shop_types (id, title, description) VALUES (0, 'store', '');");
+					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO shop_types (id, title, description) VALUES (1, 'restaurant', '');");
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO shops (id, name, url, short_desc, stylized) VALUES (0, '{$site_name}', '{$url}', '', '{$site_name}');");
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO users (id, username, password, user_role, email) VALUES (0, '{$username}', SHA2('{$password}', 512), 0, '{$email}');");
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO item_price_categories (id, shop_id, description) VALUES (0, 0, 'list');");
