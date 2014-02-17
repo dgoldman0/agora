@@ -14,3 +14,4 @@
 10. "Shop together" feature
 11. The system is in no way secure yet
 12. Add mysql_real_escape_string where it is needed
+13. Certain scenarios of ON DELETE CASCADE should be changed to TRIGGER change key value
