@@ -229,5 +229,15 @@ class Market
 			return $row = mysqli_fetch_array($response);
 		}
 	}
+	function addOrder($order)
+	{
+		$con = $this->con;
+		$sql = "INSERT INTO orders (user_id) VALUES ({$user->id})";
+		$response = mysqli_query($con, $sql);
+		if ($row = mysqli_fetch_array($response))
+		{
+			return mysqli_insert_id($con);
+		}
+	}
 }
 ?>

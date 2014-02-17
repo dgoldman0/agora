@@ -118,7 +118,7 @@ if (!mysqli_connect_errno($con))
 
 					// Order & Invoice tables
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE orders (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, user_id INT(11) UNSIGNED NOT NULL, placed_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(id), FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE=InnoDB;");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE invoices (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, order_id INT(11) UNSIGNED NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(order_id) REFERENCES orders(id) ON DELETE CASCADE, FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE invoices (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, order_id INT(11) UNSIGNED NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, payment_method INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(order_id) REFERENCES orders(id) ON DELETE CASCADE, FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE, FOREIGN KEY(payment_method) REFERENCES payment_info(id)) ENGINE=InnoDB;");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE invoice_items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, invoice_id INT(11) UNSIGNED NOT NULL, item_id INT(11) UNSIGNED NOT NULL, cnt INT(11) UNSIGNED NOT NULL DEFAULT 1, price DECIMAL(10, 3) NOT NULL DEFAULT 0, PRIMARY KEY(id), UNIQUE KEY(invoice_id, item_id), FOREIGN KEY(invoice_id) REFERENCES invoices(id) ON DELETE CASCADE, FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					// Product Reviews
 					

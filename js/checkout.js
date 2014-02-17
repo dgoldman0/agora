@@ -1,3 +1,4 @@
+$( "#new_payment" ).hide();
 $( "#payment_method" ).change(function ()
 {
 	var option = $(this).val();
