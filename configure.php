@@ -94,6 +94,7 @@ if (!mysqli_connect_errno($con))
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_types (id SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT, title VARCHAR(255) NOT NULL, description LONGBLOB NOT NULL, PRIMARY KEY(id)) ENGINE=InnoDB;");
 					// Need on delete change to different shop type?
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shops (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL DEFAULT '', stylized VARCHAR(255) NOT NULL, short_desc VARCHAR(156) NOT NULL DEFAULT '', url VARCHAR(255) NOT NULL, shop_type SMALLINT(5) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(shop_type) REFERENCES shop_types(id), UNIQUE KEY(name), UNIQUE KEY(url)) ENGINE=InnoDB;");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shop_hours (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, day SMALLINT(5) UNSIGNED NOT NULL, open TIME NOT NULL, close TIME NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					
 					// Items
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, shop_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, sku VARCHAR(50) NOT NULL, short_desc VARCHAR(156), long_desc TEXT NOT NULL, PRIMARY KEY(id), UNIQUE KEY(sku), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
@@ -135,7 +136,7 @@ if (!mysqli_connect_errno($con))
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE pages (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, title VARCHAR(255) NOT NULL, perma VARCHAR(255) NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, tstamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, content MEDIUMBLOB NOT NULL, type SMALLINT(5) UNSIGNED NOT NULL DEFAULT 1, PRIMARY KEY(id), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					// Should I use this or just reuse item tables? It would be cleaner if I did it this way. The other way might end up with restaurants looking like an afterthought
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE restaurant_menus (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, title VARCHAR(255) NOT NULL, description LONGBLOB NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(id), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
-					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE restaurant_menu_items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, menu_id INT(11) UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL, description LONGBLOB NOT NULL, PRIMARY KEY(id), FOREIGN KEY(menu_id) REFERENCES restaurant_menus(id)) ENGINE=InnoDB;");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE restaurant_menu_items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, menu_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(id) REFERENCES items(id), FOREIGN KEY(menu_id) REFERENCES restaurant_menus(id)) ENGINE=InnoDB;");
 
 					// Social Networking
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE friends (id INT(11) UNSIGNED NOT NULL, friend1 INT(11)UNSIGNED NOT NULL, friend2 INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(friend1) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY(friend2) REFERENCES users(id) ON DELETE CASCADE) ENGINE=InnoDB;");
@@ -150,8 +151,9 @@ if (!mysqli_connect_errno($con))
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO users (id, username, password, user_role, email) VALUES (0, '{$username}', SHA2('{$password}', 512), 0, '{$email}');");
 					if (mysqli_error($con) == "") mysqli_query($con, "INSERT INTO item_price_categories (id, shop_id, description) VALUES (0, 0, 'list');");
 
-					// Add procedures
+					// Add procedures, triggers, events, etc
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE EVENT clean ON SCHEDULE EVERY 1 HOUR DO DELETE FROM sessions WHERE expires < UNIX_TIMESTAMP();");
+//					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TRIGGER rmi_add AFTER INSERT on items BEGIN IF (SELECT shop_type FROM shops WHERE id=NEW.shop_id)=1 THEN INSERT INTO restaurant_menu_items  END IF; END; delimiter ;
 
 					if (mysqli_error($con) == "")
 					{

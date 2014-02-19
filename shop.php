@@ -2,13 +2,10 @@
 // Shop index
 require_once 'data.php';
 require_once 'data/shop.php';
+require_once 'restaurants/restaurant.php';
+require_once 'stores/store.php';
 
 $shop = $market->shop;
-function printItem($item)
-{
-	global $shop;
-	echo '<div class="col-md-6"><div class="panel panel-default"><div class="panel-heading"><a href="item.php?shop='.$shop->name.'&item='.$item->sku.'">'.$item->name.'</a></div><div class="panel-body"><p>'.$item->short_desc.'</p></div></div></div>';
-}
 if ($shop == "" || $shop == null)
 {
 	$protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
@@ -21,19 +18,12 @@ if ($shop == "" || $shop == null)
 	include 'menu.php';
 	if ($shop->shop_type == 0)
 	{
-	    echo '<div class="jumbotron">';
-		echo $shop->short_desc;
-	    echo '</div>';
-		$items = $shop->getItemList(true);
-		echo '<div class="row">';
-		foreach ($items as $item)
-		{
-			printItem($item);
-		}
-		echo '</div>';
+		// Display store data
+		displayStore($shop);
 	} else if ($shop->shop_type == 1)
 	{
 		// Display restaurant data
+		displayRestaurant($shop);
 	}
 	include 'include/footer.php';
 }
