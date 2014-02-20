@@ -1,6 +1,7 @@
 <?
 class Medium
 {
+	// I just realized I don't have a perma... change name to perma in later drafts
 	public $uploaded_on, $name, $type, $data, $alt_text, $long_desc, $id;
 	public function __construct($uploaded_on, $name, $type, $data, $alt_text, $long_desc, $id)
 	{

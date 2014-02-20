@@ -122,12 +122,47 @@ class Shop
 		$response = mysqli_query($con, "SELECT id FROM shops WHERE name='{$shopname}';");
 		return ($row = mysqli_fetch_array($response));
 	}
-	// Returns a list of IDs for media for the given store
-	function getMediaList()
+	function getMediaList($all_info, $include_data = false)
 	{
 		global $market;
 		$con = $market->con;
-		$response = mysqli_query($con, "SELECT id FROM media WHERE shop_id={$this->id}")
+		if ($all_info)
+		{
+			if ($include_data)
+				$response = mysqli_query($con, "SELECT * FROM media WHERE shop_id={$this->id};");
+			else 
+				$response = mysqli_query($con, "SELECT id, uploaded_on, name, type, alt_text, long_desc FROM media WHERE shop_id={$this->id};");
+		}
+		else
+		{
+			$response = mysqli_query($con, "SELECT id FROM media WHERE shop_id={$this->id};");
+		}
+		$media = aray();
+		while ($row = mysqli_fetch_array($response))
+		{
+			if ($all_info)
+			{
+				if ($include_data)
+					array_push($media, new Medium($row['uploaded_on'], $row['name'], $row['name'], $row['type'], $row['data'], $row['alt_text'], $row['long_desc']));
+				else 
+					array_push($media, new Medium($row['uploaded_on'], $row['name'], $row['name'], $row['type'], '', $row['alt_text'], $row['long_desc']));
+			}
+			else
+			{
+				array_push($media, $row['id']);
+			}
+		}
+		return $media;
+	}
+	function addMedia($media)
+	{
+		global $market;
+		$con = $market->con;
+		$response = mysqli_query($con, "INSERT INTO media () VALUES ();");
+		if ($row = $mysqli_fetch(array($response)))
+		{
+			return mysqli_insert_id($con);
+		}
 	}
 	function addItem($item)
 	{
