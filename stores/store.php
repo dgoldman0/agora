@@ -10,7 +10,7 @@ function printItem($item)
 	<div class="col-md-6">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<a href="item.php?shop=<?=$shop->name?>&item=<?=$item->sku?>\"><?=$item->name?></a>
+				<a href="item.php?shop=<?=$shop->name?>&item=<?=$item->sku?>"><?=$item->name?></a>
 			</div>
 			<div class="panel-body">
 				<p><?=$item->short_desc?></p>

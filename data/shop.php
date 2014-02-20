@@ -119,9 +119,16 @@ class Shop
 	{
 		global $market;
 		$con = $market->con;
-		$response = mysqli_query($con, "SELECT id FROM shops WHERE name='".$shopname."';");
+		$response = mysqli_query($con, "SELECT id FROM shops WHERE name='{$shopname}';");
 		return ($row = mysqli_fetch_array($response));
-	}	
+	}
+	// Returns a list of IDs for media for the given store
+	function getMediaList()
+	{
+		global $market;
+		$con = $market->con;
+		$response = mysqli_query($con, "SELECT id FROM media WHERE shop_id={$this->id}")
+	}
 	function addItem($item)
 	{
 		// Adds item to shop
