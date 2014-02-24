@@ -82,7 +82,8 @@ class Market extends BaseObject
 		$response = mysqli_query($this->con, "SELECT * FROM shopping_bags WHERE id={$bag_id};");
 		if ($row = mysqli_fetch_array($response))
 		{
-			return new Bag($row['cart_id'], $row['shop_id'], $row['active'], $row['id']);
+			$bag = new Bag($row['cart_id'], $row['shop_id'], $row['active']);
+			return $bag->init($row['id'], $row['']);
 		}
 	}
 	function getUserID()
