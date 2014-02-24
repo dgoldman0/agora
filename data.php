@@ -1,7 +1,12 @@
 <?php
+// Turn this into a global include file
 require_once 'settings.php';
 require_once 'data/market.php';
 require_once 'data/shop.php';
+require_once 'data/activity.php';
+require_once 'data/bag.php';
+require_once 'data/cart.php';
+
 // Constants: Move to Market class
 DEFINE("USER_PERMISSION_VIEW_SHOP", 4);
 DEFINE("USER_PERMISSION_EDIT_SHOP", 8);
@@ -187,4 +192,3 @@ function toURLSafe($str)
 {
 	return preg_replace('/[^\w]+/', '_', strtolower($str));
 }
-?>

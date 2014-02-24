@@ -1,10 +1,9 @@
 <?php
 require_once 'data.php';
-require_once 'data/user.php';
-require_once 'data/activity.php';
-require_once 'data/cart.php';
+require_once 'data/baseobject.php';
+
 // Basically move stuff from data.php and any general market related functionality here
-class Market
+class Market extends BaseObject
 {
 	/*
 	const USER_PERMISSION_VIEW_SHOP		= 4;
@@ -88,19 +87,29 @@ class Market
 	}
 	function getUserID()
 	{
-		$session = $this->session;
-		$con = $this->con;
-		if ($session != 0)
+		if (!$current_user)
 		{
-			$sql = "SELECT user, expires FROM sessions WHERE id='{$session}';";
-			$response = mysqli_query($con, $sql);
-			$row = mysqli_fetch_array($response);
-			if ($row["expires"] > time())
+			$session = $this->session;
+			$con = $this->con;
+			if ($session != 0)
 			{
-				return $row["user"];
+				$sql = "SELECT user, expires FROM sessions WHERE id='{$session}';";
+				$response = mysqli_query($con, $sql);
+				$row = mysqli_fetch_array($response);
+				if ($row["expires"] > time())
+				{
+					return $row["user"];
+				}
 			}
+			return -1;
+		} else
+		{
+			return $current_user;
 		}
-		return -1;
+	}
+	function getCurrentUser()
+	{
+		return getUserByID(getUserID());
 	}
 	// getActivity grabs the activity from a given user if from_id is not null
 	// getActivity grabs all friend activity for a given user if from_id is null
@@ -121,7 +130,8 @@ class Market
 		$response = mysqli_query($con, $sql);
 		while ($row = mysqli_fetch_array($response))
 		{
-			array_push($activity, new Activity($row['tstamp'], $row['from_id'], $row['to_id'], $row['shop_id'], $row['type'], $row['content'], $row['privacy_level'], $row['id']));
+			$act = new Activity($row['from_id'], $row['to_id'], $row['shop_id'], $row['type'], $row['content'], $row['privacy_level']);
+			array_push($activity, $act->init($row['id'], $row['created_on'], $row['updated_on']));
 		}
 		return $activity;
 	}
@@ -240,4 +250,3 @@ class Market
 		}
 	}
 }
-?>

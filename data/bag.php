@@ -1,7 +1,8 @@
 <?
 require_once 'data.php';
+require_once 'baseobject.php';
 // Shopping bag class
-class Bag
+class Bag extends BaseObject
 {
 	// Structure
 	public $cart_id, $shop_id, $active, $id;
@@ -9,14 +10,16 @@ class Bag
 	// Additional information: useful when pushing JSON data
 	public $item_count;
 	
-	public function __construct($cart_id, $shop_id, $active = 0, $id = -1)
+	public function __construct($cart_id, $shop_id, $active = 0)
 	{
 		$this->cart_id = $cart_id;
 		$this->shop_id = $shop_id;
 		$this->active = $active;
-		$this->id = $id;
 		$this->item_count = 0;
-		if (id != -1)
+	}
+	public function getItemCount()
+	{
+		if (!$item_count && $id != -1)
 		{
 			global $market;
 			$con = $market->con;
@@ -26,6 +29,7 @@ class Bag
 				$this->item_count = $row['scnt'];
 			}
 		}
+		return $item_count;
 	}
 	function addItem($item)
 	{
@@ -74,4 +78,3 @@ class BagItem
 		}
 	}
 }
-?>

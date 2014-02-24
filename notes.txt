@@ -16,3 +16,12 @@
 12. Add mysql_real_escape_string where it is needed
 13. Certain scenarios of ON DELETE CASCADE should be changed to TRIGGER change key value
 14. Think about using a central "keyword" table.
+
+
+MVC
+1. Model is the only part of the code that connects to external systems
+2. Model never generates any HTML or other data like that
+File in Controller = Folder in Views, almost always matching file in models
+
+Working on changing over to MVC style format...
+Also rewriting all classes to include BaseObject. This stores id, created_on, updated_on
