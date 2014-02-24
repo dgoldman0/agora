@@ -109,7 +109,6 @@ if (!mysqli_connect_errno($con))
 					// I don't really want to cascade on delete. I want to set to 0 on delete
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE item_category_codes (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL, parent INT(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(parent) REFERENCES item_category_codes(id) ON DELETE CASCADE);");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE item_categories (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, cat_code INT(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(cat_code) REFERENCES item_category_codes(id) ON DELETE CASCADE);");
-					
 
 					// Cart & Bag tables
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shopping_carts (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, owner_id INT(11) UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL DEFAULT '', wishlist TINYINT(1) NOT NULL DEFAULT 0, active TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(owner_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE=InnoDB;");
@@ -133,6 +132,9 @@ if (!mysqli_connect_errno($con))
 					// Custom content
 					// Need to add shop_id for media
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE media (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, uploaded_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP, name VARCHAR(255) NOT NULL, type SMALLINT(5), data LONGBLOB NOT NULL, alt_text VARCHAR(255), long_desc TEXT NOT NULL, PRIMARY KEY(id)) ENGINE=InnoDB;");
+					// Do some kind of on delete set default thing here
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE badges (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, medium_id INT(11) UNSIGNED NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL, description LONGBLOB NOT NULL, free TINYINT(1) NOT NULL DEFAULT 1, PRIMARY KEY(id), FOREIGN KEY(medium_id) REFERENCES media(id), FOREIGN KEY(shop_id) REFERENCES shops(id)) ENGINE=InnoDB;");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE user_badges (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, user_id INT(11) UNSIGNED NOT NULL, badge_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(user_id) REFERENCES users(id), FOREIGN KEY(badge_id) REFERENCES badges(id)) ENGINE=InnoDB;");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE pages (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, title VARCHAR(255) NOT NULL, perma VARCHAR(255) NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, tstamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, content MEDIUMBLOB NOT NULL, type SMALLINT(5) UNSIGNED NOT NULL DEFAULT 1, PRIMARY KEY(id), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					// Should I use this or just reuse item tables? It would be cleaner if I did it this way. The other way might end up with restaurants looking like an afterthought
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE restaurant_menus (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, title VARCHAR(255) NOT NULL, description LONGBLOB NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(id), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");

@@ -13,11 +13,21 @@
 	width: 200px;
 	height: 200px;
 }
-#message_bar
+#chat
 {
-   position: absolute;
-   bottom: 0px;
-   height:20px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+/*  http://acidmartin.wordpress.com/2010/11/25/creating-a-speech-bubble-with-css3-and-without-additional-markup/ */
+.speech-bubble
+{
+	margin: 10px;
+	padding: 10px;    background: #404040;    color: #fff;    font: normal 12px "Segoe UI", Arial, Sans-serif;    -moz-border-radius: 10px;    -webkit-border-radius: 10px;    border-radius: 10px;
+}
+.speech-bubble:after   {    content: "";    border: solid 10px transparent; /* set all borders to 10 pixels width */    border-top-color: #404040; /* the callout */    border-bottom: 0; /* we do not need the bottom border in this case */    width: 0;    height: 0;    overflow: hidden;    display: block;    position: relative;    bottom: -20px; /* border-width of the :after element + padding of the root element */    margin: auto;   }
+.chatbox
+{
+	padding: 2px;
 }
 td.hidden
 {
