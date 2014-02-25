@@ -1,11 +1,15 @@
 <?php
 // Turn this into a global include file
 require_once 'settings.php';
+require_once 'data/baseobject.php';
+require_once 'data/item.php';
 require_once 'data/market.php';
 require_once 'data/shop.php';
 require_once 'data/activity.php';
 require_once 'data/bag.php';
 require_once 'data/cart.php';
+require_once 'data/page.php';
+require_once 'data/user.php';
 
 // Constants: Move to Market class
 DEFINE("USER_PERMISSION_VIEW_SHOP", 4);
@@ -40,7 +44,8 @@ if ($shop != "")
 else
 	$shop = null;
 
-$market = new Market($con, null, $session);
+BaseObject::$con = $con;
+$market = new Market(null, $session);
 // Move all access to current shop into this
 if ($shop != null)
 {

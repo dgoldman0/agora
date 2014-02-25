@@ -13,11 +13,6 @@
 	width: 200px;
 	height: 200px;
 }
-#chat
-{
-	margin-left: 5px;
-	margin-right: 5px;
-}
 /*  http://acidmartin.wordpress.com/2010/11/25/creating-a-speech-bubble-with-css3-and-without-additional-markup/ */
 .speech-bubble
 {

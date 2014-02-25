@@ -1,9 +1,5 @@
 <?
 require_once 'data.php';
-require_once 'data/shop.php';
-require_once 'data/user.php';
-require_once 'data/item.php';
-require_once 'data/bag.php';
 
 class Cart
 {
@@ -42,11 +38,8 @@ class Cart
 	{
 		global $market;
 		$con = $market->con;
-		$response = mysqli_query($con, "INSERT INTO shopping_bags (cart_id, shop_id, active) VALUES ({$this->id}, {$bag->shop_id}, {$bag->active});");
-		if ($row = mysqli_fetch_array($response))
-		{
-			return mysqli_insert_id($con);
-		}
+		$bag->cart_id = $this->id;
+		return $bag->write();
 	}
 }
 ?>

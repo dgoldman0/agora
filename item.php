@@ -1,11 +1,5 @@
 <?php
 require_once 'data.php';
-require_once 'data/shop.php';
-require_once 'data/user.php';
-require_once 'data/item.php';
-require_once 'data/cart.php';
-require_once 'data/bag.php';
-require_once 'data/activity.php';
 
 function displayItem($item)
 {
@@ -22,7 +16,7 @@ function displayItem($item)
 			$cart = $market->getCart($cart_id);
 			if (!$bag_id = $cart->getActiveBag($shop->id))
 			{
-				$bag_id = $cart->createNewBag(new Bag(-1, $shop->id, TRUE, -1));
+				$bag_id = $cart->createNewBag(new Bag(null, $shop->id, TRUE));
 			}
 		}
 		$bag = $market->getBag($bag_id);
@@ -147,7 +141,7 @@ if ($shop != null)
 			echo "Unliked {$sku}";
 		} else
 		{
-			$act = new Activity(null, $market->getUserID(), 0, $shop->id, Activity::ACTIVITY_TYPE_LIKE, $sku, Activity::PRIVACY_LEVEL_PUBLIC);
+			$act = new Activity($market->getUserID(), 0, $shop->id, Activity::ACTIVITY_TYPE_LIKE, $sku, Activity::PRIVACY_LEVEL_PUBLIC);
 			$market->addActivity($act);
 			echo "Liked {$sku}";
 		}
@@ -185,4 +179,3 @@ if ($shop != null)
 	header("Location: index.php");
 	die();
 }
-?>

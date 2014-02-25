@@ -1,6 +1,5 @@
 <?php
 require_once 'data.php';
-require_once 'data/baseobject.php';
 
 // Basically move stuff from data.php and any general market related functionality here
 class Market extends BaseObject
@@ -15,17 +14,16 @@ class Market extends BaseObject
 	const USER_PERMISSION_EDIT_ITEMS	= 256;
 	*/
 			
-	public $con, $shop, $session, $current_user, $active;
-	public function __construct($con, $shop, $session)
+	public $shop, $session, $current_user, $active;
+	public function __construct($shop, $session)
 	{
-		$this->con = $con;
 		$this->shop = $shop;
 		$this->session = $session;
 		$this->current_user = User::getUserByID($this->getUserID());
 	}
 	function getUserList($all_info)
 	{
-		$con = $this->con;
+		$con = BaseObject::$con;
 		$users = array();
 		$response = null;
 		if ($all_info)
@@ -46,7 +44,7 @@ class Market extends BaseObject
 	}
 	function getItemByID($id)
 	{
-		$con = $this->con;
+		$con = BaseObject::$con;
 		$response = mysqli_query($con, "SELECT * FROM items WHERE id={$id};");
 		if ($row = mysqli_fetch_array($response))
 		{
@@ -55,7 +53,7 @@ class Market extends BaseObject
 	}
 	function getMarketEmail()
 	{
-		$response = mysqli_query($this->con, "SELECT email FROM agora;");
+		$response = mysqli_query(BaseObject::$con, "SELECT email FROM agora;");
 		if ($row = mysqli_fetch_array($response))
 		{
 			return $row['email'];
@@ -63,7 +61,7 @@ class Market extends BaseObject
 	}
 	function createNewCart($cart)
 	{
-		$response = mysqli_query($this->con, "INSERT INTO shopping_carts (owner_id, name, wishlist, active) VALUES ({$cart->owner_id}, '{$cart->name}', {$cart->wishlist}, {$cart->active});");
+		$response = mysqli_query(BaseObject::$con, "INSERT INTO shopping_carts (owner_id, name, wishlist, active) VALUES ({$cart->owner_id}, '{$cart->name}', {$cart->wishlist}, {$cart->active});");
 		if ($row = mysqli_fetch_array($response))
 		{
 			return mysqli_insert_id($con);
@@ -71,7 +69,7 @@ class Market extends BaseObject
 	}
 	function getCart($cart_id)
 	{
-		$response = mysqli_query($this->con, "SELECT * FROM shopping_carts WHERE id={$cart_id};");
+		$response = mysqli_query(BaseObject::$con, "SELECT * FROM shopping_carts WHERE id={$cart_id};");
 		if ($row = mysqli_fetch_array($response))
 		{
 			return new Cart($row['owner_id'], $row['name'], $row['wishlist'], $row['active'], $row['id']);
@@ -79,11 +77,11 @@ class Market extends BaseObject
 	}
 	function getBag($bag_id)
 	{
-		$response = mysqli_query($this->con, "SELECT * FROM shopping_bags WHERE id={$bag_id};");
+		$response = mysqli_query(BaseObject::$con, "SELECT * FROM shopping_bags WHERE id={$bag_id};");
 		if ($row = mysqli_fetch_array($response))
 		{
 			$bag = new Bag($row['cart_id'], $row['shop_id'], $row['active']);
-			return $bag->init($row['id'], $row['']);
+			return $bag->init($row);
 		}
 	}
 	function getUserID()
@@ -91,7 +89,7 @@ class Market extends BaseObject
 		if (!$current_user)
 		{
 			$session = $this->session;
-			$con = $this->con;
+			$con = BaseObject::$con;
 			if ($session != 0)
 			{
 				$sql = "SELECT user, expires FROM sessions WHERE id='{$session}';";
@@ -110,14 +108,14 @@ class Market extends BaseObject
 	}
 	function getCurrentUser()
 	{
-		return getUserByID(getUserID());
+		return $this->current_user;
 	}
 	// getActivity grabs the activity from a given user if from_id is not null
 	// getActivity grabs all friend activity for a given user if from_id is null
 	// grab the last x posts
 	function getActivity($params)
 	{
-		$con = $this->con;
+		$con = BaseObject::$con;
 		$activity = array();
 		$from_id = $params['from_id'];
 		$to_id = $params['to_id'];
@@ -126,25 +124,23 @@ class Market extends BaseObject
 			$privacy_level = 0;
 		$sql = "SELECT * FROM activity WHERE privacy_level<={$privacy_level} AND from_id={$from_id}";
 		if ($to_id != null) $sql = "{$sql} AND to_id={$to_id}";
-		if ($order != null) $sql = "{$sql} ORDER BY tstamp {$order}";
+		if ($order != null) $sql = "{$sql} ORDER BY created_on {$order}";
 		$sql = "{$sql};";
 		$response = mysqli_query($con, $sql);
 		while ($row = mysqli_fetch_array($response))
 		{
 			$act = new Activity($row['from_id'], $row['to_id'], $row['shop_id'], $row['type'], $row['content'], $row['privacy_level']);
-			array_push($activity, $act->init($row['id'], $row['created_on'], $row['updated_on']));
+			array_push($activity, $act->init($row));
 		}
 		return $activity;
 	}
 	function addActivity($activity)
 	{
-		$con = $this->con;
-		$sql = "INSERT INTO activity (from_id, to_id, shop_id, type, content, privacy_level) VALUES ({$activity->from_id}, {$activity->to_id}, {$activity->shop_id}, {$activity->type}, '{$activity->content}', {$activity->privacy_level});";
-		$response = mysqli_query($con, $sql);
+		return $activity->write();
 	}
 	function alreadyLiked($item)
 	{
-		$con = $this->con;
+		$con = BaseObject::$con;
 		$type = ACTIVITY::ACTIVITY_TYPE_LIKE;
 		$sql = "SELECT id FROM activity WHERE content='{$item->sku}' AND type={$type} AND shop_id={$item->shop_id};";
 		$response = mysqli_query($con, $sql);
@@ -159,14 +155,14 @@ class Market extends BaseObject
 	}
 	function removeLike($item)
 	{
-		$con = $this->con;
+		$con = BaseObject::$con;
 		$type = ACTIVITY::ACTIVITY_TYPE_LIKE;
 		$response = mysqli_query($con, "DELETE FROM activity WHERE content='{$item->sku}' AND type={$type} AND shop_id={$item->shop_id};");
 	}
 	// Gets the newest version by default
 	function getPageByID($id)
 	{
-		$con = $this->con;
+		$con = BaseObject::$con;
 		$response = mysqli_query($con, "SELECT * FROM pages WHERE id={$id} ORDER BY tstamp DESC LIMIT 1;");
 		if ($row = mysqli_fetch_array($response))
 		{
@@ -176,7 +172,7 @@ class Market extends BaseObject
 	// Gets the newest version by default
 	function getPageByPerma($perma, $use_shop = true)
 	{
-		$con = $this->con;
+		$con = BaseObject::$con;
 		$shop_id = 0;
 		if ($use_shop && $this->shop)
 			$shop_id = $this->shop->id;
@@ -189,7 +185,7 @@ class Market extends BaseObject
 	// This currently uses two separate queries. I want to combine this into a single query
 	function getPageLinks($use_shop = false)
 	{
-		$con = $this->con;
+		$con = BaseObject::$con;
 		$shop_id = 0;
 		if ($use_shop && $this->shop)
 			$shop_id = $this->shop->id;
@@ -205,7 +201,7 @@ class Market extends BaseObject
 	}
 	function addPage($page)
 	{
-		$con = $this->con;
+		$con = BaseObject::$con;
 		$page = $page->makeInjectionSafe();
 		$shop_id = $page->shop_id;
 		if ($shop_id == -1)
@@ -224,7 +220,7 @@ class Market extends BaseObject
 	// Might work now after changes have been made
 	function userRoleIncludes($capability)
 	{
-		$con = $this->con;
+		$con = BaseObject::$con;
 		$id = $this->getUserID();
 		if ($id != -1)
 		{
@@ -242,12 +238,25 @@ class Market extends BaseObject
 	}
 	function addOrder($order)
 	{
-		$con = $this->con;
+		$con = BaseObject::$con;
 		$sql = "INSERT INTO orders (user_id) VALUES ({$user->id})";
 		$response = mysqli_query($con, $sql);
 		if ($row = mysqli_fetch_array($response))
 		{
 			return mysqli_insert_id($con);
 		}
+	}
+	function getRecentMessages($user_id)
+	{
+		$con = BaseObject::$con;
+		$sql = "SELECT * FROM activity WHERE type=10 OR TYPE=11 AND from_id={$user_id} OR to_id={$user_id};";
+		$response = mysqli_query($con, $sql);
+		$activity = array();
+		while ($row = mysqli_fetch_array($response))
+		{
+			$act = new Activity($row['from_id'], $row['to_id'], $row['shop_id'], $row['type'], $row['content'], $row['privacy_level']);
+			array_push($activity, $act->init($row));
+		}
+		return $activity;
 	}
 }

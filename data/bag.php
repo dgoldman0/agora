@@ -5,7 +5,7 @@ require_once 'baseobject.php';
 class Bag extends BaseObject
 {
 	// Structure
-	public $cart_id, $shop_id, $active, $id;
+	public $cart_id, $shop_id, $active;
 	
 	// Additional information: useful when pushing JSON data
 	public $item_count;
@@ -15,14 +15,13 @@ class Bag extends BaseObject
 		$this->cart_id = $cart_id;
 		$this->shop_id = $shop_id;
 		$this->active = $active;
-		$this->item_count = 0;
+		$this->item_count = null;
 	}
 	public function getItemCount()
 	{
 		if (!$item_count && $id != -1)
 		{
-			global $market;
-			$con = $market->con;
+			$con = $this->con;
 			$response = mysqli_query($con, "SELECT SUM(cnt) AS scnt FROM bag_items WHERE bag_id={$id}");
 			if ($row = mysqli_fetch_array($response))
 			{
@@ -33,8 +32,7 @@ class Bag extends BaseObject
 	}
 	function addItem($item)
 	{
-		global $market;
-		$con = $market->con;
+		$con = $this->con;
 		$response = mysqli_query($con, "INSERT INTO bag_items (bag_id, item_id) VALUES ({$this->id}, {$item->id}) ON DUPLICATE KEY UPDATE cnt = cnt + 1;");
 		if ($row = mysqli_fetch_array($response))
 		{
@@ -43,26 +41,25 @@ class Bag extends BaseObject
 	}
 	function getBagItems()
 	{
-		global $market;
-		$con = $market->con;
+		$con = $this->con;
 		$response = mysqli_query($con, "SELECT * FROM bag_items WHERE bag_id={$this->id}");
 		$items = array();
 		while ($row = mysqli_fetch_array($response))
 		{
-			$items[] = new BagItem($row['bag_id'], $row['item_id'], $row['cnt'], $row['id']);
+			$item = new BagItem($row['bag_id'], $row['item_id'], $row['cnt']);
+			$items[] = $item->init($row['id'], $row['created_on'], $row['updated_on']);
 		}
 		return $items;
 	}
 }
-class BagItem
+class BagItem extends BaseObject
 {
-	public $bag_id, $item_id, $cnt, $id;
-	public function __construct($bag_id, $item_id, $cnt, $id = -1)
+	public $bag_id, $item_id, $cnt;
+	public function __construct($bag_id, $item_id, $cnt)
 	{
 		$this->bag_id = $bag_id;
 		$this->item_id = $item_id;
 		$this->cnt = $cnt;
-		$this->id = $id;
 	}
 	function getItemCount($item_id)
 	{

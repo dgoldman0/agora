@@ -1,5 +1,7 @@
 <?php
 require_once 'data.php';
+require_once 'view/json.php';
+
 function printUserA($user)
 {
 	?>
@@ -47,7 +49,7 @@ function printUserB($user)
 							?>
 							<div class="panel panel-default">
 								<div class="panel-heading">
-									<?=$act->tstamp?>
+									<?=$act->created_on?>
 								</div>
 								<div class="panel-body">
 									<?=$act->content?>
@@ -61,7 +63,7 @@ function printUserB($user)
 							?>
 							<div class="panel panel-default">
 								<div class="panel-heading">
-									<?=$act->tstamp?>
+									<?=$act->created_on?>
 								</div>
 								<div class="panel-body">
 									<?=$user->username?> liked <a href="item.php?shop=<?=$shop->name?>&item=<?=$item->sku?>"><?=$item->name?></a>.
@@ -77,25 +79,33 @@ function printUserB($user)
 	</div>	
 	<?
 }
-include 'include/header.php';
-include 'menu.php';
-$market->active="members";
-$username = $_GET['user'];
-if ($username == "")
+if ($action = $_GET['action'])
 {
-	// Get user list	
-	$users = $market->getUserList(true);
-	echo '<div class="row">';
-	foreach ($users as $user)
+	if ($action == "gtusrname")
 	{
-		printUserA($user);
+		echo jsonResponse(json_encode(User::getUserByID($_GET['id'])->username));
 	}
-	echo '</div>';
 } else
 {
-	// Get single user display
-	$user = User::getUserByUsername($username);
-	printUserB($user);
+	include 'include/header.php';
+	include 'menu.php';
+	$market->active="members";
+	$username = $_GET['user'];
+	if ($username == "")
+	{
+		// Get user list	
+		$users = $market->getUserList(true);
+		echo '<div class="row">';
+		foreach ($users as $user)
+		{
+			printUserA($user);
+		}
+		echo '</div>';
+	} else
+	{
+		// Get single user display
+		$user = User::getUserByUsername($username);
+		printUserB($user);
+	}
+	include 'include/footer.php';
 }
-include 'include/footer.php';
-?>

@@ -17,6 +17,7 @@ require_once 'chat.php';
 			$( document ).ready(function ()
 			{
 				$( "#<?=$market->active?>" ).addClass("active");
+				loadChat();
 			});
 		</script>
 	</body>

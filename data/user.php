@@ -23,8 +23,7 @@ class User
 	}
 	function getActiveCart()
 	{
-		global $market;
-		$con = $market->con;
+		$con = BaseObject::$con;
 		$sql = "SELECT id FROM shopping_carts WHERE owner_id = {$this->id} AND active=true;";
 		$response = mysqli_query($con, $sql);
 		if ($row = mysqli_fetch_array($response))
@@ -35,15 +34,14 @@ class User
 	// Static functions should be moved to Market
 	static function addUser($usr)
 	{
-		global $market;
-		$con = $market->con;
+		$con = BaseObject::$con;
 		$sql = "INSERT INTO users (username, password, user_role, email, first, last) VALUES ('{$usr->username}', SHA2('{$usr->password}', 512), {$usr->user_role}, '{$usr->email}', '{$usr->first}', '{$usr->last}');";
 		mysqli_query($con, $sql);		
 		// Should add a check to make sure it worked!
 	}
 	static function getUserByUsername($username)
 	{
-		global $con;
+		$con = BaseObject::$con;
 		$response = mysqli_query($con, "SELECT * from users WHERE username='{$username}';");
 		if ($row = mysqli_fetch_array($response))
 		{
@@ -53,7 +51,7 @@ class User
 	}
 	static function getUserByID($id)
 	{
-		global $con;
+		$con = BaseObject::$con;
 		$response = mysqli_query($con, "SELECT * from users WHERE id={$id};");
 		if ($row = mysqli_fetch_array($response))
 		{

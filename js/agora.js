@@ -41,6 +41,14 @@ function login(username, password)
 		
 	});
 }
+function getUsernameFromID(id)
+{
+	$.get( "user.php", {action: "gtusrname", id: id}).done(function ( data )
+	{
+		var result = JSON.parse( data );
+		username = result.data;
+	});
+}
 /*
 function addItem(sku, shop)
 {

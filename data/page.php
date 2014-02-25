@@ -1,5 +1,4 @@
 <?
-require_once 'data/market.php';
 require_once 'data.php';
 
 class Page
@@ -18,8 +17,7 @@ class Page
 	}
 	function makeInjectionSafe()
 	{
-		global $market;
-		$con = $market->con;
+		$con = BaseObject::$con;
 		return new Page(mysqli_real_escape_string($con, $this->title),
 			mysqli_real_escape_string($con, $this->perma),
 			$this->shop_id,

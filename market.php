@@ -1,10 +1,7 @@
 <?php
-require_once 'data/shop.php';
 require_once 'data.php';
+require_once 'views/shop.php';
 
-function printShop($shop)
-{	echo "<div class=\"col-md-4\"><div class=\"panel panel-default\"><div class=\"panel-heading\"><a href=\"shop.php?shop={$shop->name}\">{$shop->stylized}</a></div><div class=\"panel-body\"><p>{$shop->short_desc}</p></div></div></div>";	
-}
 include 'include/header.php';
 include 'menu.php';
 $market->active = "market";
