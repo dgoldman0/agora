@@ -1,6 +1,6 @@
 <?php
 require_once 'data.php';
-require_once 'views/shop.php';
+require_once 'view/shop.php';
 
 include 'include/header.php';
 include 'menu.php';

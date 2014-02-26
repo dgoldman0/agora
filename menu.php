@@ -1,8 +1,5 @@
 <?php
-require_once 'settings.php';
 require_once 'data.php';
-require_once 'data/shop.php';
-require_once 'data/page.php';
 
 ?>
 <nav class="navbar navbar-default" role="navigation">

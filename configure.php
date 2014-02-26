@@ -3,6 +3,15 @@
 require_once 'settings.php';
 require_once 'data.php';
 
+// How often to poll, in microseconds (1,000,000 μs equals 1 s)
+define('MESSAGE_POLL_MICROSECONDS', 500000);
+ 
+// How long to keep the Long Poll open, in seconds
+define('MESSAGE_TIMEOUT_SECONDS', 30);
+ 
+// Timeout padding in seconds, to avoid a premature timeout in case the last call in the loop is taking a while
+define('MESSAGE_TIMEOUT_SECONDS_BUFFER', 5);
+
 function configurationView()
 {
 ?>
@@ -85,6 +94,7 @@ if (!mysqli_connect_errno($con))
 					// Will have to do something about expired sessions
 					// Rename user->user_id
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE sessions (id VARCHAR (255) NOT NULL DEFAULT '', user INT(11) UNSIGNED NOT NULL, expires BIGINT(12) UNSIGNED, PRIMARY KEY(id), FOREIGN KEY (user) REFERENCES users(id) ON DELETE CASCADE) ENGINE = MEMORY;");
+					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE session_notifications (id INT(11) NOT NULL AUTO_INCREMENT, created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, session_id VARCHAR(255) NOT NULL, activity_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(session_id) REFERENCES sessions(id) ON DELETE CASCADE, FOREIGN KEY(activity_id) REFERENCES activity(id) ON DELETE CASCADE) ENGINE=MEMORY;");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE user_roles (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, PRIMARY KEY(id));");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE user_role_capabilities (capability INT(11) UNSIGNED NOT NULL DEFAULT 0, role_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(capability, role_id), FOREIGN KEY(role_id) REFERENCES user_roles(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					if (mysqli_error($con) == "") mysqli_query($con, "CREATE TABLE shipping (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, user_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, first VARCHAR(50) NOT NULL, last VARCHAR(50) NOT NULL, street1 VARCHAR(255) NOT NULL, street2 VARCHAR(255) NOT NULL, locality VARCHAR(50) NOT NULL, postal VARCHAR(20) NOT NULL, state VARCHAR(50) NOT NULL, country VARCHAR(50) NOT NULL, PRIMARY KEY(id), FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE=InnoDB;");

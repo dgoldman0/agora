@@ -110,34 +110,6 @@ class Market extends BaseObject
 	{
 		return $this->current_user;
 	}
-	// getActivity grabs the activity from a given user if from_id is not null
-	// getActivity grabs all friend activity for a given user if from_id is null
-	// grab the last x posts
-	function getActivity($params)
-	{
-		$con = BaseObject::$con;
-		$activity = array();
-		$from_id = $params['from_id'];
-		$to_id = $params['to_id'];
-		$order = $params['order'];
-		if (!$privacy_level = $params['privacy_level'])
-			$privacy_level = 0;
-		$sql = "SELECT * FROM activity WHERE privacy_level<={$privacy_level} AND from_id={$from_id}";
-		if ($to_id != null) $sql = "{$sql} AND to_id={$to_id}";
-		if ($order != null) $sql = "{$sql} ORDER BY created_on {$order}";
-		$sql = "{$sql};";
-		$response = mysqli_query($con, $sql);
-		while ($row = mysqli_fetch_array($response))
-		{
-			$act = new Activity($row['from_id'], $row['to_id'], $row['shop_id'], $row['type'], $row['content'], $row['privacy_level']);
-			array_push($activity, $act->init($row));
-		}
-		return $activity;
-	}
-	function addActivity($activity)
-	{
-		return $activity->write();
-	}
 	function alreadyLiked($item)
 	{
 		$con = BaseObject::$con;
@@ -246,13 +218,60 @@ class Market extends BaseObject
 			return mysqli_insert_id($con);
 		}
 	}
+	// I should probably switch this to get recent notifications...
 	function getRecentMessages($user_id)
 	{
 		$con = BaseObject::$con;
-		$sql = "SELECT * FROM activity WHERE type=10 OR TYPE=11 AND from_id={$user_id} OR to_id={$user_id};";
+		$sql = "SELECT * FROM activity WHERE type=10 OR TYPE=11 AND from_id={$user_id} OR to_id={$user_id} ORDER BY created_on desc;";
 		$response = mysqli_query($con, $sql);
 		$activity = array();
 		while ($row = mysqli_fetch_array($response))
+		{
+			$act = new Activity($row['from_id'], $row['to_id'], $row['shop_id'], $row['type'], $row['content'], $row['privacy_level']);
+			array_push($activity, $act->init($row));
+		}
+		return $activity;
+	}
+	// getActivity grabs the activity from a given user if from_id is not null
+	// getActivity grabs all friend activity for a given user if from_id is null
+	// grab the last x posts.
+	// Way too much redundancy with getRecentMessages, etc
+	function getActivity($params)
+	{
+		$con = BaseObject::$con;
+		$activity = array();
+		$from_id = $params['from_id'];
+		$to_id = $params['to_id'];
+		$order = $params['order'];
+		if (!$privacy_level = $params['privacy_level'])
+			$privacy_level = 0;
+		$sql = "SELECT * FROM activity WHERE privacy_level<={$privacy_level} AND from_id={$from_id}";
+		if ($to_id != null) $sql = "{$sql} AND to_id={$to_id}";
+		if ($order != null) $sql = "{$sql} ORDER BY created_on {$order}";
+		$sql = "{$sql};";
+		$response = mysqli_query($con, $sql);
+		while ($row = mysqli_fetch_array($response))
+		{
+			$act = new Activity($row['from_id'], $row['to_id'], $row['shop_id'], $row['type'], $row['content'], $row['privacy_level']);
+			array_push($activity, $act->init($row));
+		}
+		return $activity;
+	}
+	function addActivity($activity)
+	{
+		$con = BaseObject::$con;
+		$aid = $activity->write();
+		// Push to active sessions, but only for certain activity subclasses
+		mysqli_query($con, "INSERT INTO session_notifications SELECT user, {$aid} FROM sessions;");
+		return $aid;
+	}
+	function getSessionNotifications($session)
+	{
+		$con = BaseObject::$con;
+		$sql = "SELECT * FROM activity WHERE id=(SELECT activity_id FROM session_notifications WHERE session_id='{$session}');";
+		$result = mysqli_query($con, $sql);
+		$activity = array();
+		while ($row = mysqli_fetch_array($result))
 		{
 			$act = new Activity($row['from_id'], $row['to_id'], $row['shop_id'], $row['type'], $row['content'], $row['privacy_level']);
 			array_push($activity, $act->init($row));
