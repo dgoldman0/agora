@@ -123,7 +123,7 @@ if ($username == '')
 			$shop_id = 0;
 			if ($market->shop)
 				$shop_id = $market->shop->id;
-			$market->addActivity(new Activity(null, mysqli_insert_id($con), 0, $shop_id, Activity::ACTIVITY_TYPE_NOTICE, "{$username} joined Agora", Activity::PRIVACY_LEVEL_PUBLIC));
+			$market->addActivity(new Activity(mysqli_insert_id($con), 0, $shop_id, Activity::ACTIVITY_TYPE_JOIN, "{$username} joined Agora", Activity::PRIVACY_LEVEL_PUBLIC));
 			$m_email = $market->getMarketEmail();
 			mail($user->email, "Registration", $message, "From: {$m_email}");
 			if ($market->getUserID() == -1)

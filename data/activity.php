@@ -1,8 +1,8 @@
 <?
-require_once 'data/baseobject.php';
+require_once 'data.php';
 class Activity extends BaseObject
 {
-	const ACTIVITY_TYPE_NOTICE = 0;
+	const ACTIVITY_TYPE_JOIN = 0;
 	const ACTIVITY_TYPE_LIKE = 1;
 	const ACTIVITY_TYPE_FRIEND_REQUEST = 2;
 	const ACTIVITY_TYPE_FRIEND_ACCEPTED = 4;

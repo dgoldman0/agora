@@ -29,7 +29,7 @@ function pushMessage(message, usernames)
        	input.val("");
         if (text != "")
         {
-        	$.get( "chat.php", {action: 'send', to: usr, message: text}).done();
+        	$.get( "activity.php", {action: 'send', to: usr, message: text}).done();
         }
     }
 });
@@ -71,12 +71,12 @@ function processResponse(response)
 }
 function loadNotificationManager()
 {
-	$.get( "notifications.php", {action: 'recent'}).done(function ( data ) {
+	$.get( "activity.php", {action: 'recent'}).done(function ( data ) {
 		var response = JSON.parse( data );
 		processResponse(response);
 		// Enable notification manager
 		(function poll(){
-		$.ajax({ url: "notifications.php?action=poll", success: function(data){
+		$.ajax({ url: "activity.php?action=poll", success: function(data){
 		     processResponse(data.value);
 		}, dataType: "json", complete: poll, timeout: 30000 });
 		})();

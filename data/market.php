@@ -262,13 +262,24 @@ class Market extends BaseObject
 		$con = BaseObject::$con;
 		$aid = $activity->write();
 		// Push to active sessions, but only for certain activity subclasses
-		mysqli_query($con, "INSERT INTO session_notifications SELECT user, {$aid} FROM sessions;");
+		$id = $this->getUserID();
+		$sql = "INSERT INTO session_notifications (session_id, activity_id) (SELECT id, {$aid} FROM sessions WHERE user={$id});";
+		mysqli_query($con, $sql);
 		return $aid;
 	}
 	function getSessionNotifications($session)
 	{
 		$con = BaseObject::$con;
-		$sql = "SELECT * FROM activity WHERE id=(SELECT activity_id FROM session_notifications WHERE session_id='{$session}');";
+		// Thank you stackoverflow for this one
+		$sql =
+		"START TRANSACTION;
+		SELECT * FROM activity WHERE id IN (
+    		SELECT activity_id FROM session_notifications
+    		WHERE session_id='{$session}');
+		DELETE FROM activity WHERE id IN (
+    		SELECT activity_id FROM session_notifications
+    		WHERE session_id='{$session}');
+		COMMIT;";
 		$result = mysqli_query($con, $sql);
 		$activity = array();
 		while ($row = mysqli_fetch_array($result))

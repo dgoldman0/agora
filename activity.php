@@ -1,6 +1,6 @@
 <?
 require_once 'data.php';
-require_once 'view/notifications.php';
+require_once 'view/activity.php';
 
 if ($action = $_GET['action'])
 {
@@ -16,7 +16,7 @@ if ($action = $_GET['action'])
 			}
 		} else
 		{
-			echo "Not logged in";
+//			echo "Not logged in";
 		}
 	} else if ($action == "recent")
 	{

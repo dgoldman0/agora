@@ -45,6 +45,7 @@ else
 	$shop = null;
 
 BaseObject::$con = $con;
+
 $market = new Market(null, $session);
 // Move all access to current shop into this
 if ($shop != null)
