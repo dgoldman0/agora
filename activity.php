@@ -57,7 +57,10 @@ if ($action = $_GET['action'])
 		if(isset($data))
 		{
 		    // Send data to client; you may want to precede it by a mime type definition header, eg. in the case of JSON or XML
-		    pushActivities($data);
+		    pushActivity($data);
+		} else
+		{
+			http_response_code(202);
 		}
 	}
 }

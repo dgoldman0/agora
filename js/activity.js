@@ -15,7 +15,7 @@ function pushMessage(message, usernames)
 		displayChatWindow(usr, usernames);	
 	}
 	wind = $( '#chat_wind_' + usr );
-	wind.prepend('<div class="speech-bubble">'+
+	wind.append('<div class="speech-bubble">'+
 					message.content+
 				 '</div>');
 	$( '.chatbox input, .speech-bubble' ).click(function(e) {
@@ -62,23 +62,28 @@ function processResponse(response)
 		user_id = response.user_id;
 		// Check for new notifications
 		// Check for new messages
-		var messages = response.data.messages;
-		for (var i = 0; i < messages.length; i++)
+		var notifications = response.data.notifications;
+		for (var i = 0; i < notifications.length; i++)
 		{
-			pushMessage(messages[i], response.data.usernames);
+			var notification = notifications[i];
+			if (notification.type == 10 || notification.type == 11)
+				pushMessage(notification, response.data.usernames);
 		}
 		// Check for group movement
 }
 function loadNotificationManager()
 {
 	$.get( "activity.php", {action: 'recent'}).done(function ( data ) {
-		var response = JSON.parse( data );
-		processResponse(response);
+		if (data != "")
+		{
+			var response = JSON.parse( data );
+			processResponse(response);
+		}
 		// Enable notification manager
 		(function poll(){
 		$.ajax({ url: "activity.php?action=poll", success: function(data){
-		     processResponse(data.value);
-		}, dataType: "json", complete: poll, timeout: 30000 });
+		     processResponse(data);
+		}, dataType: 'json', complete: poll, timeout: 30000 });
 		})();
 	}).fail(function () {
 	});

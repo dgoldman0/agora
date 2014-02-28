@@ -3,7 +3,7 @@ require_once 'data.php';
 require_once 'view/json.php';
 
 // Send messages in JSON format
-function pushActivities($activities)
+function pushActivity($activities)
 {
 	global $market;
 	$actcoded = "\"notifications\" : [";

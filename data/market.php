@@ -222,7 +222,8 @@ class Market extends BaseObject
 	function getRecentMessages($user_id)
 	{
 		$con = BaseObject::$con;
-		$sql = "SELECT * FROM activity WHERE type=10 OR TYPE=11 AND from_id={$user_id} OR to_id={$user_id} ORDER BY created_on desc;";
+		mysqli_query($con, "LOCK TABLES activity, session_notifications WRITE;");
+		$sql = "SELECT * FROM activity WHERE type=10 OR TYPE=11 AND from_id={$user_id} OR to_id={$user_id} ORDER BY created_on asc;";
 		$response = mysqli_query($con, $sql);
 		$activity = array();
 		while ($row = mysqli_fetch_array($response))
@@ -230,6 +231,9 @@ class Market extends BaseObject
 			$act = new Activity($row['from_id'], $row['to_id'], $row['shop_id'], $row['type'], $row['content'], $row['privacy_level']);
 			array_push($activity, $act->init($row));
 		}
+		$sql = "DELETE FROM session_notifications WHERE activity_id IN (SELECT id FROM activity WHERE type=10 OR TYPE=11 AND from_id={$user_id} OR to_id={$user_id} ORDER BY created_on desc) AND session_id='{$this->session}';";
+		$result = mysqli_query($con, $sql);
+		mysqli_query($con, "UNLOCK TABLES;");
 		return $activity;
 	}
 	// getActivity grabs the activity from a given user if from_id is not null
@@ -263,7 +267,7 @@ class Market extends BaseObject
 		$aid = $activity->write();
 		// Push to active sessions, but only for certain activity subclasses
 		$id = $this->getUserID();
-		$sql = "INSERT INTO session_notifications (session_id, activity_id) (SELECT id, {$aid} FROM sessions WHERE user={$id});";
+		$sql = "INSERT INTO session_notifications (session_id, activity_id) (SELECT id, {$aid} FROM sessions WHERE user={$id} AND expires > unix_timestamp());";
 		print_r($sql);
 		mysqli_query($con, $sql);
 		return $aid;
@@ -273,17 +277,20 @@ class Market extends BaseObject
 		$con = BaseObject::$con;
 		// Thank you stackoverflow for this one
 		mysqli_query($con, "LOCK TABLES activity, session_notifications WRITE;");
-		$sql = "SELECT * FROM activity WHERE id IN (SELECT activity_id FROM session_notifications WHERE session_id='{$session}');";
+		$sql = "SELECT * FROM activity WHERE id IN (SELECT activity_id FROM session_notifications WHERE session_id='{$session}') ORDER BY created_on asc;";
 		$result = mysqli_query($con, $sql);
 		$activity = array();
 		while ($row = mysqli_fetch_array($result))
 		{
 			$act = new Activity($row['from_id'], $row['to_id'], $row['shop_id'], $row['type'], $row['content'], $row['privacy_level']);
-			array_push($activity, $act->init($row));
+			$act->init($row);
+			array_push($activity, $act);
 		}
 		$sql = "DELETE FROM session_notifications WHERE session_id='{$session}'";
 		$result = mysqli_query($con, $sql);
 		mysqli_query($con, "UNLOCK TABLES;");
-		return $activity;
+		if (count($activity) > 0)
+			return $activity;
+		return null;
 	}
 }
