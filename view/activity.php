@@ -3,39 +3,38 @@ require_once 'data.php';
 require_once 'view/json.php';
 
 // Send messages in JSON format
-function pushMessages($messages)
+function pushActivities($activities)
 {
 	global $market;
-	$msgscoded = "\"messages\" : [";
+	$actcoded = "\"notifications\" : [";
 	$first = true;
 	$first1 = true;
 	$first2 = true;
 	$users = array();
-	foreach ($messages as $message)
+	foreach ($activities as $activity)
 	{
-		if (!array_key_exists($message->to_id))
+		if (!array_key_exists($activity->to_id))
 		{
-			$users[$message->to_id] = User::getUserByID($message->to_id)->username;
+			$users[$activity->to_id] = User::getUserByID($activity->to_id)->username;
 		}
 		if (!array_key_exists($messages->from_id))
 		{
-			$users[$message->from_id] = User::getUserByID($message->from_id)->username;
+			$users[$activity->from_id] = User::getUserByID($activity->from_id)->username;
 		}
+		$enc = $activity->jsonEncode();
 		if ($first)
 		{
 			$first = false;
-			$enc = $message->jsonEncode();
-			$msgscoded = "{$msgscoded}\r\n{$enc}";
+			$actcoded = "{$actcoded}\r\n{$enc}";
 		} else
 		{
-			$enc = $message->jsonEncode();
-			$msgscoded = "{$msgscoded}\r\n,{$enc}";
+			$actcoded = "{$actcoded}\r\n,{$enc}";
 		}
 	}
-	$msgscoded = $msgscoded."]";
+	$actcoded = $actcoded."]";
 	$usrcoded = json_encode($users);
 	$usrcoded = "\"usernames\" : {$usrcoded}";
-	echo jsonResponse("{{$usrcoded},{$msgscoded}}");
+	echo jsonResponse("{{$usrcoded},{$actcoded}}");
 }
 
 function displayChat()

@@ -264,6 +264,7 @@ class Market extends BaseObject
 		// Push to active sessions, but only for certain activity subclasses
 		$id = $this->getUserID();
 		$sql = "INSERT INTO session_notifications (session_id, activity_id) (SELECT id, {$aid} FROM sessions WHERE user={$id});";
+		print_r($sql);
 		mysqli_query($con, $sql);
 		return $aid;
 	}
@@ -271,15 +272,8 @@ class Market extends BaseObject
 	{
 		$con = BaseObject::$con;
 		// Thank you stackoverflow for this one
-		$sql =
-		"START TRANSACTION;
-		SELECT * FROM activity WHERE id IN (
-    		SELECT activity_id FROM session_notifications
-    		WHERE session_id='{$session}');
-		DELETE FROM activity WHERE id IN (
-    		SELECT activity_id FROM session_notifications
-    		WHERE session_id='{$session}');
-		COMMIT;";
+		mysqli_query($con, "LOCK TABLES activity, session_notifications WRITE;");
+		$sql = "SELECT * FROM activity WHERE id IN (SELECT activity_id FROM session_notifications WHERE session_id='{$session}');";
 		$result = mysqli_query($con, $sql);
 		$activity = array();
 		while ($row = mysqli_fetch_array($result))
@@ -287,6 +281,9 @@ class Market extends BaseObject
 			$act = new Activity($row['from_id'], $row['to_id'], $row['shop_id'], $row['type'], $row['content'], $row['privacy_level']);
 			array_push($activity, $act->init($row));
 		}
+		$sql = "DELETE FROM session_notifications WHERE session_id='{$session}'";
+		$result = mysqli_query($con, $sql);
+		mysqli_query($con, "UNLOCK TABLES;");
 		return $activity;
 	}
 }

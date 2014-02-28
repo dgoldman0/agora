@@ -22,7 +22,7 @@ if ($action = $_GET['action'])
 	{
 		// Checks for recent messages
 		$messages = $market->getRecentMessages($market->getUserID());
-		pushMessages($messages);
+		pushActivity($messages);
 	} else if ($action == "poll")
 	{
 		// Close the session prematurely to avoid usleep() from locking other requests
@@ -57,7 +57,7 @@ if ($action = $_GET['action'])
 		if(isset($data))
 		{
 		    // Send data to client; you may want to precede it by a mime type definition header, eg. in the case of JSON or XML
-		    echo $data;
+		    pushActivities($data);
 		}
 	}
 }
