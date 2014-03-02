@@ -9,6 +9,7 @@ require_once 'administration.php';
 function registerFormView()
 {
 	global $market;
+	$invite_code = $_REQUEST['invite_code']
 ?>
 	<form class="form-horizontal" action="register.php" method="post" id="register-form">
 		<fieldset>
@@ -50,6 +51,14 @@ function registerFormView()
 					<input id="email" name="email" type="text" placeholder="Email" class="form-control input-md">
             	</div>
 			</div>
+			<? if (REQUIRE_INVITE || $invite_code) {?>
+				<div class="form-group">
+					<label class="col-md-2 control-label" for="invite_code">Invite Code</label>
+	           	   	<div class="col-md-4">
+						<input id="invite_code" name="invite_code" type="text" placeholder="Invite Code" value="<?=$invite_code?>" class="form-control input-md">
+	            	</div>
+				</div>
+			<?}?>
 			<div class="form-group">
 				<label class="col-md-2 control-label" for="singlebutton">Register</label>
 				<div class="col-md-2">
@@ -67,14 +76,14 @@ function registerFormView()
 <?php
 }
 
-$username = $_POST['username'];
+$username = $_REQUEST['username'];
 
 include 'include/header.php';
 // Probably should reverse the order of the if statements to reduce repeating code
 if ($username == '')
 {
 	$id = getUserID();
-	if (($id == -1 && checkAllowsUserRegistration()) || userRoleIncludes(USER_PERMISSION_EDIT_USER))
+	if (($id == -1 && ALLOW_REGISTRATION) || userRoleIncludes(USER_PERMISSION_EDIT_USER))
 	{
 		if ($id != -1)
 		{
@@ -101,9 +110,13 @@ if ($username == '')
 	}
 } else
 {
-	if (($id == -1 && checkAllowsUserRegistration()) || userRoleIncludes(USER_PERMISSION_EDIT_USER))
+	if ($invite_code = $_REQUEST['invite_code'])
 	{
-		if ($_POST['autogenerate'] == "on")
+		$invite = Invite::getFromCode($invite_code);
+	}
+	if (($id == -1 && ALLOW_REGISTRATION && (!REQUIRE_INVITE || $invite)) || userRoleIncludes(USER_PERMISSION_EDIT_USER))
+	{
+		if ($_REQUEST['autogenerate'] == "on")
 		{
 			// Get random password using random.org which uses atmospheric noise to create high quality "random" numbers
 			$password1 = trim(file_get_contents("http://www.random.org/strings/?num=1&len=12&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new"));
@@ -119,13 +132,17 @@ if ($username == '')
 		if (validatePassword($password1, $password2))
 		{
 			$user = new User($username, $password1, getDefaultUserRole(), $_POST['email'], $_POST['first'], $_POST['last'], -1);
-			User::addUser($user);
+			$uid = User::addUser($user);
 			$shop_id = 0;
 			if ($market->shop)
 				$shop_id = $market->shop->id;
 			$market->addActivity(new Activity(mysqli_insert_id($con), 0, $shop_id, Activity::ACTIVITY_TYPE_JOIN, "{$username} joined Agora", Activity::PRIVACY_LEVEL_PUBLIC));
 			$m_email = $market->getMarketEmail();
 			mail($user->email, "Registration", $message, "From: {$m_email}");
+
+			// Add to friends list
+			$friend = new Friend($uid, $invite->invited_by);
+			Friend::friend($friend);
 			if ($market->getUserID() == -1)
 				header('Location: login.php');
 			else

@@ -10,6 +10,8 @@ require_once 'data/bag.php';
 require_once 'data/cart.php';
 require_once 'data/page.php';
 require_once 'data/user.php';
+require_once 'data/invite.php';
+require_once 'data/friend.php';
 
 // Constants: Move to Market class
 DEFINE("USER_PERMISSION_VIEW_SHOP", 4);
@@ -58,10 +60,6 @@ else
 }
 $market->shop = $sshop;
 
-function checkAllowsUserRegistration()
-{
-	return false;
-}
 // Will be set in database later
 function getDefaultUserRole()
 {
@@ -193,6 +191,11 @@ function validatePassword($pass1, $pass2)
 {
 	// Will require more complex features such as, at least one number, etc, etc, etc
 	return $pass1 == $pass2;
+}
+// Will fill in the details later
+function validateEmail($email)
+{
+	return $email != "";
 }
 function toURLSafe($str)
 {

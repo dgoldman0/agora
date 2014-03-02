@@ -23,4 +23,27 @@ class Activity extends BaseObject
 		$this->content = $content;
 		$this->privacy_level = $privacy_level;
 	}
+	public function get($id)
+	{
+		
+	}
+	public function getFromRow($row)
+	{
+		$act = new Activity($row['from_id'], $row['to_id'], $row['shop_id'], $row['type'], $row['content'], $row['privacy_level']);
+		$act.init();
+		return $act;
+	}
+	public function write()
+	{
+		if (!$this->live)
+		{
+			$con = BaseObject::$con;
+			$sql = "INSERT INTO activity (from_id, to_id, shop_id, type, content, privacy_level) VALUES (?,?,?,?,?,?);";
+			$stmt = $con->prepare($sql);
+			$stmt->bind_param('iiiisi', $this->from_id, $this->to_id, $this->shop_id, $this->type, $this->content, $this->privacy_level);
+			$stmt->execute();
+			$stmt->close();
+			return $con->insert_id;
+		}
+	}
 }

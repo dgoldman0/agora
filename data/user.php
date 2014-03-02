@@ -31,12 +31,13 @@ class User
 			return $row['id'];
 		}
 	}
-	// Static functions should be moved to Market
+	// Change this to write and make injection safe
 	static function addUser($usr)
 	{
 		$con = BaseObject::$con;
 		$sql = "INSERT INTO users (username, password, user_role, email, first, last) VALUES ('{$usr->username}', SHA2('{$usr->password}', 512), {$usr->user_role}, '{$usr->email}', '{$usr->first}', '{$usr->last}');";
-		mysqli_query($con, $sql);		
+		$con->query($sql);
+		return $con->insert_id;
 		// Should add a check to make sure it worked!
 	}
 	static function getUserByUsername($username)
@@ -49,6 +50,7 @@ class User
 			return $user;
 		}
 	}
+	// Change this to get($id)
 	static function getUserByID($id)
 	{
 		$con = BaseObject::$con;

@@ -37,6 +37,10 @@ function pushActivity($activities)
 	echo jsonResponse("{{$usrcoded},{$actcoded}}");
 }
 
+// Bind event handlers
+
+// View
+
 function displayChat()
 {
 ?>

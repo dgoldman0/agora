@@ -51,6 +51,16 @@ class Bag extends BaseObject
 		}
 		return $items;
 	}
+	public function get($id)
+	{
+		
+	}
+	public function write()
+	{	
+	}
+	public function getFromRow($row)
+	{	
+	}
 }
 class BagItem extends BaseObject
 {
@@ -73,5 +83,15 @@ class BagItem extends BaseObject
 		{
 			return 0;
 		}
+	}
+	public function get($id)
+	{
+		
+	}
+	public function write()
+	{	
+	}
+	public function getFromRow($row)
+	{	
 	}
 }

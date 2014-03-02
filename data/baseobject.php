@@ -1,87 +1,30 @@
 <?
-class BaseObject
+require_once 'data.php';
+
+abstract class BaseObject
 {
 	public $id, $created_on, $updated_on, $live;
 	public $table, $columns;
 	public static $con;
-	/*
-	public static function con()
-	{
-		if ($con == null)
-		{
-			$con = mysqli_connect(DB_LOCATION, DB_USERNAME, DB_PASSWORD, DB_NAME);
-		}
-		return $con;
-	}
-    */
+
 	public function __construct($table, $columns)
 	{
 		$this->table = $table;
 		$this->columns = $columns;
 	}
-	public function get($id = null)
+	// Fix this... should be static
+	abstract public function get($id);
+	abstract public function getFromRow($row);
+	public function getAllFromResult($result)
 	{
-		
-	}
-	public function fromRow($row)
-	{
-		
-	}
-	// Fills in root column information from sql row
-	public function write()
-	{
-		$object = (array) $this;
-		if (!$live)
+		$arr = array();
+		while ($row = mysqli_fetch_array($result))
 		{
-			$first = true;
-			foreach ($this->columns as $column)
-			{
-				$value = $object[$column];
-				if (!is_numeric($value))
-				{
-					$value = mysqli_real_escape_string(BaseObject::$con, $value);
-					$value = "'{$value}'";
-				}
-				if ($first)
-				{
-					$first = false;
-					$list = $column;
-					$values = $value;
-				} else
-				{
-					$list = "{$list},{$column}";
-					$values = "{$values},{$value}";
-				}
-			}
-			$sql = "INSERT INTO {$this->table} ({$list}) VALUES ({$values});";
-			mysqli_query(BaseObject::$con, $sql);
-			return mysqli_insert_id(BaseObject::$con);
-		} else
-		{
-			$first = true;
-			foreach ($this->columns as $column)
-			{
-				$value = $object[$column];
-				if (!is_numeric($value))
-				{
-					$value = mysqli_real_escape_string(BaseObject::$con, $value);
-					$value = "'{$value}'";
-				}
-				if ($first)
-				{
-					$first = false;
-					$list = $column;
-					$values = $value;
-				} else
-				{
-					$list = "{$list},{$column}={$value}";
-				}
-			}
-			$sql = "UPDATE {$this->table} SET {$list} WHERE id={$this->id};";
-			mysqli_query(BaseObject::$con, $sql);
-			return $this->id;
+			$arr[] = $this->getFromRow($row);
 		}
+		return $arr;
 	}
+	abstract public function write();
 	public function jsonEncode()
 	{
 		$object = (array) $this;

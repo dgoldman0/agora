@@ -21,6 +21,7 @@ if ($action = $_GET['action'])
 	} else if ($action == "recent")
 	{
 		// Checks for recent messages
+		// $recent = Activity::getRecentActivity();
 		$messages = $market->getRecentMessages($market->getUserID());
 		pushActivity($messages);
 	} else if ($action == "poll")
@@ -38,6 +39,7 @@ if ($action = $_GET['action'])
 		while($counter > 0)
 		{
 		    // Check for new data (not illustrated)
+		    // if($data = SessionNotification::getAll($market->session))
 		    if($data = $market->getSessionNotifications($market->session))
 		    {
 		        // Break out of while loop if new data is populated
@@ -62,5 +64,8 @@ if ($action = $_GET['action'])
 		{
 			http_response_code(202);
 		}
+	} else
+	{
+		// Show activity stream and allow posting
 	}
 }

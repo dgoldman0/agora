@@ -293,4 +293,14 @@ class Market extends BaseObject
 			return $activity;
 		return null;
 	}
-}
+	public function write()
+	{	
+	}
+	public function get($id = null)
+	{
+		
+	}
+	public function getFromRow($row)
+	{	
+	}
+	}
