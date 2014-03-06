@@ -38,7 +38,7 @@ function userConfigurationView($user = "")
 						</div>
 						<div class="panel-body">
 							<table class="table table-striped">
-								<tr><th><input id="checkall_master" type="checkbox" class="form-control input-md"></th><th>Username</th><th>First</th><th>Last</th><th>Email</th><th>Role</th></tr>
+								<thead><tr><th><input id="checkall_master" type="checkbox" class="form-control input-md"></th><th>Username</th><th>First</th><th>Last</th><th>Email</th><th>Role</th></tr></thead>
 								<?php
 								// Change this to Market->getUserList(true)
 								$users = $market->getUserList(true);

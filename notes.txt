@@ -17,6 +17,8 @@
 13. Certain scenarios of ON DELETE CASCADE should be changed to TRIGGER change key value
 14. Think about using a central "keyword" table.
 
+15. Implement DataTables with json integration!
+
 
 MVC
 1. Model is the only part of the code that connects to external systems

@@ -1,6 +1,13 @@
 <?php
 require_once 'data.php';
 
+$role = $_REQUEST['role'];
+if ($role == "admin")
+{
+	// Check if actually admin	
+	$root = "admin/";
+}
+
 if ($action = $_REQUEST['action'])
 {
 	if ($action == "gtusrname")
@@ -13,7 +20,6 @@ if ($action = $_REQUEST['action'])
 	}
 } else
 {
-	$root = "main";
 	$username = $_REQUEST['username'];
 	$id = $_REQUEST['id'];
 	if ($username || $id)
@@ -32,4 +38,5 @@ if ($action = $_REQUEST['action'])
 		$view = "user/list";
 	}
 }
-include "view/_$root.php";
+$include = "view/{$root}_base.php";
+include $include;

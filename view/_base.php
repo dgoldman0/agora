@@ -1,3 +1,5 @@
+<?require_once 'data.php';?>
+<?require_once 'activity.php';?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -38,7 +40,8 @@
 		</div>
 		-->
 		<div class="container">
-			<?=include "view/$view.php"?>
+			<?include 'menu.php'?>
+			<?include "view/$view.php"?>
 		</div>
 		<?=(isLoggedIn()) ? displayChat(): ''?>
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
