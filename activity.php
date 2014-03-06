@@ -58,6 +58,7 @@ if ($action = $_GET['action'])
 		// If we've made it this far, we've either timed out or have some data to deliver to the client
 		if(isset($data))
 		{
+			set_time_limit(0);
 		    // Send data to client; you may want to precede it by a mime type definition header, eg. in the case of JSON or XML
 		    pushActivity($data);
 		} else
@@ -67,5 +68,6 @@ if ($action = $_GET['action'])
 	} else
 	{
 		// Show activity stream and allow posting
+		
 	}
 }

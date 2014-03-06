@@ -223,7 +223,7 @@ class Market extends BaseObject
 	{
 		$con = BaseObject::$con;
 		mysqli_query($con, "LOCK TABLES activity, session_notifications WRITE;");
-		$sql = "SELECT * FROM activity WHERE type=10 OR TYPE=11 AND from_id={$user_id} OR to_id={$user_id} ORDER BY created_on asc;";
+		$sql = "SELECT * FROM activity WHERE (type=10 OR TYPE=11) AND (from_id={$user_id} OR to_id={$user_id}) ORDER BY created_on asc;";
 		$response = mysqli_query($con, $sql);
 		$activity = array();
 		while ($row = mysqli_fetch_array($response))

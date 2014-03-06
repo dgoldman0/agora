@@ -6,7 +6,7 @@ function pushMessage(message, usernames)
 	var usr = 0;
 	if (message.from_id != user_id)
 		usr = message.from_id;
-	else
+	else if (message.to_id != user_id)
 		usr = message.to_id;
 	// Check to see if display window is open, if not, open it
 	var wind = $( '#chat_wind_' + usr );
