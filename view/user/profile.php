@@ -70,3 +70,9 @@ function showProfile($user)
 	</div>
 	<?
 }
+
+if ($view == "user/profile")
+{
+	showProfile($user);
+}
+

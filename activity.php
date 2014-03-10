@@ -13,6 +13,7 @@ if ($action = $_GET['action'])
 			if ($market->userRoleIncludes(0) || $market->areFriends($from, $to))
 			{
 				$market->addActivity(new Activity($from, $to, 0, Activity::ACTIVITY_TYPE_MESSAGE, $_GET['message'], Activity::PRIVACY_LEVEL_FRIEND));
+				die();
 			}
 		} else
 		{
@@ -24,6 +25,7 @@ if ($action = $_GET['action'])
 		// $recent = Activity::getRecentActivity();
 		$messages = $market->getRecentMessages($market->getUserID());
 		pushActivity($messages);
+		die();
 	} else if ($action == "poll")
 	{
 		// Close the session prematurely to avoid usleep() from locking other requests
@@ -65,9 +67,13 @@ if ($action = $_GET['action'])
 		{
 			http_response_code(202);
 		}
+		die();
 	} else
 	{
 		// Show activity stream and allow posting
-		
+		$view = "activity/board";
 	}
 }
+$include = "view/{$root}_base.php";
+include $include;
+

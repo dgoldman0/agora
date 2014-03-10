@@ -1,34 +1,41 @@
 <?php
 require_once 'data.php';
-require_once 'view/user.php';
 
-if ($action = $_GET['action'])
+$role = $_REQUEST['role'];
+if ($role == "admin")
+{
+	// Check if actually admin	
+	$root = "admin/";
+}
+
+if ($action = $_REQUEST['action'])
 {
 	if ($action == "gtusrname")
 	{
-		echo jsonResponse(json_encode(User::getUserByID($_GET['id'])->username));
+//		echo jsonResponse(json_encode(User::getUserByID($_GET['id'])->username));
+	} else if ($action == "register")
+	{
+		$view="user/register";
 	}
 } else
 {
-	include 'include/header.php';
-	include 'menu.php';
-	$market->active="members";
-	$username = $_GET['user'];
-	if ($username == "")
+	$username = $_REQUEST['user'];
+	$id = $_REQUEST['id'];
+	if ($username || $id)
 	{
-		// Get user list	
-		$users = $market->getUserList(true);
-		echo '<div class="row">';
-		foreach ($users as $user)
+		if ($username)
 		{
-			printUserA($user);
+			$user = User::getUserByUsername($username);
+		} else
+		{
+			$user = User::getUserByID($id);
 		}
-		echo '</div>';
-	} else
-	{
-		// Get single user display
-		$user = User::getUserByUsername($username);
-		printUserB($user);
+		$view = "user/profile";
 	}
-	include 'include/footer.php';
+	else
+	{
+		$view = "user/list";
+	}
 }
+$include = "view/{$root}_base.php";
+include $include;

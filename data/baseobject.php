@@ -13,8 +13,6 @@ abstract class BaseObject
 		$this->columns = $columns;
 	}
 	// Fix this... should be static
-	abstract public function get($id);
-	abstract public function getFromRow($row);
 	public function getAllFromResult($result)
 	{
 		$arr = array();
@@ -24,7 +22,6 @@ abstract class BaseObject
 		}
 		return $arr;
 	}
-	abstract public function write();
 	public function jsonEncode()
 	{
 		$object = (array) $this;
@@ -44,4 +41,7 @@ abstract class BaseObject
 		$this->live = true;
 		return $this;
 	}
+	abstract public function get($id);
+	abstract public function getFromRow($row);
+	abstract public function write();
 }
