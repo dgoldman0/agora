@@ -5,7 +5,6 @@ function printFriend($friend)
 {
 	
 }
-
 function listFriends($friends)
 {
 	include 'include/header.php';

@@ -1,15 +1,7 @@
 <?
 require_once 'data.php';
-require_once 'view/json.php';
+require_once 'view/activity/_base.php';
 
-function printActivityBlock($user)
-{
-	
-}
-function printActivityEditor()
-{
-	
-}
 function printBoard($user)
 {
 	?>

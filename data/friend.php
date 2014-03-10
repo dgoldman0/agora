@@ -45,4 +45,7 @@ class Friend
 	public function getFromRow($row)
 	{	
 	}
+	public function isFriend($id)
+	{
+	}
 }

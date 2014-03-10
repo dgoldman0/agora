@@ -23,11 +23,29 @@ class Activity extends BaseObject
 		$this->content = $content;
 		$this->privacy_level = $privacy_level;
 	}
-	public function get($id)
+	public static function get($id)
 	{
-		
+		$con = BaseObject::$con;
+		if ($id)
+		{
+			$sql = "SELECT * FROM activity WHERE id=$id;";
+			return $this->getFromResult($con->query($sql));
+		} else
+		{
+			$sql = "SELECT id FROM activity;";
+			return $this->getAllFromResult($con->query($sql));
+		}
 	}
-	public function getFromRow($row)
+	public static function getByPrivacyLevel($privacy_level, $all_data)
+	{
+		$con = BaseObject::$con;
+		if ($all_data)
+			$sql = "SELECT * FROM activity WHERE privacy_level >= $privacy_level;";
+		else
+			$sql = "SELECT id FROM activity WHERE privacy_level >= $privacy_level";
+		return $this->getAllFromresponse($con->query($sql));
+	}
+	public static function getFromRow($row)
 	{
 		$act = new Activity($row['from_id'], $row['to_id'], $row['shop_id'], $row['type'], $row['content'], $row['privacy_level']);
 		$act.init();

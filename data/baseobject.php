@@ -18,9 +18,14 @@ abstract class BaseObject
 		$arr = array();
 		while ($row = mysqli_fetch_array($result))
 		{
-			$arr[] = $this->getFromRow($row);
+			$arr[] = static::getFromRow($row);
 		}
 		return $arr;
+	}
+	public function getFromResult($result)
+	{
+		if ($row = $result->fetch_array())
+			return static::getFromRow($row);
 	}
 	public function jsonEncode()
 	{
@@ -41,7 +46,15 @@ abstract class BaseObject
 		$this->live = true;
 		return $this;
 	}
-	abstract public function get($id);
-	abstract public function getFromRow($row);
-	abstract public function write();
+	public function execSQL($sql, $types, $bind)
+	{
+			$con = BaseObject::$con;
+			$stmt = $con->prepare($sql);
+			$stmt->bind_param($type, $bind);
+			$stmt->execute();
+			$stmt->close();
+	}
+	public static function get($id) {}
+	public static function getFromRow($row) {}
+	public static function write() {}
 }
