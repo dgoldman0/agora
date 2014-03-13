@@ -23,4 +23,14 @@ class Board extends BaseObject
 	{
 		
 	}
+	public function getFliers()
+	{
+		$con = BaseObject::$con;
+		$sql = "SELECT * FROM fliers WHERE board_id=$this->id";
+		$res = $con->query($sql);
+		while ($row = $res->fetch_array())
+		{
+			
+		}
+	}
 }
