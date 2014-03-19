@@ -4,7 +4,14 @@ require_once 'data.php';
 class Invite extends BaseObject
 {
 	public $invite_code, $invited_by, $expires;
-	public function write()
+	
+	public function __construct($invite_code, $invited_by, $expires)
+	{
+		$this->invite_code = $invite_code;
+		$this->invited_by = $invited_by;
+		$this->expires = $expires;
+	}
+	public static function write()
 	{
 		$con = BaseObject::$con;
 		$sql = "INSERT INTO invites (invite_code, invited_by, expires) VALUES (?,?,?);";
@@ -28,7 +35,7 @@ class Invite extends BaseObject
 			return $con->insert_id;
 		}
 	}
-	public function get($id)
+	public static function get($id)
 	{
 		$con = BaseObject::$con;
 		$result = $con->query("SELECT * FROM invites WHERE id={$id}");
@@ -42,7 +49,7 @@ class Invite extends BaseObject
 		if ($row = $result->fetch_array())
 			return getFromRow($row);
 	}
-	public function getFromRow($row)
+	public static function getFromRow($row)
 	{
 		$invite = new Invite($row['invite_code'], $row['invited_by'], $row['expires']);
 		$invite.init();

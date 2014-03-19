@@ -1,5 +1,6 @@
 <?
 require_once 'data.php';
+
 class Activity extends BaseObject
 {
 	const ACTIVITY_TYPE_JOIN = 0;
@@ -23,7 +24,7 @@ class Activity extends BaseObject
 		$this->content = $content;
 		$this->privacy_level = $privacy_level;
 	}
-	public static function get($id)
+	public static function get($id = null)
 	{
 		$con = BaseObject::$con;
 		if ($id)
@@ -51,7 +52,7 @@ class Activity extends BaseObject
 		$act.init();
 		return $act;
 	}
-	public function write()
+	public static function write()
 	{
 		if (!$this->live)
 		{

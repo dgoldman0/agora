@@ -1,6 +1,6 @@
 <?
 require_once 'data.php';
-require_once 'baseobject.php';
+
 // Shopping bag class
 class Bag extends BaseObject
 {
@@ -21,7 +21,7 @@ class Bag extends BaseObject
 	{
 		if (!$item_count && $id != -1)
 		{
-			$con = $this->con;
+			$con = BaseObject::$con;
 			$response = mysqli_query($con, "SELECT SUM(cnt) AS scnt FROM bag_items WHERE bag_id={$id}");
 			if ($row = mysqli_fetch_array($response))
 			{
@@ -32,7 +32,7 @@ class Bag extends BaseObject
 	}
 	function addItem($item)
 	{
-		$con = $this->con;
+		$con = BaseObject::$con;
 		$response = mysqli_query($con, "INSERT INTO bag_items (bag_id, item_id) VALUES ({$this->id}, {$item->id}) ON DUPLICATE KEY UPDATE cnt = cnt + 1;");
 		if ($row = mysqli_fetch_array($response))
 		{
@@ -41,7 +41,7 @@ class Bag extends BaseObject
 	}
 	function getBagItems()
 	{
-		$con = $this->con;
+		$con = BaseObject::$con;
 		$response = mysqli_query($con, "SELECT * FROM bag_items WHERE bag_id={$this->id}");
 		$items = array();
 		while ($row = mysqli_fetch_array($response))
@@ -51,17 +51,18 @@ class Bag extends BaseObject
 		}
 		return $items;
 	}
-	public function get($id)
+	public static function get($id = null)
 	{
 		
 	}
-	public function write()
+	public static function write()
 	{	
 	}
-	public function getFromRow($row)
+	public static function getFromRow($row)
 	{	
 	}
 }
+
 class BagItem extends BaseObject
 {
 	public $bag_id, $item_id, $cnt;
@@ -73,8 +74,7 @@ class BagItem extends BaseObject
 	}
 	function getItemCount($item_id)
 	{
-		global $market;
-		$con = $market->con;
+		$con = BaseObject::$con;
 		$response = mysqli_query($con, "SELECT cnt FROM bag_items WHERE bag_id={$this->bag_id} AND item_id={$item_id}");
 		if ($row = mysqli_fetch_array($response))
 		{
@@ -84,14 +84,14 @@ class BagItem extends BaseObject
 			return 0;
 		}
 	}
-	public function get($id)
+	public static function get($id = null)
 	{
 		
 	}
-	public function write()
+	public static function write()
 	{	
 	}
-	public function getFromRow($row)
+	public static function getFromRow($row)
 	{	
 	}
 }
