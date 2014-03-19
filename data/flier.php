@@ -13,7 +13,13 @@ class Flier extends BaseObject
 	}
 	public static function get($id)
 	{
-		
+		if ($id)
+		{
+			$sql = "SELECT * FROM fliers WHERE id=$id;";
+		} else {
+			// Rarely if ever used
+			$sql = "SELECT id FROM fliers;";
+		}
 	}
 	public static function getFromRow($row)
 	{

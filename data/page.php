@@ -27,6 +27,14 @@ class Page
 			$this->id
 		);
 	}
+	function getAbstract()
+	{
+		$pos = strpos($content, "<!--more");
+		if ($pos === false)
+			return $content;
+		else
+			return substr($content, 0, $pos);
+	}
 	function getCategories()
 	{
 		
