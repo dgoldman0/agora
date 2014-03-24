@@ -1,12 +1,9 @@
-<?php
+<?
 
-include 'include/header.php';
-include 'menu.php';
-?>
-                <!-- Marketing area -->
-                <div class="jumbotron">
-                        <h1>Welcome to the Agora!</h1>
-		        </div>
-<?php		        
-include 'include/footer.php';
-?>
+require_once 'data.php';
+
+$view = "shop/home";
+
+$include = "view/{$root}_base.php";
+include $include;
+

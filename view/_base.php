@@ -1,5 +1,4 @@
-<?require_once 'data.php';?>
-<?require_once 'activity.php';?>
+<?require_once 'data.php'?>
 <!DOCTYPE html>
 <html>
 	<head>

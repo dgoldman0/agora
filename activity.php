@@ -1,6 +1,5 @@
 <?
 require_once 'data.php';
-require_once 'view/activity.php';
 
 $action = $_REQUEST['action'];
 
