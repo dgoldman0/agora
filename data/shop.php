@@ -159,5 +159,15 @@ class Shop
 		$response = mysqli_query($con, "INSERT INTO items (shop_id, name, sku, short_desc, long_desc) VALUES ({$this->id}, '{$item->name}', '{$item->sku}', '{$item->short_desc}', '{$item->long_desc}');");
 		return mysqli_insert_id($con);
 	}
+	function getBoard()
+	{
+		$con = BaseObject::$con;
+		$sql = "SELECT * FROM boards WHERE shop_id = $id AND default_board = TRUE;";
+		$response = $con->query($sql);
+		if ($row = $response->fetch_array())
+		{
+			return Board::getFromRow($row);
+		}
+	}
 }
 ?>

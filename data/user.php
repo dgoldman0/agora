@@ -1,9 +1,8 @@
 <?php
 require_once 'data.php';
 
-class User
+class User extends BaseObject
 {
-	public $id;
 	public $username;
 	public $password;
 	public $user_role;
@@ -11,7 +10,7 @@ class User
 	public $first;
 	public $last;
 	
-	function __construct($username, $password, $user_role, $email, $first, $last, $id)
+	function __construct($username, $password, $user_role, $email, $first, $last)
 	{
 		$this->username = $username;
 		$this->password = $password;
@@ -19,7 +18,6 @@ class User
 		$this->email = $email;
 		$this->first = $first;
 		$this->last = $last;
-		$this->id = $id;
 	}
 	function getActiveCart()
 	{
@@ -50,7 +48,7 @@ class User
 			return $user;
 		}
 	}
-	// Change this to get($id)
+	// Deprecated
 	static function getUserByID($id)
 	{
 		$con = BaseObject::$con;
@@ -60,6 +58,26 @@ class User
 			$user = new User($row['username'], $row['user_role'], '', $row['email'], $row['first'], $row['last'], $row['id']);
 			return $user;
 		}
+	}
+	public static function get($id = null)
+	{
+		if ($id)
+		{
+			$con = BaseObject::$con;
+			$response = $con->query("SELECT * from users WHERE id=$id;");
+			if ($row = $response->fetch_array())
+			{
+				$user = getFromRow($row);
+				$user.init();
+				return $user;
+			}
+		}
+	}
+	public static function getFromRow($row) {}
+	public static function write() {}
+	public static function validate(User $user)
+	{
+		
 	}
 }
 ?>

@@ -15,7 +15,7 @@ if ($action = $_REQUEST['action'])
 //		echo jsonResponse(json_encode(User::getUserByID($_GET['id'])->username));
 	} else if ($action == "register")
 	{
-		$view="user/register";
+		$view="user/edit";
 	}
 } else
 {
