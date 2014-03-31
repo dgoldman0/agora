@@ -10,34 +10,6 @@
 		<script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
 	</head>
 	<body>
-		<!--
-		<div id="login" class="container">
-			<form class="form-horizontal" action="login.php" method="post">
-				<fieldset>
-					<legend>Agora Login</legend>
-					<div class="form-group">
-						<label class="col-md-2 control-label" for="username">Username</label>
-						<div class="col-md-4">
-							<input id="username" name="username" type="text" placeholder="Username" class="form-control input-md">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-md-2 control-label" for="password">Password</label>
-						<div class="col-md-4"><input id="password" name="password" type="password" placeholder="Password" class="form-control input-md"></div>
-					</div>
-					<div class="form-group">
-						<label class="col-md-2 control-label" for="singlebutton">Login</label>
-						<div class="col-md-2">
-							<button id="singlebutton" name="singlebutton" class="btn btn-primary">Submit</button>
-						</div>
-						<div class="col-md-2">
-							<a href="register.php">Register</a>
-						</div>
-					</div>
-				</fiedset>
-			</form>
-		</div>
-		-->
 		<div class="container">
 			<?include 'menu.php'?>
 			<?include "view/$view.php"?>
@@ -52,6 +24,9 @@
 		<script src="js/agora.js"></script>
 		<script src="js/activity.js"></script>
 		<script src="js/opentip-jquery-min.js"></script>
+		<?foreach ($scripts as $script) {
+			echo "<scrip src=\"$script\"></scrip>";
+		}?>
 		<script>
 			$( document ).ready(function ()
 			{

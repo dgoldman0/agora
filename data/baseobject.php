@@ -54,9 +54,11 @@ abstract class BaseObject
 			$stmt->execute();
 			$stmt->close();
 	}
+	// Returns whether or not 
+	public static function exists($id) {}
 	public static function get($id) {}
 	public static function getFromRow($row) {}
-	public static function write() {}
+	public function write() {}
 	// Returns an erray of error messages
-	public static function validate() {}
+	public static function validate($object) {}
 }
