@@ -52,7 +52,7 @@ class Activity extends BaseObject
 		$act.init();
 		return $act;
 	}
-	public static function write()
+	public function write()
 	{
 		if (!$this->live)
 		{
