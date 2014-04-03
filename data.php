@@ -36,30 +36,15 @@ if ($_COOKIE["session"] != "")
 	setcookie("session", $session, $expires);
 	mysqli_query($con, "UPDATE sessions SET expires='".$expires."' WHERE id='".$session."';");
 }
-$shop = $_GET['shop'];
-if ($shop == "")
+
+$sid = $_REQUEST['sid'];
+if ($sid != null)
 {
-	$shop = $_POST['shop'];
+	$shop = Shop::get($sid);
 }
-if ($shop != "")
-	$shop = toURLSafe($_GET['shop']);
-else
-	$shop = null;
 
 BaseObject::$con = $con;
 $scripts = array();
-
-$market = new Market(null, $session);
-// Move all access to current shop into this
-if ($shop != null)
-{
-	$sshop = Shop::getShopFromName($shop);
-}
-else
-{
-	$sshop = null;
-}
-$market->shop = $sshop;
 
 // Will be set in database later
 function getDefaultUserRole()
@@ -67,22 +52,9 @@ function getDefaultUserRole()
 	return 1;
 }
 
-function getUserID()
-{
-	global $session;
-	global $con;
-	if ($session != 0)
-	{
-		$sql = "SELECT user, expires from sessions WHERE id='".$session."';";
-		$response = mysqli_query($con, $sql);
-		$row = mysqli_fetch_array($response);
-		if ($row["expires"] > time())
-		{
-			return $row["user"];
-		}
-	}
-	return -1;
-}
+$uid = $_REQUEST['uid'];
+if ($uid)
+	$user = User::get($uid);
 function getServiceURL()
 {
 	global $con;
