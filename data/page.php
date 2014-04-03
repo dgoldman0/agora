@@ -1,7 +1,7 @@
 <?
 require_once 'data.php';
 
-class Page
+class Page extends 
 {
 	const TYPE_NORMAL = 1;
 	public $title, $perma, $shop_id, $tstamp, $content, $type, $id;
@@ -14,18 +14,6 @@ class Page
 		$this->content = $content;
 		$this->type = $type;
 		$this->id = $id;
-	}
-	function makeInjectionSafe()
-	{
-		$con = BaseObject::$con;
-		return new Page(mysqli_real_escape_string($con, $this->title),
-			mysqli_real_escape_string($con, $this->perma),
-			$this->shop_id,
-			$this->tstamp,
-			mysqli_real_escape_string($con, $this->content),
-			$this->type,
-			$this->id
-		);
 	}
 	function getAbstract()
 	{

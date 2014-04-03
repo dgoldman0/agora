@@ -19,8 +19,6 @@ if ($action = $_REQUEST['action'])
 	}
 } else
 {
-	$username = $_REQUEST['user'];
-	$id = $_REQUEST['id'];
 	if ($username || $id)
 	{
 		if ($username)

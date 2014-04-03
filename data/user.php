@@ -38,33 +38,20 @@ class User extends BaseObject
 		return $con->insert_id;
 		// Should add a check to make sure it worked!
 	}
-	static function getUserByUsername($username)
-	{
-		$con = BaseObject::$con;
-		$response = mysqli_query($con, "SELECT * from users WHERE username='{$username}';");
-		if ($row = mysqli_fetch_array($response))
-		{
-			$user = new User($row['username'], $row['user_role'], '', $row['email'], $row['first'], $row['last'], $row['id']);
-			return $user;
-		}
-	}
-	// Deprecated
-	static function getUserByID($id)
-	{
-		$con = BaseObject::$con;
-		$response = mysqli_query($con, "SELECT * from users WHERE id={$id};");
-		if ($row = mysqli_fetch_array($response))
-		{
-			$user = new User($row['username'], $row['user_role'], '', $row['email'], $row['first'], $row['last'], $row['id']);
-			return $user;
-		}
-	}
 	public static function get($id = null)
 	{
 		if ($id)
 		{
 			$con = BaseObject::$con;
-			$response = $con->query("SELECT * from users WHERE id=$id;");
+			if (is_numeric($id))
+			{
+				$response = $con->query("SELECT * FROM users WHERE id=$id;");
+			}
+			else
+			{
+				$username = $con->real_escape_string($id);
+				$response = $con->query("SELECT * FROM users WHERE username=$username");
+			}
 			if ($row = $response->fetch_array())
 			{
 				$user = getFromRow($row);
