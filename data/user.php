@@ -40,9 +40,9 @@ class User extends BaseObject
 	}
 	public static function get($id = null)
 	{
+		$con = BaseObject::$con;
 		if ($id)
 		{
-			$con = BaseObject::$con;
 			if (is_numeric($id))
 			{
 				$response = $con->query("SELECT * FROM users WHERE id=$id;");
@@ -54,17 +54,17 @@ class User extends BaseObject
 			}
 			if ($row = $response->fetch_array())
 			{
-				$user = getFromRow($row);
-				$user.init();
+				$user = User::getFromRow($row);
+				$user->init($row);
 				return $user;
 			}
 		} else
 		{
 			$users = array();
 			$response = $con->query("SELECT * FROM users;");
-			while ($row = $response->fetch)
+			while ($row = $response->fetch_array())
 			{
-				$users[] = getFromRow($row);
+				$users[] = User::getFromRow($row);
 			}
 			return $users;
 		}
@@ -72,7 +72,7 @@ class User extends BaseObject
 	public static function getFromRow($row)
 	{
 		$user = new User($row['username'], $row['password'], $row['user_role'], $row['email'], $row['first'], $row['last']);
-		$user.init();
+		$user->init($row);
 		return $user;
 	}
 	public function write() {}
