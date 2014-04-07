@@ -1,13 +1,6 @@
 <?php
 require_once 'data.php';
 
-$role = $_REQUEST['role'];
-if ($role == "admin")
-{
-	// Check if actually admin	
-	$root = "admin/";
-}
-
 if ($action = $_REQUEST['action'])
 {
 	if ($action == "gtusrname")
