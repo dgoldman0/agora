@@ -1,18 +1,17 @@
 <?php
 require_once 'data.php';
 
-class Shop
+class Shop extends BaseObject
 {
-	public $id, $name, $stylized, $short_desc, $url, $shop_type;
+	public $name, $url, $shop_type, $short_desc, $stylized;
 	
-	public function __construct($name, $stylized, $short_desc, $url, $shop_type, $id)
+	public function __construct($name, $url, $shop_type, $short_desc, $stylized)
 	{
 		$this->name = $name;
-		$this->stylized = $stylized;
-		$this->short_desc = $short_desc;
 		$this->url = $url;
 		$this->shop_type = $shop_type;
-		$this->id = $id;
+		$this->short_desc = $short_desc;
+		$this->stylized = $stylized;
 	}
 	// This needs to be moved into Market
 	static function addShop($shop)
@@ -30,50 +29,6 @@ class Shop
 	{
 		$con = BaseObject::$con;
 		mysqli_query($con, "UPDATE shop_users SET role_id={$role} WHERE id={$user->id};");
-	}
-	// These functons probably belong in market.php->Market class
-	static function getShopFromName($name)
-	{
-		$con = BaseObject::$con;
-		$response = mysqli_query($con, "SELECT * FROM shops WHERE name='{$name}';");
-		if ($row = mysqli_fetch_array($response))
-		{
-			$shop = new Shop($row['name'], $row['stylized'], $row['short_desc'], $row['url'], $row['shop_type'], $row['id']);
-			return $shop;
-		}
-	}
-	static function getShopFromID($id)
-	{
-		$con = BaseObject::$con;
-		$response = mysqli_query($con, "SELECT * FROM shops WHERE id={$id};");
-		if ($row = mysqli_fetch_array($response))
-		{
-			$shop = new Shop($row['name'], $row['stylized'], $row['short_desc'], $row['url'], $row['shop_type'], $id);
-			return $shop;
-		}
-	}
-	// Get the ID list of all of the shops. If $all_info then get the entire shop data and return as Shop
-	// Should move this into Market class
-	static function getShopList($all_info)
-	{
-		$con = BaseObject::$con;
-		$shops = array();
-		$response = null;
-		if ($all_info)
-			$response = mysqli_query($con, "SELECT * FROM shops;");
-				else
-			$response = mysqli_query($con, "SELECT id FROM shops;");
-		while ($row = mysqli_fetch_array($response))
-		{
-			if ($all_info)
-			{
-				array_push($shops, new Shop($row['name'], $row['stylized'], $row['short_desc'], $row['url'], $row['shop_type'], $row['id']));
-			} else
-			{
-				array_push($shops, $row['id']);
-			}
-		}
-		return $shops;
 	}
 	function getItemFromSKU($sku)
 	{
@@ -169,5 +124,34 @@ class Shop
 			return Board::getFromRow($row);
 		}
 	}
+	public static function get($id)
+	{
+		if (isset($id))
+		{
+			$con = BaseObject::$con;
+			if (is_numeric($id))
+			{
+				$response = $con->query("SELECT * FROM shops WHERE id=$id;");
+			}
+			else
+			{
+				$name = $con->real_escape_string($name);
+				$response = $con->query("SELECT * FROM shops WHERE name=$name");
+			}
+			if ($row = $response->fetch_array())
+			{
+				$shop = Shop::getFromRow($row);
+				return $shop;
+			}
+		}
+	}
+	public static function getFromRow($row)
+	{
+		$shop = new Shop($row['name'], $row['url'], $row['shop_type'], $row['short_desc'], $row['stylized']);
+		$shop->init($row);
+		return $shop;
+	}
+	public function write() {}
+	public static function validate() {}
 }
 ?>

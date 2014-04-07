@@ -39,7 +39,7 @@
 		</div>
 		-->
 		<div class="container">
-			<?include 'menu.php'?>
+			<?include "view/_menu.php"?>
 			<?include "view/$view.php"?>
 		</div>
 		<?=(isLoggedIn()) ? displayChat(): ''?>

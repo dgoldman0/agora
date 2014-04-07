@@ -50,7 +50,7 @@ class User extends BaseObject
 			else
 			{
 				$username = $con->real_escape_string($id);
-				$response = $con->query("SELECT * FROM users WHERE username=$username");
+				$response = $con->query("SELECT * FROM users WHERE username=$username;");
 			}
 			if ($row = $response->fetch_array())
 			{
@@ -58,10 +58,24 @@ class User extends BaseObject
 				$user.init();
 				return $user;
 			}
+		} else
+		{
+			$users = array();
+			$response = $con->query("SELECT * FROM users;");
+			while ($row = $response->fetch)
+			{
+				$users[] = getFromRow($row);
+			}
+			return $users;
 		}
 	}
-	public static function getFromRow($row) {}
-	public static function write() {}
+	public static function getFromRow($row)
+	{
+		$user = new User($row['username'], $row['password'], $row['user_role'], $row['email'], $row['first'], $row['last']);
+		$user.init();
+		return $user;
+	}
+	public function write() {}
 	public static function validate(User $user)
 	{
 		

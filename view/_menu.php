@@ -12,9 +12,9 @@ require_once 'data.php';
       	<span class="icon-bar"></span></button>
       	<a class="navbar-brand" href="
 	      	<?
-			if (!$market->shop == null)
+			if (!$_shop == null)
 			{
-	   			echo "shop.php?shop={$market->shop->name}\">{$market->shop->stylized}";
+	   			echo "shop.php?shop={$_shop->name}\">{$_shop->stylized}";
 			} else
 			{
 				echo 'index.php">Agora';
@@ -26,24 +26,25 @@ require_once 'data.php';
   	<!-- Collect the nav links, forms, and other content for toggling -->
   	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
   		<ul class="nav navbar-nav">
-  			<?php
+  			<?
   			// List pages as menu items
 			// Display pages
-			foreach ($market->getPageLinks(true) as $page1)
+			$pageLinks = Page::getPageLinks();
+			foreach ($pageLinks as $page1)
 			{
-				echo "<li id=\"{$page1->perma}\"><a href=\"page.php?perma={$page1->perma}\">{$page1->title}</a></li>";
+				echo "<li id=\"{$page1->id}\"><a href=\"page.php?page={$page1->id}\">{$page1->title}</a></li>";
 			}
 			echo "<li id=\"market\"><a href=\"market.php\">Market</a></li>";
-  			if (!$market->shop == null)
+  			if ($_shop->id = 0)
 			{
-		      	echo "<li id=\"members\"><a href=\"user.php?shop={$market->shop->name}\">Members</a></li>";
-				echo "<li id=\"stream\"><a href=\"stream.php?shop={$market->shop->name}\">Stream</a></li>";
+		      	echo "<li id=\"members\"><a href=\"user.php?shop={$shop->name}\">Members</a></li>";
+				echo "<li id=\"stream\"><a href=\"stream.php?shop={$shop->name}\">Stream</a></li>";
 			} else
 			{
 		      	echo "<li id=\"members\"><a href=\"user.php\">Members</a></li>";
 				echo "<li id=\"stream\"><a href=\"stream.php\">Stream</a></li>";
 	      	}
-      		if (isAdmin($market->shop))
+      		if (isAdmin($_shop))
       		{
       			echo "<li id=\"admin\"><a href=\"admin.php\">Administration</a></li>";
       		}

@@ -56,7 +56,7 @@ abstract class BaseObject
 	}
 	public static function get($id) {}
 	public static function getFromRow($row) {}
-	public static function write() {}
+	public function write() {}
 	// Returns an erray of error messages
 	public static function validate() {}
 }

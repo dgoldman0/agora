@@ -3,7 +3,6 @@
 require_once 'settings.php';
 require_once 'data/baseobject.php';
 require_once 'data/item.php';
-require_once 'data/market.php';
 require_once 'data/shop.php';
 require_once 'data/activity.php';
 require_once 'data/bag.php';
@@ -13,7 +12,6 @@ require_once 'data/user.php';
 require_once 'data/invite.php';
 require_once 'data/friend.php';
 
-// Constants: Move to Market class
 DEFINE("USER_PERMISSION_VIEW_SHOP", 4);
 DEFINE("USER_PERMISSION_EDIT_SHOP", 8);
 DEFINE("USER_PERMISSION_VIEW_USER", 16);
@@ -34,16 +32,23 @@ if ($_COOKIE["session"] != "")
 	// Reset expiration timer
 	$expires = time()+3600;
 	setcookie("session", $session, $expires);
-	mysqli_query($con, "UPDATE sessions SET expires='".$expires."' WHERE id='".$session."';");
-}
-
-$sid = $_REQUEST['sid'];
-if ($sid != null)
-{
-	$shop = Shop::get($sid);
+	$con->query("UPDATE sessions SET expires='".$expires."' WHERE id='$session';");
+	$response = $con->query("SELECT user FROM sessions WHERE id='$session'");
+	if ($row = $response->fetch_array())
+	{
+		$current_user = User::get($row['user']);
+	}
 }
 
 BaseObject::$con = $con;
+
+// If a shop is specified, use that shop, if not, use the root shop
+$shop = $_REQUEST['shop'];
+if (!isset($shop))
+{
+	$shop = 0;
+}
+$_shop = Shop::get($shop);
 
 // Will be set in database later
 function getDefaultUserRole()
@@ -51,9 +56,10 @@ function getDefaultUserRole()
 	return 1;
 }
 
-$uid = $_REQUEST['uid'];
-if ($uid)
-	$user = User::get($uid);
+$user = $_REQUEST['user'];
+if (isset($user))
+	$_user = User::get($user);
+
 function getServiceURL()
 {
 	global $con;
@@ -65,19 +71,25 @@ function getServiceURL()
 }
 function isLoggedIn()
 {
-	return getUserID() != -1;
+	return isset($_user);
 }
-function isAdmin($shop = '')
+
+function isAdmin($shop = 0)
 {
-	global $con;
+	return false;
+}
+/*
+function isAdmin($shop = 0)
+{
+	$con = BaseObject::$con;
 
 	$id = getUserID();
 	if ($id != -1)
 	{
-		if ($shop == '')
+		if ($shop == 0)
 		{
 			// Is the user an administrator
-			$sql = "SELECT user_role FROM users WHERE id=".$id." AND user_role=0;";
+			$sql = "SELECT user_role FROM users WHERE id=$id AND user_role=0;";
 			$response = mysqli_query($con, $sql);
 			return $row = mysqli_fetch_array($response);
 		} else
@@ -87,6 +99,7 @@ function isAdmin($shop = '')
 		}
 	}
 }
+*/
 /* Move these into User or Market class
  * A copy is now in the Market class. Wherever you see use of this function,
  * change the call to $market->userRoleIncludes 

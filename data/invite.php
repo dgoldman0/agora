@@ -11,7 +11,7 @@ class Invite extends BaseObject
 		$this->invited_by = $invited_by;
 		$this->expires = $expires;
 	}
-	public static function write()
+	public function write()
 	{
 		$con = BaseObject::$con;
 		$sql = "INSERT INTO invites (invite_code, invited_by, expires) VALUES (?,?,?);";

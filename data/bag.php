@@ -55,7 +55,7 @@ class Bag extends BaseObject
 	{
 		
 	}
-	public static function write()
+	public function write()
 	{	
 	}
 	public static function getFromRow($row)
@@ -88,7 +88,7 @@ class BagItem extends BaseObject
 	{
 		
 	}
-	public static function write()
+	public function write()
 	{	
 	}
 	public static function getFromRow($row)
