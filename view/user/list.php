@@ -7,7 +7,7 @@ $users = User::get();
 
 ?>
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/css/jquery.dataTables.min.css" />
-<div class="col-md-10">
+<div class="container col-md-10">
 	<table id = "users" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
 		<thead>
 			<tr>
@@ -28,7 +28,7 @@ $users = User::get();
 					<td><?=$user->username?></td>
 					<td><?=$user->first?></td>
 					<td><?=$user->last?></td>
-					<td><?=$user->email?></td>
+					<td>??</td>
 					<td><?=$user->role?></td>
 					<td>
 						<div class="btn-group">

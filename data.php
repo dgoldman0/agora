@@ -24,7 +24,10 @@ DEFINE("USER_PERMISSION_EDIT_PAGES", 512);
 // Should I cache values that will never change like user id?
 
 $con = mysqli_connect(DB_LOCATION, DB_USERNAME, DB_PASSWORD, DB_NAME);
+BaseObject::$con = $con;
+
 $session = 0;
+$_current_user = null;
 // Need to add a code snippet which will delete expired cookies now and then
 if ($_COOKIE["session"] != "")
 {
@@ -36,11 +39,9 @@ if ($_COOKIE["session"] != "")
 	$response = $con->query("SELECT user FROM sessions WHERE id='$session'");
 	if ($row = $response->fetch_array())
 	{
-		$current_user = User::get($row['user']);
+		$_current_user = User::get($row['user']);
 	}
 }
-
-BaseObject::$con = $con;
 
 // If a shop is specified, use that shop, if not, use the root shop
 $shop = $_REQUEST['shop'];
@@ -57,6 +58,7 @@ function getDefaultUserRole()
 }
 
 $user = $_REQUEST['user'];
+
 if (isset($user))
 	$_user = User::get($user);
 
@@ -71,7 +73,8 @@ function getServiceURL()
 }
 function isLoggedIn()
 {
-	return isset($_user);
+	global $_current_user;
+	return isset($_current_user);
 }
 
 function isAdmin($shop = 0)
@@ -108,21 +111,25 @@ function userRoleIncludes($capability)
 {
 	global $session;
 	global $con;
-	$id = getUserID();
-	if ($id != -1)
+	if (isset($_current_user))
 	{
-		// Is the user an administrator
-		$sql = "SELECT user_role FROM users WHERE id=".$id." AND user_role=0;";
-		$response = mysqli_query($con, $sql);
-		if ($row = mysqli_fetch_array($response))
-			return true;
-
-		// If not, does the user's role include the requested permission
-		$sql = "SELECT capability FROM user_role_capabilities WHERE capability=".$capability.";";
-		$response = mysqli_query($con, $sql);
-		return $row = mysqli_fetch_array($response);
+		$id = $_current_user->id;
+		if ($id != -1)
+		{
+			// Is the user an administrator
+			$sql = "SELECT user_role FROM users WHERE id=".$id." AND user_role=0;";
+			$response = mysqli_query($con, $sql);
+			if ($row = mysqli_fetch_array($response))
+				return true;
+	
+			// If not, does the user's role include the requested permission
+			$sql = "SELECT capability FROM user_role_capabilities WHERE capability=".$capability.";";
+			$response = mysqli_query($con, $sql);
+			return $row = mysqli_fetch_array($response);
+		}
 	}
 }
+
 // Combine this with userRoleIncludes: If no shop is specified, assume root
 function shopUserRoleIncludes($shop, $capability)
 {
