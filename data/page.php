@@ -44,9 +44,9 @@ class Page extends BaseObject
 	// If all then get every revision of the page, otherwise just get the newest version
 	public static function get($id, $all = false)
 	{
+		$con = BaseObject::$con;
 		if ($id)
 		{
-			$con = BaseObject::$con;
 			if (is_numeric($id))
 			{
 				if ($all)
@@ -56,14 +56,24 @@ class Page extends BaseObject
 			{
 				$perma = $con->real_escape_string($id);
 				if ($all)
-					$response = $con->query("SELECT * FROM pages WHERE perma=$perma");
+					$response = $con->query("SELECT * FROM pages WHERE perma=$perma AND shop_id = $_shop->id");
 			}
 			if ($row = $response->fetch_array())
 			{
-				$user = getFromRow($row);
-				$user.init();
-				return $user;
+				$page = User::getFromRow($row);
+				$page.init($row);
+				return $page;
 			}
+		} else {
+			$response = $con->query("SELECT * FROM pages");
+			$pages = array();
+			while ($row = $response->fetch_array())
+			{
+				$page = getFromRow($row);
+				$page.init($row);
+				$pages[] = $page;
+			}
+			return $pages;
 		}
 	}
 	public static function getFromRow($row)
