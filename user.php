@@ -6,7 +6,7 @@ if ($action = $_REQUEST['action'])
 	if ($action == "gtusrname")
 	{
 //		echo jsonResponse(json_encode(User::getUserByID($_GET['id'])->username));
-	} else if ($action == "register")
+	} else if ($action == "edit")
 	{
 		$view="user/edit";
 	}
@@ -28,5 +28,12 @@ if ($action = $_REQUEST['action'])
 		$view = "user/list";
 	}
 }
-$include = "view/{$root}_base.php";
+$format = $_REQUEST['format'];
+if (!isset($format))
+{
+	$include = "view/{$root}_base.php";
+} else if ($format == "modal")
+{
+	$include = "view/$view.php";
+}
 include $include;

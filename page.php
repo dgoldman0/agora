@@ -21,12 +21,21 @@ if ($action == "save")
 	header("Location: page.php?id={$id}");
 } else
 {
-	if ($id = $_GET['id'])
-		$page = $market->getPageByID($id);
-	else if ($perma = $_GET['perma'])
-		$page = $market->getPageByPerma($perma);
-	$market->active=$perma;
-	// Check edit privileges
+	$pid = $_REQUEST['pid'];
+	if (isset($pid))
+	{
+		$page = Page::get($pid);
+	} else
+	{
+		$view = "page/list";
+	}
+}
+
+$include = "view/{$root}_base.php";
+include $include;
+
+/*
+ 	// Check edit privileges
 	$edit = $market->userRoleIncludes(USER_PERMISSION_EDIT_PAGES);
 	if ($page && $action != "edit")
 	{
@@ -78,6 +87,5 @@ if ($action == "save")
 		</script>
 		<?
 	}
-}
-include 'include/footer.php';
-?>
+ * 
+ */

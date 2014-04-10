@@ -3,7 +3,7 @@ require_once 'data.php';
 
 include 'view/_adminmenu.php';
 
-$users = User::get();
+$pages = Page::get();
 
 ?>
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/css/jquery.dataTables.min.css" />
@@ -44,24 +44,6 @@ $users = User::get();
 		</tbody>
 	</table>
 </div>
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
 <?
 function javascripts()
 {
@@ -71,15 +53,6 @@ function javascripts()
 		<script type="text/javascript">
 			$(document).ready(function() {
 	    		$('#users').dataTable();
-			});
-			$(".glyphicon-edit").click(function (event) {
-				var that = $this;
-				event.preventDefault();
-				$.get(that.href, {}, function(data) {
-					var $myModal = $('#myModal');
-					$('.modal-content', $myModal).html(data);
-					$myModal.modal('show');
-				})
 			});
 		</script>
 	<?
