@@ -29,15 +29,6 @@ class User extends BaseObject
 			return $row['id'];
 		}
 	}
-	// Change this to write and make injection safe
-	static function addUser($usr)
-	{
-		$con = BaseObject::$con;
-		$sql = "INSERT INTO users (username, password, user_role, email, first, last) VALUES ('{$usr->username}', SHA2('{$usr->password}', 512), {$usr->user_role}, '{$usr->email}', '{$usr->first}', '{$usr->last}');";
-		$con->query($sql);
-		return $con->insert_id;
-		// Should add a check to make sure it worked!
-	}
 	public static function get($id = null)
 	{
 		$con = BaseObject::$con;
@@ -55,7 +46,6 @@ class User extends BaseObject
 			if ($row = $response->fetch_array())
 			{
 				$user = User::getFromRow($row);
-				$user->init($row);
 				return $user;
 			}
 		} else
@@ -69,13 +59,46 @@ class User extends BaseObject
 			return $users;
 		}
 	}
+	public static function getUsername($id)
+	{
+		if (isset($id))
+		{
+			$sql = "SELECT username FROM users WHERE id = $id;";
+			$response = BaseObject::$con->query($sql);
+			if ($row = $response->fetch_array())
+			{
+				return $row['username'];
+			}
+		}
+	}
 	public static function getFromRow($row)
 	{
 		$user = new User($row['username'], $row['password'], $row['user_role'], $row['email'], $row['first'], $row['last']);
 		$user->init($row);
 		return $user;
 	}
-	public function write() {}
+	public function write()
+	{
+		if (!$this->live)
+		{
+			$con = BaseObject::$con;
+			$sql = "INSERT INTO users (username, password, user_role, email, first, last) VALUES (?,?,?,?,?,?);";
+			$stmt = $con->prepare($sql);
+			$stmt->bind_param('ssisss', $this->username, $this->password, $this->user_role, $this->email, $this->first, $this->last);
+			$stmt->execute();
+			$stmt->close();
+			return $con->insert_id;
+		} else
+		{
+			$con = BaseObject::$con;
+			$sql = "UPDATE users SET username = ?, password = ?, user_role = ?, email = ?, first = ?, last = ?) WHERE id = ?;";
+			$stmt = $con->prepare($sql);
+			$stmt->bind_param('ssisssi', $this->username, $this->password, $this->user_role, $this->email, $this->first, $this->last, $this->id);
+			$stmt->execute();
+			$stmt->close();
+			return $id;
+		}
+	}
 	public static function validate(User $user)
 	{
 		

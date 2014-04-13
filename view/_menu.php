@@ -34,16 +34,9 @@ isLoggedIn();
 			{
 				echo "<li id=\"{$page1->id}\"><a href=\"page.php?page={$page1->id}\">{$page1->title}</a></li>";
 			}
-			echo "<li id=\"market\"><a href=\"market.php\">Market</a></li>";
-  			if ($_shop->id = 0)
-			{
-		      	echo "<li id=\"members\"><a href=\"user.php?shop={$shop->name}\">Members</a></li>";
-				echo "<li id=\"stream\"><a href=\"stream.php?shop={$shop->name}\">Stream</a></li>";
-			} else
-			{
-		      	echo "<li id=\"members\"><a href=\"user.php\">Members</a></li>";
-				echo "<li id=\"stream\"><a href=\"stream.php\">Stream</a></li>";
-	      	}
+			echo "<li id=\"market\"><a href=\"shop.php\">Market</a></li>";
+	      	echo "<li id=\"members\"><a href=\"user.php\">Members</a></li>";
+			echo "<li id=\"stream\"><a href=\"activity.php\">Recent Activity</a></li>";
       		if (isAdmin($_shop))
       		{
       			echo "<li id=\"admin\"><a href=\"admin.php\">Administration</a></li>";
@@ -64,7 +57,7 @@ isLoggedIn();
 	          		<li><a href="/settings.php">Settings</a></li>
 			  		<?= (isLoggedIn()) ? '<li><a href="cart.php">Cart</a></li>' : ''?>
 	          		<li class="divider"></li>
-			  		<?= (isLoggedIn()) ? '<li><a href="login.php?logout=true">Logout</a></li>' : '<li><a href="login.php">Login</a></li>'?>
+			  		<?= (isLoggedIn()) ? '<li><a href="user.php?logout=true">Logout</a></li>' : '<li><a id="login" href="user.php?action=login">Login</a></li>'?>
 				</ul>
 			</li>
 		</ul>

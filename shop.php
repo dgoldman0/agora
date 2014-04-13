@@ -1,30 +1,36 @@
-<?php
-// Shop index
-require_once 'data.php';
-require_once 'data/shop.php';
-require_once 'restaurants/restaurant.php';
-require_once 'stores/store.php';
+<?
 
-$shop = $market->shop;
-if ($shop == "" || $shop == null)
+require_once 'data.php';
+
+$format = $_REQUEST['format'];
+
+if ($action = $_REQUEST['action'])
 {
-	$protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-	// Check if the current URL matches any stores, of so, set store to that
-//	header("Location: ".$protocol.getServiceURL());
-	die();
+	switch ($action)
+	{
+		case "edit":
+			$view = "shop/edit";
+			break;
+		default: 
+	}
 } else
 {
-	include 'include/header.php';
-	include 'menu.php';
-	if ($shop->shop_type == 0)
+	if ($_shop->id != 0)
 	{
-		// Display store data
-		displayStore($shop);
-	} else if ($shop->shop_type == 1)
-	{
-		// Display restaurant data
-		displayRestaurant($shop);
+		 $view = "shop/home";
+	} else {
+		if ($format == "admin" && isAdmin($_shop->id))
+			$view = "shop/list";
+		else
+			$view = "shop/market";	
 	}
-	include 'include/footer.php';
 }
-?>
+
+if ($format == "modal")
+{
+	$include = "view/$view.php";
+} else
+{
+	$include = "view/{$root}_base.php";
+}
+include $include;

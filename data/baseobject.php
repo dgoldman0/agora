@@ -46,11 +46,11 @@ abstract class BaseObject
 		$this->live = true;
 		return $this;
 	}
-	public function execSQL($sql, $types, $bind)
+	public static function execSQL($sql, $types, $bind)
 	{
 			$con = BaseObject::$con;
 			$stmt = $con->prepare($sql);
-			$stmt->bind_param($type, $bind);
+			$stmt->bind_param($types, $bind);
 			$stmt->execute();
 			$stmt->close();
 	}

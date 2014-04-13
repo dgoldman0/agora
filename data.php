@@ -35,21 +35,20 @@ if ($_COOKIE["session"] != "")
 	// Reset expiration timer
 	$expires = time()+3600;
 	setcookie("session", $session, $expires);
-	$con->query("UPDATE sessions SET expires='".$expires."' WHERE id='$session';");
+	$con->query("UPDATE sessions SET expires='$expires' WHERE id='$session';");
 	$response = $con->query("SELECT user FROM sessions WHERE id='$session'");
 	if ($row = $response->fetch_array())
 	{
 		$_current_user = User::get($row['user']);
 	}
 }
-
 // If a shop is specified, use that shop, if not, use the root shop
-$shop = $_REQUEST['shop'];
-if (!isset($shop))
+$sid = $_REQUEST['sid'];
+if (!isset($sid))
 {
-	$shop = 0;
+	$sid = 0;
 }
-$_shop = Shop::get($shop);
+$_shop = Shop::get($sid);
 
 // Will be set in database later
 function getDefaultUserRole()
@@ -79,14 +78,10 @@ function isLoggedIn()
 
 function isAdmin($shop = 0)
 {
-	return false;
-}
-/*
-function isAdmin($shop = 0)
-{
 	$con = BaseObject::$con;
 
-	$id = getUserID();
+	global $_current_user;
+	$id = $_current_user->id;
 	if ($id != -1)
 	{
 		if ($shop == 0)
@@ -102,7 +97,6 @@ function isAdmin($shop = 0)
 		}
 	}
 }
-*/
 /* Move these into User or Market class
  * A copy is now in the Market class. Wherever you see use of this function,
  * change the call to $market->userRoleIncludes 

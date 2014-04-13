@@ -61,7 +61,6 @@ class Page extends BaseObject
 			if ($row = $response->fetch_array())
 			{
 				$page = User::getFromRow($row);
-				$page.init($row);
 				return $page;
 			}
 		} else {
@@ -69,9 +68,7 @@ class Page extends BaseObject
 			$pages = array();
 			while ($row = $response->fetch_array())
 			{
-				$page = getFromRow($row);
-				$page.init($row);
-				$pages[] = $page;
+				$pages[] = getFromRow($row);
 			}
 			return $pages;
 		}
@@ -79,7 +76,7 @@ class Page extends BaseObject
 	public static function getFromRow($row)
 	{
 			$page = new Page($row['title'], $row['perma'], $row['shop_id'], $row['content'], $row['type']);
-			$page.init();
+			$page->init($row);
 			return $page;
 	}
 	public function write()

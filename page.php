@@ -1,24 +1,28 @@
 <?
 // View and edit pages
 require_once 'administration.php';
-require_once 'data/page.php';
-include 'include/header.php';
-include 'menu.php';
 
 $action = $_GET['action'];
 // Modify to take care of revision history. Right now it just posts a new page with the same perma, which causes errors
-if ($action == "save")
+
+if ($action = $_RESPONSE['action'])
 {
-	$shop_id = 0;
-	if ($market->shop)
-		$shop_id = $market->shop->id;
-	if (!$perma = $_POST['perma'])
-		$perma = toURLSafe($_POST['title']);
-	if (!$id = $_GET['id'])
-		$id = -1;
-	$page = new Page($_POST['title'], $perma, $shop_id, null, $_POST['content'], 1, $id);
-	$id = $market->addPage($page);
-	header("Location: page.php?id={$id}");
+	switch ($action)
+	{
+		case "save":
+			$shop_id = 0;
+			if ($market->shop)
+				$shop_id = $market->shop->id;
+			if (!$perma = $_POST['perma'])
+				$perma = toURLSafe($_POST['title']);
+			if (!$id = $_GET['id'])
+				$id = -1;
+			$page = new Page($_POST['title'], $perma, $shop_id, null, $_POST['content'], 1, $id);
+			$id = $market->addPage($page);
+			header("Location: page.php?id={$id}");
+			break;
+		default:
+	}
 } else
 {
 	$pid = $_REQUEST['pid'];
@@ -27,11 +31,20 @@ if ($action == "save")
 		$page = Page::get($pid);
 	} else
 	{
-		$view = "page/list";
+		if ($format == "admin")
+			$view = "admin/page/list";
+		else
+			$view = "page/list";
 	}
 }
 
-$include = "view/{$root}_base.php";
+if ($format == "modal")
+{
+	$include = "view/$view.php";
+} else
+{
+	$include = "view/{$root}_base.php";
+}
 include $include;
 
 /*

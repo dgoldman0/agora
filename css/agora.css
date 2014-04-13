@@ -1,6 +1,4 @@
-@import url("/css/bootstrap.min.css");
-@import url("/css/media_management.css");
-@import url("/css/opentip.css");
+@import url("//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.min.css");
 .vender-block {
 	border-width: 1px;
 	border-color: #cccccc #aaaaaa #999999 #aaaaaa;
@@ -29,7 +27,6 @@ td.hidden
 {
 	display: none;
 }
-.modal-backdrop {background: white;}
 
 h2 {text-decoration:underline!important;font-weight: bold!important;font-style:italic!important;margin-bottom:8px!important;}
 h3 {font-style:italic!important;margin-bottom:8px!important;}

@@ -1,78 +1,79 @@
-<?php
+<?
 require_once 'data.php';
-require_once 'data/price.php';
 
-class Item
+class Item extends BaseObject
 {
-	public $shop_id, $name, $sku, $short_desc, $long_desc, $id;
-	public function __construct($shop_id, $name, $sku, $short_desc, $long_desc, $id)
+	public $shop_id, $name, $sku, $short_desc, $long_desc;
+	public function __construct($shop_id, $name, $sku, $short_desc, $long_desc)
 	{
 		$this->shop_id = $shop_id;
 		$this->name = $name;
 		$this->sku = $sku;
 		$this->short_desc = $short_desc;
 		$this->long_desc = $long_desc;
-		$this->id = $id;
 	}
-	function makeInjectionSafe()
+	public static function get($id = null, $shop_id = null)
 	{
-		global $market;
-		$con = $market->con;
-		return new Item($this->shop_id,
-			mysqli_real_escape_string($con, $this->name),
-			mysqli_real_escape_string($con, $this->sku),
-			mysqli_real_escape_string($con, $this->short_desc),
-			mysqli_real_escape_string($con, $this->long_desc),
-			$this->id);
-	}
-	public function getItemImages($all_info)
-	{
-		global $market;
-		$con = $market->con;
-		$images = array();
-		$response = null;
-		if ($all_info)
-			$response = mysqli_query($con, "SELECT * FROM item_images WHERE id=".$this->id.";");
-				else
-			$response = mysqli_query($con, "SELECT id FROM item_images WHERE id=".$this->id.";");
-		while ($row = mysqli_fetch_array($response))
+		$con = BaseObject::$con;
+		if ($id)
 		{
-			if ($all_info)
+			if (is_numeric($id))
 			{
-				array_push($images, new ItemImage());
-			} else
-			{
-				array_push($images, $row['id']);
+				$response = $con->query("SELECT * FROM items WHERE id=$id;");
 			}
-		}
-		return $images;
-	}
-	public function removePrices()
-	{
-		global $market;
-		$con = $market->con;
-		$response = mysqli_query($con, "DELETE FROM item_prices WHERE item_id={$this->id};");
-	}
-	public function addPrice($price)
-	{
-		global $market;
-		$con = $market->con;
-		if ($this->id != -1)
+			else
+			{
+				$sku = $con->real_escape_string($id);
+				$response = $con->query("SELECT * FROM items WHERE sku=$sku AND shop_id = $shop_id;");
+			}
+			if ($row = $response->fetch_array())
+			{
+				$item = Item::getFromRow($row);
+				return $item;
+			}
+		} else
 		{
-			$response = mysqli_query($con, "INSERT INTO item_prices (item_id, price_category, currency, value) VALUES ({$this->id}, {$price->price_category}, {$price->currency}, {$price->value});");
+			$items = array();
+			if (!isset($shop_id))
+				$response = $con->query("SELECT * FROM items;");
+			else
+				$response = $con->query("SELECT * FROM items WHERE shop_id = $shop_id;");
+			while ($row = $response->fetch_array())
+			{
+				$items[] = Item::getFromRow($row);
+			}
+			return $items;
 		}
 	}
-	// Only selects list price right now
-	public function getPrice()
+	public static function getFromRow($row)
 	{
-		global $market;
-		$con = $market->con;
-		$response = mysqli_query($con, "SELECT * FROM item_prices WHERE item_id={$this->id} AND price_category=0;");
-		if ($row = mysqli_fetch_array($response))
+		$item = new Item($row['shop_id'], $row['name'], $row['sku'], $row['short_desc'], $row['long_desc']);
+		$item->init($row);
+		return $item;
+	}
+	public function write()
+	{
+		$con = BaseObject::$con;
+		if (!$this->live)
 		{
-			return new Price($row['item_id'], $row['price_category'], $row['currency'], $row['value'], $row['id']);
+			$sql = "INSERT INTO items (shop_id, name, sku, short_desc, long_desc) VALUES (?,?,?,?,?);";
+			$stmt = $con->prepare($sql);
+			$stmt->bind_param('issss', $this->shop_id, $this->name, $this->sku, $this->short_desc, $this->long_desc);
+			$stmt->execute();
+			$stmt->close();
+			return $con->insert_id;
+		} else
+		{
+			$sql = "UPDATE items SET shop_id = ?, name = ?, sku = ?, short_desc = ?, long_desc = ?) WHERE id = ?;";
+			$stmt = $con->prepare($sql);
+			$stmt->bind_param('issssi', $this->shop_id, $this->name, $this->sku, $this->short_desc, $this->long_desc, $this->id);
+			$stmt->execute();
+			$stmt->close();
+			return $id;
 		}
-		return new Price($this->id, 0, 1, '0.000', -1);
+	}
+	public static function validate(Item $item)
+	{
+		
 	}
 }
-?>

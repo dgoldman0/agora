@@ -8,28 +8,26 @@ $pages = Page::get();
 ?>
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/css/jquery.dataTables.min.css" />
 <div class="col-md-10">
-	<table id = "users" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
+	<table id = "pages" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
 		<thead>
 			<tr>
-				<th>Username</th>
-				<th>First Name</th>
-				<th>Last Name</th>
-				<th>Email</th>
-				<th>Role</th>
+				<th>Title</th>
+				<th>Perma</th>
+				<th>Shop</th>
+				<th>Type</th>
 				<th>Actions</th>
 			</tr>
 		</thead>
 		<tbody>		
 			<?
-			foreach ($users as $user)
+			foreach ($pages as $page)
 			{
 				?>
 				<tr>
-					<td><?=$user->username?></td>
-					<td><?=$user->first?></td>
-					<td><?=$user->last?></td>
-					<td><?=$user->email?></td>
-					<td><?=$user->role?></td>
+					<td><?=$page->title?></td>
+					<td><?=$page->perma?></td>
+					<td><?=$page->shop_id?></td>
+					<td></td>
 					<td>
 						<div class="btn-group">
 							<a class="btn btn-sm btn-default glyphicon glyphicon-edit" title="Edit" href="?action=edit&id=<?=$user->id?>"></a>
@@ -52,7 +50,20 @@ function javascripts()
 		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
-	    		$('#users').dataTable();
+	    		$('#pages').dataTable();
+				$('.glyphicon-edit').click(function (event) {
+					var that = this;
+					event.preventDefault();
+					$.get(that.href, { format: 'modal'}, function(data){
+						var myModal = $("#myModal");
+						$(".modal-content", myModal).html(data);
+						myModal.modal('show');
+					})
+				});
+				$('.glyphicon-delete').click(function (event) {
+					var that = $this;
+					event.preventDefault();
+				});
 			});
 		</script>
 	<?
