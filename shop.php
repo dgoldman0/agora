@@ -20,7 +20,7 @@ if ($action = $_REQUEST['action'])
 		 $view = "shop/home";
 	} else {
 		if ($format == "admin" && isAdmin($_shop->id))
-			$view = "admin/shop/list";
+			$view = "shop/admin/list";
 		else
 			$view = "shop/list";	
 	}
