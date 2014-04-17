@@ -41,6 +41,17 @@ class Page extends BaseObject
 		}
 		return $pageLinks;
 	}
+	public static function permaExists($perma, $shop_id)
+	{
+		$con = BaseObject::$con;
+		$sql = "SELECT id FROM pages WHERE perma='$perma' AND shop_id = $shop_id;";
+		$response = $con->query($sql);
+		if ($row = $response->fetch_array())
+		{
+			return true;
+		}
+		return false;
+	}
 	// If all then get every revision of the page, otherwise just get the newest version
 	public static function get($id, $all = false)
 	{
@@ -56,7 +67,7 @@ class Page extends BaseObject
 			{
 				$perma = $con->real_escape_string($id);
 				if ($all)
-					$response = $con->query("SELECT * FROM pages WHERE perma=$perma AND shop_id = $_shop->id");
+					$response = $con->query("SELECT * FROM pages WHERE perma='$perma' AND shop_id = $_shop->id;");
 			}
 			if ($row = $response->fetch_array())
 			{
@@ -98,29 +109,26 @@ class Page extends BaseObject
 		return $con->insert_id;
 		}
 	// I want to replace these text errors with an error hierarchy
-	public static function validate()
+	public static function validate($page)
 	{
 		$errors = array();
-		if ($this->perma)
+		if (isset($page->shop_id))
 		{
-			if (permaExists($this->perma))
-				$errors[] = "Perma Exists";
+			if ($page->shop_id < 0 || !Shop::exists($page->shop_id))
+			{
+				$errors[] = new Error("Invalid Shop");
+			}
+			if ($page->perma)
+			{
+				if (Page::permaExists($page->perma, $page->shop_id) && !$page->live)
+					$errors[] = new Error("Perma Exists");
+			} else
+			{
+				$errors[] = new Error("Perma Blank");
+			}
 		} else
 		{
-			$error = "Perma Blank";
-		}
-		if ($shop_id)
-		{
-			if ($shop_id >= 0)
-			{
-				// Check if shop exists
-				if (!Shop::exists($shop_id))
-				{
-					$errors[] = "Invalid Shop";
-				}
-			} else {
-				$errors[] = "Invalid Shop";
-			}
+			$errors[] = new Error("No Shop Specified");
 		}
 		return $errors;
 	}

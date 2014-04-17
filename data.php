@@ -11,6 +11,7 @@ require_once 'data/page.php';
 require_once 'data/user.php';
 require_once 'data/invite.php';
 require_once 'data/friend.php';
+require_once 'data/error.php';
 
 DEFINE("USER_PERMISSION_VIEW_SHOP", 4);
 DEFINE("USER_PERMISSION_EDIT_SHOP", 8);

@@ -20,9 +20,9 @@ if ($action = $_REQUEST['action'])
 		 $view = "shop/home";
 	} else {
 		if ($format == "admin" && isAdmin($_shop->id))
-			$view = "shop/list";
+			$view = "admin/shop/list";
 		else
-			$view = "shop/market";	
+			$view = "shop/list";	
 	}
 }
 

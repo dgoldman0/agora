@@ -97,9 +97,9 @@ if ($action = $_REQUEST['action'])
 	else
 	{
 		if ($format == "admin" && isAdmin($_shop->id))
-			$view = "user/list";
+			$view = "user/admin/list";
 		else
-			$view = "user/search";
+			$view = "user/list";
 	}
 }
 if ($format == "modal")

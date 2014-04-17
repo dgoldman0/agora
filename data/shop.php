@@ -13,6 +13,24 @@ class Shop extends BaseObject
 		$this->short_desc = $short_desc;
 		$this->stylized = $stylized;
 	}
+	public static function exists($id)
+	{
+		$con = BaseObject::$con;
+		if (is_numeric($id))
+		{
+			$response = $con->query("SELECT id FROM shops WHERE id=$id;");
+		}
+		else
+		{
+			$name = $con->real_escape_string($id);
+			$response = $con->query("SELECT id FROM shops WHERE name='$name';");
+		}
+		if ($row = $response->fetch_array())
+		{
+			return true;
+		}
+		return false;
+	}
 	function getBoard()
 	{
 		$con = BaseObject::$con;
@@ -35,7 +53,7 @@ class Shop extends BaseObject
 			else
 			{
 				$name = $con->real_escape_string($id);
-				$response = $con->query("SELECT * FROM shops WHERE name='$name'");
+				$response = $con->query("SELECT * FROM shops WHERE name='$name';");
 			}
 			if ($row = $response->fetch_array())
 			{
