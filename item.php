@@ -35,17 +35,22 @@ if ($action = $_REQUEST['action'])
 	}
 } else
 {
-	if ($format == "admin" && isAdmin($_shop->id))
+	if ($layout == "admin" && isAdmin($_shop->id) && !isset($format))
 		$view = "item/admin/list";
 	else
-		$view = "item/list";	
+		$view = "item/list";
 }
 
-if ($format == "modal")
+switch ($format)
 {
-	$include = "view/$view.php";
-} else
-{
-	$include = "view/{$root}_base.php";
+	case "modal":
+	case "csv":
+	case "json":
+		$include = "view/$view.php";
+		break;
+	default:
+		$include = "view/_base.php";
 }
-include $include;
+
+if (isset($include))
+	include $include;
