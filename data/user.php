@@ -19,16 +19,6 @@ class User extends BaseObject
 		$this->first = $first;
 		$this->last = $last;
 	}
-	function getActiveCart()
-	{
-		$con = BaseObject::$con;
-		$sql = "SELECT id FROM shopping_carts WHERE owner_id = {$this->id} AND active=true;";
-		$response = mysqli_query($con, $sql);
-		if ($row = mysqli_fetch_array($response))
-		{
-			return $row['id'];
-		}
-	}
 	public static function get($id = null)
 	{
 		$con = BaseObject::$con;

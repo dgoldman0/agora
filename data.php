@@ -98,6 +98,9 @@ function isLoggedIn()
 
 function isAdmin($shop = 0)
 {
+	global $_current_user;
+	if (!isset($_current_user))
+		return false;
 	$con = BaseObject::$con;
 
 	global $_current_user;
@@ -113,7 +116,11 @@ function isAdmin($shop = 0)
 		} else
 		{
 			// Will fix later
-			return false;
+			// Is the user an administrator
+			$sql = "SELECT user_role FROM users WHERE id=$id AND user_role=0;";
+			$response = mysqli_query($con, $sql);
+			return $row = mysqli_fetch_array($response);
+						return false;
 		}
 	}
 }
@@ -206,4 +213,11 @@ function validateEmail($email)
 function toURLSafe($str)
 {
 	return preg_replace('/[^\w]+/', '_', strtolower($str));
+}
+function jsonResponse($data)
+{
+	$response = array();
+	$response['session'] = $session;
+	$response['data'] = $data;
+	return json_encode($response);
 }

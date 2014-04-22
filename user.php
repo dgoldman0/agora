@@ -3,6 +3,7 @@ require_once 'data.php';
 
 $uid = $_REQUEST['uid'];
 $format = $_REQUEST['format'];
+$layout = $_REQUEST['layout'];
 
 if ($uid)
 {
@@ -55,7 +56,7 @@ if ($action = $_REQUEST['action'])
 	} else if ($action = "logout")
 	{
 		setcookie("session", "", time() - 3600);
-		mysqli_query($con, "DELETE FROM sessions WHERE session='".$session."';");
+		mysqli_query($con, "DELETE FROM sessions WHERE session='$session';");
 		header("Location: index.php");
 		die();
 	} else if ($action = "save")
@@ -96,7 +97,7 @@ if ($action = $_REQUEST['action'])
 	}
 	else
 	{
-		if ($format == "admin" && isAdmin($_shop->id))
+		if ($layout == "admin" && isAdmin($_shop->id))
 			$view = "user/admin/list";
 		else
 			$view = "user/list";

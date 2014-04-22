@@ -18,11 +18,10 @@ if ($action = $_REQUEST['action'])
 		case "edit":
 			if (isset($_item))
 			{
-				if ($isAdmin($_item->shop_id))
-					$view = "item/edit";
+				$_shop = Shop::get($_item->shop_id);
+				if ($isAdmin($_shop->id))
+					$view = "item/admin/edit";
 			}
-			if (!isset($view))
-				$view = "item/list";
 			break;
 		case "csveditor":
 			$view = "item/csvEditor";
@@ -35,12 +34,17 @@ if ($action = $_REQUEST['action'])
 	}
 } else
 {
-	if ($layout == "admin" && isAdmin($_shop->id) && !isset($format))
-		$view = "item/admin/list";
-	else
-		$view = "item/list";
+	if (!isset($_item))
+	{
+		if ($layout == "admin" && isAdmin($_shop->id) && !isset($format))
+			$view = "item/admin/list";
+		else
+			$view = "item/list";
+	} else
+	{
+		$view = "item/detailed";
+	}
 }
-
 switch ($format)
 {
 	case "modal":

@@ -3,12 +3,12 @@ require_once 'data.php';
 
 include 'view/_adminmenu.php';
 
-$items = Item::get(null, $_shop->id);
+$objects = ItemCategory::get(null, $_shop->id);
 
 ?>
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/css/jquery.dataTables.min.css" />
 <div class="container col-md-10">
-	<h2>Item Management</h2>
+	<h2>Item Category Management</h2>
 	<div class="btn-group">
 		<a class="btn btn-sm btn-default glyphicon glyphicon-plus" title = "Add Item" href = "?action=edit"></a>
 		<a class="btn btn-sm btn-default glyphicon glyphicon-open" title = "Add From CSV" href = "?action=csveditor"></a>
@@ -18,21 +18,18 @@ $items = Item::get(null, $_shop->id);
 		<thead>
 			<tr>
 				<th>Name</th>
-				<th>SKU</th>
-				<th>Short Description</th>
+				<th>Parent</th>
 				<th>Actions</th>
 			</tr>
 		</thead>
 		<tbody>		
 			<?
-			foreach ($items as $item)
+			foreach ($objects as $object)
 			{
-				$sd = $item->short_desc;
-				if (strlen($sd) > 50)
-					$sd = substr($sd, 0, 50)."...";
 				?>
 				<tr>
-					<td><?=$item->name?></td>
+					<td><?=$object->name?></td>
+					<td><?=$object->parent?></td>
 					<td><?=$item->sku?></td>
 					<td title="<?=$item->short_desc?>"><?=$sd?></td>
 					<td>

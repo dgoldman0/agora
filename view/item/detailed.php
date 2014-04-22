@@ -1,6 +1,7 @@
 <?
 
 require_once 'data.php';
+$item = $_item;
 ?>
 
 <div class="row">
@@ -75,15 +76,10 @@ require_once 'data.php';
 				<div class="button-toolbar" role="toobar">
 					<div class="btn-group">
 						<button type="button" onClick="addItem('<?=$item->sku?>', '<?=$shop->name?>');" class="btn btn-default"><span id="bagadd" class="glyphicon glyphicon-briefcase" title="Add to Bag"></span></button>
-						<? if ($market->alreadyLiked($item)) {?>
-						<button type="button" onClick="likeItem('<?=$item->sku?>', '<?=$shop->name?>');" class="btn btn-default"><span id="like" class="glyphicon glyphicon-heart-empty" title="Like"></span></button>
-						<?} else {?>
-						<button type="button" onClick="likeItem('<?=$item->sku?>', '<?=$shop->name?>');" class="btn btn-default"><span id="like" class="glyphicon glyphicon-heart" title="Like"></span></button>
-						<?}?>
 					</div>
 				</div>
 				<hr/>
-				Price: <?=$item->getPrice()->str()?><br/>
+				Price: <br/>
 				Score: 
 			</div>
 		</div>
@@ -99,3 +95,12 @@ require_once 'data.php';
 		</div>
 	</div>
 </div>
+
+<?
+/*
+						<? if ($market->alreadyLiked($item)) {?>
+						<button type="button" onClick="likeItem('<?=$item->sku?>', '<?=$shop->name?>');" class="btn btn-default"><span id="like" class="glyphicon glyphicon-heart-empty" title="Like"></span></button>
+						<?} else {?>
+						<button type="button" onClick="likeItem('<?=$item->sku?>', '<?=$shop->name?>');" class="btn btn-default"><span id="like" class="glyphicon glyphicon-heart" title="Like"></span></button>
+						<?}?>
+*/

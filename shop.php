@@ -3,6 +3,7 @@
 require_once 'data.php';
 
 $format = $_REQUEST['format'];
+$layout = $_REQUEST['layout'];
 
 if ($action = $_REQUEST['action'])
 {
@@ -19,7 +20,7 @@ if ($action = $_REQUEST['action'])
 	{
 		 $view = "shop/home";
 	} else {
-		if ($format == "admin" && isAdmin($_shop->id))
+		if ($layout == "admin" && isAdmin($_shop->id))
 			$view = "shop/admin/list";
 		else
 			$view = "shop/list";	

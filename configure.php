@@ -109,8 +109,7 @@ if (!mysqli_connect_errno($con))
 					if ($con->error == "") $con->query("CREATE TABLE tax_categories (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL, type SMALLINT(5) NOT NULL, value DECIMAL(6, 3), PRIMARY KEY(id)) ENGINE=InnoDB;");
 					if ($con->error == "") $con->query("CREATE TABLE item_tax_categories (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, item_id INT(11) UNSIGNED NOT NULL, cat_id INT (11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE, FOREIGN KEY(cat_id) REFERENCES tax_categories(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					// I don't really want to cascade on delete. I want to set to 0 on delete
-					if ($con->error == "") $con->query("CREATE TABLE item_category_codes (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL, parent INT(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(parent) REFERENCES item_category_codes(id) ON DELETE CASCADE);");
-					if ($con->error == "") $con->query("CREATE TABLE item_categories (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, cat_code INT(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(cat_code) REFERENCES item_category_codes(id) ON DELETE CASCADE);");
+					if ($con->error == "") $con->query("CREATE TABLE item_categories ($base, name VARCHAR(60) NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, parent INT(11) UNSIGNED DEFAULT NULL, PRIMARY KEY(id), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE, FOREIGN KEY(parent) REFERENCES item_categories(id)) ENGINE=InnoDB;");
 
 					// Cart & Bag tables
 					if ($con->error == "") $con->query("CREATE TABLE shopping_carts (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, owner_id INT(11) UNSIGNED NOT NULL, name VARCHAR(255) NOT NULL DEFAULT '', wishlist TINYINT(1) NOT NULL DEFAULT 0, active TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(owner_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE=InnoDB;");
@@ -150,7 +149,7 @@ if (!mysqli_connect_errno($con))
 					if ($con->error == "") $con->query("CREATE TABLE activity ($base, from_id INT(11) UNSIGNED NOT NULL, to_id INT(11) UNSIGNED DEFAULT NULL, shop_id INT(11) UNSIGNED NOT NULL DEFAULT 0, type SMALLINT(5) UNSIGNED NOT NULL DEFAULT 1, content MEDIUMBLOB NOT NULL, privacy_level SMALLINT(5), PRIMARY KEY(id), FOREIGN KEY(from_id) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY(to_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE=InnoDB, AUTO_INCREMENT=100;");
 					if ($con->error == "") $con->query("CREATE TABLE activity_filters ($base, user_id INT(11) UNSIGNED NOT NULL, name VARCHAR(60) NOT NULL, PRIMARY KEY(id), FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE) ENGINE=InnoDB, AUTO_INCREMENT=100;");
 
-										if ($con->error == "") $con->query("CREATE TABLE board (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, shop_id INT(11) UNSIGNED NOT NULL, title VARCHAR(60) NOT NULL, open TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
+					if ($con->error == "") $con->query("CREATE TABLE board (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, shop_id INT(11) UNSIGNED NOT NULL, title VARCHAR(60) NOT NULL, open TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					// Add settings info & create administrator account
 					if (mysqli_error($con == "")) $con->query("SET sql_mode='NO_AUTO_VALUE_ON_ZERO';");
 					if ($con->error == "") $con->query("INSERT INTO shop_types (id, title, description) VALUES (0, 'store', '');");

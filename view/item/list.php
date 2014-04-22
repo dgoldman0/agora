@@ -2,31 +2,19 @@
 
 require_once 'data.php';
 
-if ($_shop->id != 0)
-{
-	// Get only items for the specific shop
-} else
-{
-	$items = Item::get();
-}
+$items = Item::get(null, $_shop->id);
 
 switch ($format)
 {
 	case "json":
-		$data = array();
-		$data['data'] = $items;
-		echo json_encode($data);
+		$response = array();
+		$response['data'] = $items;
+		echo json_encode($response);
 		break;
 	case "csv":
 		echo str_putcsv($items);
 		break;
 	default:
 	?>
-	<script type="text/template" id="item-tmpl">
-		<div class="row">
-			{{#each}}
-			{{/each}}
-		</div>
-	</script>
 	<?
 }

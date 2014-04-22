@@ -3,38 +3,39 @@ require_once 'data.php';
 
 include 'view/_adminmenu.php';
 
-$pages = Page::get(null, $_shop->id);
+$items = $bag->getBagItems();
 
 ?>
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/css/jquery.dataTables.min.css" />
-<div class="col-md-10">
-	<h1>Page Management</h1>
-	<p></p><a href="?action=edit" class="cmd-new">New Page</a></p>
-	<table id = "pages" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
+<div class="container col-md-10">
+	<h2>Shopping Bag</h2>
+	<hr/>
+	<table id = "items" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
 		<thead>
 			<tr>
-				<th>Title</th>
-				<th>Perma</th>
-				<th>Shop</th>
-				<th>Type</th>
+				<th>Name</th>
+				<th>SKU</th>
+				<th>Short Description</th>
+				<th>Qnt</th>
 				<th>Actions</th>
 			</tr>
 		</thead>
 		<tbody>		
 			<?
-			foreach ($pages as $page)
+			foreach ($items as $item)
 			{
+				$sd = $item->short_desc;
+				if (strlen($sd) > 50)
+					$sd = substr($sd, 0, 50)."...";
 				?>
 				<tr>
-					<td><?=$page->title?></td>
-					<td><?=$page->perma?></td>
-					<td><?=$page->shop_id?></td>
-					<td></td>
+					<td><?=$item->name?></td>
+					<td><?=$item->sku?></td>
+					<td title="<?=$item->short_desc?>"><?=$sd?></td>
+					<td class="item-cnt" id="cnt-<?=$item->id?>"></td>
 					<td>
 						<div class="btn-group">
-							<a class="btn btn-sm btn-default glyphicon glyphicon-edit" title="Edit" href="?action=edit&id=<?=$user->id?>"></a>
-							<a class="btn btn-sm btn-default glyphicon glyphicon-eye-open" title="Details" href="?action=edit&id=<?=$user->id?>"></a>
-							<a class="btn btn-sm btn-default glyphicon glyphicon-trash" title="Delete" href="?action=edit&id=<?=$user->id?>"></a>
+							<a class="btn btn-sm btn-default glyphicon glyphicon-trash" title="Delete" href="?action=delete&iid=<?=$item->id?>"></a>
 						</div>
 					</td>
 				</tr>
@@ -48,12 +49,12 @@ $pages = Page::get(null, $_shop->id);
 function javascripts()
 {
 	?>
-		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
-	    		$('#pages').dataTable();
-				$('.glyphicon-edit, .cmd-new').click(function (event) {
+	    		$('#items').dataTable();
+				$('.glyphicon-edit').click(function (event) {
 					var that = this;
 					event.preventDefault();
 					$.get(that.href, { format: 'modal'}, function(data){
@@ -62,6 +63,12 @@ function javascripts()
 						myModal.modal('show');
 					})
 				});
+				$('.item-cnt').click(function (event))
+				{
+					var that = this;
+					event.preventDefault();
+					
+				}
 				$('.glyphicon-delete').click(function (event) {
 					var that = $this;
 					event.preventDefault();

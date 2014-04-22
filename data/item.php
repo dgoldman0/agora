@@ -24,32 +24,32 @@ class Item extends BaseObject
 			else
 			{
 				$sku = $con->real_escape_string($id);
-				$response = $con->query("SELECT * FROM items WHERE sku=$sku AND shop_id = $shop_id;");
+				$response = $con->query("SELECT * FROM items WHERE sku='$sku' AND shop_id = $shop_id;");
 			}
 			if ($row = $response->fetch_array())
 			{
-				$item = Item::getFromRow($row);
-				return $item;
+				$object = Item::getFromRow($row);
+				return $object;
 			}
 		} else
 		{
-			$items = array();
+			$objects = array();
 			if (!isset($shop_id))
 				$response = $con->query("SELECT * FROM items;");
 			else
 				$response = $con->query("SELECT * FROM items WHERE shop_id = $shop_id;");
 			while ($row = $response->fetch_array())
 			{
-				$items[] = Item::getFromRow($row);
+				$objects[] = Item::getFromRow($row);
 			}
-			return $items;
+			return $objects;
 		}
 	}
 	public static function getFromRow($row)
 	{
-		$item = new Item($row['shop_id'], $row['name'], $row['sku'], $row['short_desc'], $row['long_desc']);
-		$item->init($row);
-		return $item;
+		$object = new Item($row['shop_id'], $row['name'], $row['sku'], $row['short_desc'], $row['long_desc']);
+		$object->init($row);
+		return $object;
 	}
 	public function write()
 	{
@@ -72,7 +72,7 @@ class Item extends BaseObject
 			return $id;
 		}
 	}
-	public static function validate(Item $item)
+	public static function validate($object)
 	{
 		
 	}

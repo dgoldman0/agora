@@ -3,6 +3,8 @@ require_once 'data.php';
 
 // Modify to take care of revision history. Right now it just posts a new page with the same perma, which causes errors
 $format = $_REQUEST['format'];
+$layout = $_REQUEST['layout'];
+
 if ($pid = $_REQUEST['pid'])
 {
 	$page = Page::get($pid);
@@ -50,7 +52,7 @@ if ($action = $_REQUEST['action'])
 		$view = "page/view.php";
 	} else
 	{
-		if ($format == "admin")
+		if ($layout == "admin")
 			$view = "page/admin/list";
 		else
 			$view = "page/list";

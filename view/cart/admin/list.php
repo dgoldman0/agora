@@ -3,38 +3,32 @@ require_once 'data.php';
 
 include 'view/_adminmenu.php';
 
-$pages = Page::get(null, $_shop->id);
+$users = User::get();
 
 ?>
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/css/jquery.dataTables.min.css" />
-<div class="col-md-10">
-	<h1>Page Management</h1>
-	<p></p><a href="?action=edit" class="cmd-new">New Page</a></p>
-	<table id = "pages" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
+<div class="container col-md-10">
+	<table id = "users" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
 		<thead>
 			<tr>
-				<th>Title</th>
-				<th>Perma</th>
-				<th>Shop</th>
-				<th>Type</th>
+				<th>Cart Name</th>
+				<th>Cart Owner</th>
 				<th>Actions</th>
 			</tr>
 		</thead>
 		<tbody>		
 			<?
-			foreach ($pages as $page)
+			foreach ($users as $user)
 			{
 				?>
 				<tr>
-					<td><?=$page->title?></td>
-					<td><?=$page->perma?></td>
-					<td><?=$page->shop_id?></td>
-					<td></td>
+					<td><?=$user->username?></td>
+					<td><?=$user->first?></td>
 					<td>
 						<div class="btn-group">
-							<a class="btn btn-sm btn-default glyphicon glyphicon-edit" title="Edit" href="?action=edit&id=<?=$user->id?>"></a>
-							<a class="btn btn-sm btn-default glyphicon glyphicon-eye-open" title="Details" href="?action=edit&id=<?=$user->id?>"></a>
-							<a class="btn btn-sm btn-default glyphicon glyphicon-trash" title="Delete" href="?action=edit&id=<?=$user->id?>"></a>
+							<a class="btn btn-sm btn-default glyphicon glyphicon-edit" title="Edit" href="?action=edit&uid=<?=$user->id?>"></a>
+							<a class="btn btn-sm btn-default glyphicon glyphicon-eye-open" title="Details" href="?action=edit&uid=<?=$user->id?>"></a>
+							<a class="btn btn-sm btn-default glyphicon glyphicon-trash" title="Delete" href="?action=delete&uid=<?=$user->id?>"></a>
 						</div>
 					</td>
 				</tr>
@@ -48,12 +42,12 @@ $pages = Page::get(null, $_shop->id);
 function javascripts()
 {
 	?>
-		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
-	    		$('#pages').dataTable();
-				$('.glyphicon-edit, .cmd-new').click(function (event) {
+	    		$('#users').dataTable();
+				$('.glyphicon-edit').click(function (event) {
 					var that = this;
 					event.preventDefault();
 					$.get(that.href, { format: 'modal'}, function(data){
