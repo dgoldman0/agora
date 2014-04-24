@@ -36,11 +36,9 @@ switch ($format)
 						<tr>
 							<td>{{name}}</td>
 							<td>{{sku}}</td>
-							<td>{{cnt}}</td>
+							<td class="item-cnt" id="item-cnt-{id}">{{cnt}}</td>
 							<td>
 								<div class="btn-group">
-									<a class="btn btn-sm btn-default glyphicon glyphicon-edit" title="Edit" href="?action=edit&iid={{id}}"></a>
-									<a class="btn btn-sm btn-default glyphicon glyphicon-eye-open" title="Details" href="?action=edit&iid={{id}}"></a>
 									<a class="btn btn-sm btn-default glyphicon glyphicon-trash" title="Delete" href="?action=delete&iid={{id}}"></a>
 								</div>
 							</td>
@@ -68,6 +66,14 @@ switch ($format)
 						$.get("cart.php?format=json&cid=<?=$cart->id?>", function(data){
 							$("#list_block").html(tmpl(data));
 				    		$('.item_table').dataTable();
+				    		$('.item-cnt').click(function ()
+				    		{
+//								this.innerHTML = '<input type = "text" id = "_' + this.attr('id') + '" name = "' + this.attr('id') + '" value = "'+this.innerHTML+'"></input>';
+				    		});
+				    		$('.item-cnt').blur(function ())
+				    		{
+//				    			this.innerHTML = $('#_' + this.attr('id')).val();
+				    		}
 						}, 'json'
 						);
 						return false;
