@@ -39,7 +39,7 @@ function JavaScripts()
 			var tmpl = Handlebars.compile($("#bag-tmpl").html());
 			
 			$(document).ready(function(){
-				$.get("cart.php?format=json&cid=<?=$cart->id?>", function(data){
+				$.get("cart.php?format=json&cid=<?=$_cart->id?>", function(data){
 					$("#cart_block").html(tmpl(data));
 				}, 'json'
 				);

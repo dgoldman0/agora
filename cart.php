@@ -6,13 +6,13 @@ $layout = $_REQUEST['layout'];
 
 if ($cid = $_REQUEST['cid'])
 {
-	$cart = Cart::get($cid);
+	$_cart = Cart::get($cid);
 } else
 {
 	// Check logged in
 	if (isset($_current_user))
 	{
-		$cart = Cart::getActiveCart($_current_user->id);
+		$_cart = Cart::getActiveCart($_current_user->id);
 	}
 }
 
@@ -21,8 +21,21 @@ if ($action = $_REQUEST['action'])
 	if ($action == "edit" && isset($cart))
 	{
 		$view = "cart/edit";
-	} else if ($action = "save")
+	} else if ($action == "save")
 	{
+	} else if ($action == "add")
+	{
+		if ($iid = $_REQUEST['iid'])
+		{
+			$item = Item::get($iid);
+			if ($bid = $_REQUEST['bid'])
+				$_bag = Bag::get($bid);
+			else if (isset($_current_user))
+				$_bag = Bag::getActiveBag($_cart->id, null, $item->shop_id);
+			if (isset($_bag))
+			{
+			}
+		}
 	}
 } else
 {

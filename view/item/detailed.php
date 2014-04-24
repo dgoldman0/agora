@@ -2,6 +2,7 @@
 
 require_once 'data.php';
 $item = $_item;
+
 ?>
 
 <div class="row">
@@ -75,22 +76,12 @@ $item = $_item;
 			<div class="panel-body">
 				<div class="button-toolbar" role="toobar">
 					<div class="btn-group">
-						<button type="button" onClick="addItem('<?=$item->sku?>', '<?=$shop->name?>');" class="btn btn-default"><span id="bagadd" class="glyphicon glyphicon-briefcase" title="Add to Bag"></span></button>
+						<a href = "cart.php?action=add&cid=<?=$_cart->id?>&iid=<?=$item->id?>" class="glyphicon glyphicon-briefcase" title="Add to Bag"></a>
 					</div>
 				</div>
 				<hr/>
 				Price: <br/>
 				Score: 
-			</div>
-		</div>
-	</div>
-	<div class="col-sm-3" style = "height: 100%;">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<a href="cart.php" alt="Go to cart">Current Shopping Bag</a>
-			</div>
-			<div class="panel-body">
-				Items: <span id="item_count"><?=$bag->item_count?></span>
 			</div>
 		</div>
 	</div>

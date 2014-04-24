@@ -4,16 +4,20 @@ require_once 'data.php';
 switch ($format)
 {
 	case "json":
-		$bags = Bag::get(null, $cart->id, null);
+		$bags = Bag::get(null, $_cart->id, null);
 		// Get item information
 		$bagitems = array();
+		$cnt = 0;
 		foreach ($bags as $bag)
 		{
 			$bagitems["$bag->id"] = BagItem::get(null, $bag->id);
+			$cnt++;
 		}
 		$data = array();
+		$data['cart'] = $_cart;
 		$data['bags'] = $bags;
 		$data['bagitems'] = $bagitems;
+		$data['bagcnt'] = $cnt;
 		echo jsonResponse($data);
 		break;
 	default:
@@ -21,6 +25,9 @@ switch ($format)
 		<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/css/jquery.dataTables.min.css" />
 		<!--Templates-->
 		<script type="text/template" id = "list-tmpl">
+			<h2>Cart Summary</h2>
+			Bags: {{data.bagcnt}}
+			<br/><br/>
 			{{#each data.bagitems}}
 			<table class="item_table" id = "items_{{id}}" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
 				<thead>
@@ -63,17 +70,17 @@ switch ($format)
 					var tmpl = Handlebars.compile($("#list-tmpl").html());
 					
 					$(document).ready(function(){
-						$.get("cart.php?format=json&cid=<?=$cart->id?>", function(data){
+						$.get("cart.php?format=json&cid=<?=$_cart->id?>", function(data){
 							$("#list_block").html(tmpl(data));
 				    		$('.item_table').dataTable();
 				    		$('.item-cnt').click(function ()
 				    		{
-//								this.innerHTML = '<input type = "text" id = "_' + this.attr('id') + '" name = "' + this.attr('id') + '" value = "'+this.innerHTML+'"></input>';
+								this.innerHTML = '<input type = "text" id = "_' + this.attr('id') + '" name = "' + this.attr('id') + '" value = "'+this.innerHTML+'"></input>';
 				    		});
-				    		$('.item-cnt').blur(function ())
+				    		$('.item-cnt').blur(function ()
 				    		{
-//				    			this.innerHTML = $('#_' + this.attr('id')).val();
-				    		}
+				    			this.innerHTML = $('#_' + this.attr('id')).val();
+				    		});
 						}, 'json'
 						);
 						return false;

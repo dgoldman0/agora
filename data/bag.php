@@ -13,10 +13,16 @@ class Bag extends BaseObject
 		$this->shop_id = $shop_id;
 		$this->active = $active;
 	}
-	function getActiveBag($user_id)
+	static function getActiveBag($cart_id = null, $owner_id, $shop_id)
 	{
 		$con = BaseObject::$con;
-		$sql = "SELECT * FROM shopping_bags WHERE cart_id = $cart_id AND shop_id = $_shop->id AND active=true;";
+		if (!isset($cart_id))
+		{
+			$cart = Cart::getActiveCart($owner_id);
+			$cart_id = $cart->id;
+		}
+		$sql = "SELECT * FROM shopping_bags WHERE cart_id = $cart_id AND shop_id = $shop_id AND active=true;";
+		print_r($sql);
 		$response = mysqli_query($con, $sql);
 		if ($row = mysqli_fetch_array($response))
 		{
