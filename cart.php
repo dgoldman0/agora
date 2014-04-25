@@ -23,23 +23,10 @@ if ($action = $_REQUEST['action'])
 		$view = "cart/edit";
 	} else if ($action == "save")
 	{
-	} else if ($action == "add")
-	{
-		if ($iid = $_REQUEST['iid'])
-		{
-			$item = Item::get($iid);
-			if ($bid = $_REQUEST['bid'])
-				$_bag = Bag::get($bid);
-			else if (isset($_current_user))
-				$_bag = Bag::getActiveBag($_cart->id, null, $item->shop_id);
-			if (isset($_bag))
-			{
-			}
-		}
 	}
 } else
 {
-	if (isset($cart))
+	if (isset($_cart))
 	{
 		$view = "cart/contents";
 	}
@@ -49,6 +36,7 @@ if ($action = $_REQUEST['action'])
 			$view = "cart/admin/list";
 	}
 }
+
 switch ($format)
 {
 	case "modal":

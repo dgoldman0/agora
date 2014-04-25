@@ -22,7 +22,6 @@ class Bag extends BaseObject
 			$cart_id = $cart->id;
 		}
 		$sql = "SELECT * FROM shopping_bags WHERE cart_id = $cart_id AND shop_id = $shop_id AND active=true;";
-		print_r($sql);
 		$response = mysqli_query($con, $sql);
 		if ($row = mysqli_fetch_array($response))
 		{
@@ -107,14 +106,14 @@ class BagItem extends Item
 			return 0;
 		}
 	}
-	public static function get($id = null, $bag_id)
+	public static function get($id = null, $bag_id, $item_id = null)
 	{
 		$con = BaseObject::$con;
 		if (isset($id))
 		{
 			if (is_numeric($id))
 			{
-				$response = $con->query("SELECT bag_items.*,items.* FROM bag_items INNER JOIN items ON bag_items.item_id=items.id WHERE bag_items.id=$id;");
+				$response = $con->query("SELECT items.*, bag_items.* FROM bag_items INNER JOIN items ON bag_items.item_id=items.id WHERE bag_items.id=$id;");
 				if ($row = $response->fetch_array())
 				{
 					$object = BagItem::getFromRow($row);
@@ -123,21 +122,53 @@ class BagItem extends Item
 			}
 		} else
 		{
-			$objects = array();
 			if (isset($bag_id))
 			{
-				$response = $con->query("SELECT bag_items.*,items.* FROM bag_items INNER JOIN items ON bag_items.item_id=items.id WHERE bag_items.bag_id = $bag_id;");
-				$objects = array();
-				while ($row = $response->fetch_array())
+				if (isset($item_id))
 				{
-					$objects[] = BagItem::getFromRow($row);
+					if (is_numeric($item_id))
+					{
+						$sql = "SELECT items.*, bag_items.* FROM bag_items INNER JOIN items ON bag_items.item_id=items.id WHERE bag_items.bag_id=$bag_id AND bag_items.item_id = $item_id;";
+						$response = $con->query($sql);
+						if ($row = $response->fetch_array())
+						{
+							$object = BagItem::getFromRow($row);
+							return $object;
+						}
+					}
+				} else {
+					$response = $con->query("SELECT items.*, bag_items.* FROM bag_items INNER JOIN items ON bag_items.item_id=items.id WHERE bag_items.bag_id = $bag_id;");
+					$objects = array();
+					while ($row = $response->fetch_array())
+					{
+						$objects[] = BagItem::getFromRow($row);
+					}
+					return $objects;
 				}
 			}
-			return $objects;
 		}
 	}
 	public function write()
-	{	
+	{	if (!$this->live)
+		{
+			$con = BaseObject::$con;
+			$sql = "INSERT INTO bag_items (bag_id, item_id, cnt) VALUES (?,?,?);";
+			$stmt = $con->prepare($sql);
+			$stmt->bind_param('iii', $this->bag_id, $this->item_id, $this->cnt);
+			$stmt->execute();
+			$stmt->close();
+			return $con->insert_id;
+		} else
+		{
+			$con = BaseObject::$con;
+			$sql = "UPDATE bag_items SET bag_id = ?, item_id = ?, cnt = ? WHERE id = ?;";
+			$stmt = $con->prepare($sql);
+			print_r($con->error);
+			$stmt->bind_param('iiii', $this->bag_id, $this->item_id, $this->cnt, $this->id);
+			$stmt->execute();
+			$stmt->close();
+			return $id;
+		}	
 	}
 	public static function getFromRow($row)
 	{	

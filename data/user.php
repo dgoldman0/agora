@@ -81,7 +81,7 @@ class User extends BaseObject
 		} else
 		{
 			$con = BaseObject::$con;
-			$sql = "UPDATE users SET username = ?, password = ?, user_role = ?, email = ?, first = ?, last = ?) WHERE id = ?;";
+			$sql = "UPDATE users SET username = ?, password = ?, user_role = ?, email = ?, first = ?, last = ? WHERE id = ?;";
 			$stmt = $con->prepare($sql);
 			$stmt->bind_param('ssisssi', $this->username, $this->password, $this->user_role, $this->email, $this->first, $this->last, $this->id);
 			$stmt->execute();

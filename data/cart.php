@@ -77,7 +77,7 @@ class Cart extends BaseObject
 			return $con->insert_id;
 		} else
 		{
-			$sql = "UPDATE items SET owner_id = ?, name = ?, wishlist = ?, active = ?) WHERE id = ?;";
+			$sql = "UPDATE items SET owner_id = ?, name = ?, wishlist = ?, active = ? WHERE id = ?;";
 			$stmt = $con->prepare($sql);
 			$stmt->bind_param('isiii', $this->owner_id, $this->name, $this->wishlist, $this->active, $this->id);
 			$stmt->execute();

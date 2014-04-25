@@ -6,23 +6,40 @@ $layout = $_REQUEST['layout'];
 
 if ($bid = $_REQUEST['bid'])
 {
-	$bag = Bag::get($bid);
+	$_bag = Bag::get($bid);
 } else
 {
-	// Check logged in
-	if (isset($_current_user))
+	if ($iid = $_REQUEST['iid'])
 	{
-		$bag = Bag::getActiveBag(Cart::getActiveCart($_current_user->id));
+		$item = Item::get($iid);
+		$_bag = Bag::getActiveBag(null, $_current_user->id, $item->shop_id);
+	} else if (isset($_current_user))
+	{
+		$_bag = Bag::getActiveBag(null, $_current_user->id, $_shop->id);
 	}
 }
 
 if ($action = $_REQUEST['action'])
 {
-	if ($action == "edit" && isset($bag))
+	if ($action == "edit" && isset($_bag))
 	{
 		$view = "bag/edit";
-	} else if ($action = "save")
+	} else if ($action == "save")
 	{
+	} else if ($action == "add")
+	{
+		if (isset($_bag))
+		{
+			if ($bitem = BagItem::get(null, $_bag->id, $item->id))
+				$bitem->cnt = $bitem->cnt + 1;
+			else
+				$bitem = new BagItem($_bag->id, $item->id, 1);
+			$bitem->write();
+			if (BaseObject::$con->errorno == 0)
+			{
+				
+			}
+		}
 	}
 } else
 {

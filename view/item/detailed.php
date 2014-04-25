@@ -76,7 +76,7 @@ $item = $_item;
 			<div class="panel-body">
 				<div class="button-toolbar" role="toobar">
 					<div class="btn-group">
-						<a href = "cart.php?action=add&cid=<?=$_cart->id?>&iid=<?=$item->id?>" class="glyphicon glyphicon-briefcase" title="Add to Bag"></a>
+						<a href = "bag.php?action=add&cid=<?=$_cart->id?>&iid=<?=$item->id?>" class="glyphicon glyphicon-briefcase" title="Add to Bag"></a>
 					</div>
 				</div>
 				<hr/>

@@ -10,7 +10,7 @@ switch ($format)
 		$cnt = 0;
 		foreach ($bags as $bag)
 		{
-			$bagitems["$bag->id"] = BagItem::get(null, $bag->id);
+			$bagitems["$bag->id"] = BagItem::get(null, $bag->id, null);
 			$cnt++;
 		}
 		$data = array();
