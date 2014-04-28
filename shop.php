@@ -16,14 +16,13 @@ if ($action = $_REQUEST['action'])
 	}
 } else
 {
-	if ($_shop->id != 0)
+	if ($layout == "admin" && isAdmin($_shop->id))
 	{
-		 $view = "shop/home";
-	} else {
-		if ($layout == "admin" && isAdmin($_shop->id))
-			$view = "shop/admin/list";
-		else
-			$view = "shop/list";	
+		$view = "shop/admin/list";
+	}
+	else
+	{
+		$view = "shop/home";	
 	}
 }
 

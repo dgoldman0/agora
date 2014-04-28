@@ -41,7 +41,7 @@ if ($format == "modal")
 }
 ?>
 <div id="editor_block">
-	<form class="form-horizontal" action="page.php?action=save<?=$final?>" method="post" id="register-form">
+	<form class="form-horizontal" action="page.php?action=save<?=$final?>&sid=<?=$_shop->id?>" method="post" id="register-form">
 		<fieldset>
 			<legend><?=$legend?></legend>
 			<input type="text" name="title" class="form-control input-md" placeholder="<?=$placeholder?>" value="<?=$title?>" style="margin-bottom: 5px;">

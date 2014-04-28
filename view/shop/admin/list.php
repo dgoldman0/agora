@@ -30,7 +30,7 @@ $shops = Shop::get();
 			{
 				?>
 				<tr>
-					<td><?=$shop->stylized?></td>
+					<td title="Select Shop"><a href = "?sid=<?=$shop->id?>&layout=admin"><?=$shop->stylized?></a></td>
 					<td><?=$shop->url?></td>
 					<td></td>
 					<td><?=$shop->short_desc?></td>

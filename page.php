@@ -19,28 +19,31 @@ if ($action = $_REQUEST['action'])
 			$view = "page/edit";
 			break;
 		case "save":
-			$shop_id = $_shop->id;
-			if (!$perma = $_REQUEST['perma'])
-				$perma = toURLSafe($_REQUEST['title']);
-			else
-				$perma = toURLSafe($perma);
-			if (!isset($page))
+			if (isAdmin($_current_user->id))
 			{
-				$page = new Page($_REQUEST['title'], $perma, $shop_id, $_REQUEST['content'], 1);
-			} else
-			{
-				// Update page information
-			}
-			$errors = Page::validate($page);
-			if (sizeof($errors) == 0)
-			{
-				$pid = $page->write();
-				$page = Page::get($pid);
-				$view = "page/edit";
-			} else
-			{
-				// Do error stuff
-				print_r($errors);
+				$shop_id = $_shop->id;
+				if (!$perma = $_REQUEST['perma'])
+					$perma = toURLSafe($_REQUEST['title']);
+				else
+					$perma = toURLSafe($perma);
+				if (!isset($page))
+				{
+					$page = new Page($_REQUEST['title'], $perma, $shop_id, $_REQUEST['content'], 1);
+				} else
+				{
+					// Update page information
+				}
+				$errors = Page::validate($page);
+				if (sizeof($errors) == 0)
+				{
+					$pid = $page->write();
+					$page = Page::get($pid);
+					$view = "page/admin/list";
+				} else
+				{
+					// Do error stuff
+					print_r($errors);
+				}
 			}
 			break;
 		default:
@@ -49,10 +52,10 @@ if ($action = $_REQUEST['action'])
 {
 	if (isset($page))
 	{
-		$view = "page/view.php";
+		$view = "page/view";
 	} else
 	{
-		if ($layout == "admin")
+		if ($layout == "admin" && isAdmin($_current_user->id))
 			$view = "page/admin/list";
 		else
 			$view = "page/list";

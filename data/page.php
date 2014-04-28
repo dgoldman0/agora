@@ -26,7 +26,7 @@ class Page extends BaseObject
 	function getAbstract()
 	{
 		$pos = strpos($content, "<!--more");
-		if ($pos === false)
+		if (isset($pos))
 			return $content;
 		else
 			return substr($content, 0, $pos);
@@ -53,35 +53,47 @@ class Page extends BaseObject
 		return false;
 	}
 	// If all then get every revision of the page, otherwise just get the newest version
-	public static function get($id, $all = false)
+	public static function get($id, $shop_id, $all = false)
 	{
 		$con = BaseObject::$con;
-		if ($id)
+		$multi = false;
+		if (isset($id))
 		{
 			if (is_numeric($id))
 			{
-				if ($all)
-					$response = $con->query("SELECT * FROM pages WHERE id=$id;");
-			}
-			else
+				$sql = "SELECT * FROM pages WHERE id=$id";
+			} else
 			{
-				$perma = $con->real_escape_string($id);
-				if ($all)
-					$response = $con->query("SELECT * FROM pages WHERE perma='$perma' AND shop_id = $_shop->id;");
-			}
-			if ($row = $response->fetch_array())
-			{
-				$page = User::getFromRow($row);
-				return $page;
+				if (isset($shop_id))
+				{
+					$perma = $con->real_escape_string($id);
+					$sql = "SELECT * FROM pages WHERE perma='$perma' AND shop_id = $shop_id";
+				}
 			}
 		} else {
-			$response = $con->query("SELECT * FROM pages");
-			$pages = array();
-			while ($row = $response->fetch_array())
+			if (isset($shop_id))
 			{
-				$pages[] = getFromRow($row);
+				$sql = "SELECT * FROM pages WHERE shop_id = $shop_id";
 			}
-			return $pages;
+		}
+		if (isset($sql))
+		{
+			if (isset($all))
+			{
+				$response = $con->query($sql." ORDER BY created_on DESC;");
+				$pages = array();
+				while ($row = $response->fetch_array())
+				{
+					$pages[] = Page::getFromRow($row);
+				}
+				return $pages;
+			} else {
+				$response = $con->query($sql.";");
+				if ($row = $response->fetch_arra())
+				{
+					return Page::getFromRow($row);
+				}
+			}
 		}
 	}
 	public static function getFromRow($row)
@@ -100,9 +112,9 @@ class Page extends BaseObject
 			$stmt->bind_param('ssiis', $this->title, $this->perma, $this->shop_id, $this->type, $this->content);
 		} else
 		{
-			$sql = "INSERT INTO pages (id, title, perma, shop_id, type, content) VALUES (?,?,?,?,?,?);";
+			$sql = "INSERT INTO pages (title, perma, shop_id, type, content) VALUES (?,?,?,?,?) WHERE id = ?;";
 			$stmt = $con->prepare($sql);
-			$stmt->bind_param('issiis', $this->id, $this->title, $this->perma, $this->shop_id, $this->type, $this->content);
+			$stmt->bind_param('ssiisi', $this->title, $this->perma, $this->shop_id, $this->type, $this->content, $this->id);
 		}
 		$stmt->execute();
 		$stmt->close();

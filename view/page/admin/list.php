@@ -9,7 +9,7 @@ $pages = Page::get(null, $_shop->id);
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/css/jquery.dataTables.min.css" />
 <div class="col-md-10">
 	<h1>Page Management</h1>
-	<p></p><a href="?action=edit" class="cmd-new">New Page</a></p>
+	<p></p><a href="?action=edit&sid=<?=$_shop->id?>" class="cmd-new">New Page</a></p>
 	<table id = "pages" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
 		<thead>
 			<tr>

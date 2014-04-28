@@ -29,10 +29,10 @@ isLoggedIn();
   			<?
   			// List pages as menu items
 			// Display pages
-			$pageLinks = Page::getPageLinks();
-			foreach ($pageLinks as $page1)
+			$pages = Page::get(null, $_shop->id);
+			foreach ($pages as $page)
 			{
-				echo "<li id=\"{$page1->id}\"><a href=\"page.php?page={$page1->id}\">{$page1->title}</a></li>";
+				echo "<li id=\"page_$page->id\"><a href=\"page.php?pid=$page->id\">$page->title</a></li>";
 			}
 			echo "<li id=\"market\"><a href=\"shop.php\">Market</a></li>";
 			echo "<li id=\"stream\"><a href=\"activity.php\">Recent Activity</a></li>";
