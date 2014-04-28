@@ -1,10 +1,11 @@
 <?
 require_once 'data.php';
+
 ?>
 <!--Templates-->
 <script type="text/template" id = "item-tmpl">
 	{{#each data}}
-	<div class="col-md-3">
+	<div class="col-md-4">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<a href="item.php?iid={{id}}">{{name}}</a>
@@ -17,7 +18,6 @@ require_once 'data.php';
 	{{/each}}
 </script>
 <!--End of Templates-->
-<!--Change this to a template as well, but later...-->
 <div class="col-md-3">
 	<div class="panel panel-default">
 		<div class="panel-heading">
@@ -28,9 +28,9 @@ require_once 'data.php';
 		</div>
 	</div>
 </div>	
-<div class="col-md-6 container" id = "item_block">
+<div class="col-md-7 container" id = "item_block">
 </div>
-<div class="col-md-3 container" id = "categories">
+<div class="col-md-2 container" id = "categories">
 	
 </div>
 <?

@@ -28,6 +28,9 @@ if ($action = $_REQUEST['action'])
 			$result = mysqli_query($con, "SELECT password=SHA2('{$password}', 512), id FROM users where username='{$username}';");
 			$row = mysqli_fetch_array($result);
 			$rkeys = array_keys($row);
+			if (!$ref = $_REQUEST['ref'])
+				$ref = "index.php";
+
 			if ($row[$rkeys[0]] == 1)
 			{
 				// Login successful
@@ -43,7 +46,7 @@ if ($action = $_REQUEST['action'])
 				} while (mysql_errno() == 1062 || $first);
 				// Add cookie
 				setcookie("session", $uuid, $expires);
-				header("Location: index.php");
+				header("Location: $ref");
 				die();
 			} else
 			{

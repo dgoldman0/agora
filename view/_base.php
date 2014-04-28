@@ -43,7 +43,7 @@
 				$('#login').click(function (event) {
 					var that = this;
 					event.preventDefault();
-					$.get(that.href, { format: 'modal'}, function(data){
+					$.get(that.href, { format: 'modal', ref: window.location.href}, function(data){
 						var login = $("#myModal");
 						$('.modal-content', login).html(data);
 						login.modal('show');

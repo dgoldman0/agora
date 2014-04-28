@@ -35,11 +35,12 @@ isLoggedIn();
 				echo "<li id=\"{$page1->id}\"><a href=\"page.php?page={$page1->id}\">{$page1->title}</a></li>";
 			}
 			echo "<li id=\"market\"><a href=\"shop.php\">Market</a></li>";
-	      	echo "<li id=\"members\"><a href=\"user.php\">Members</a></li>";
 			echo "<li id=\"stream\"><a href=\"activity.php\">Recent Activity</a></li>";
+			if (isLoggedIn())
+				echo "<li id=\"\"><a href=\"friend.php\">Friends</a></li></li>";
       		if (isAdmin($_shop))
       		{
-      			echo "<li id=\"admin\"><a href=\"admin.php\">Administration</a></li>";
+      			echo "<li id=\"admin\"><a href=\"shop.php?layout=admin\">Administration</a></li>";
       		}
       		?>
     	</ul>

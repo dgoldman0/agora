@@ -35,5 +35,6 @@
 				<a href="user.php?action=edit">Register</a>
 			</div>
 		</div>
+		<?=($ref = $_REQUEST['ref']) ? "<input type = \"hidden\" name = \"ref\" value = \"$ref\"/>" : ""?>
 	</fiedset>
 </form>

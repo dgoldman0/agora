@@ -43,13 +43,16 @@ if ($action = $_REQUEST['action'])
 	} else
 	{
 		$view = "item/detailed";
-		if ($cid = $_REQUEST['cid'])
+		if (isset($_current_user))
 		{
-			$_cart = Cart::get($cid);
-		} else
-		{
-			$_cart = Cart::getActiveCart($_current_user->id);
-		}			
+			if ($cid = $_REQUEST['cid'])
+			{
+				$_cart = Cart::get($cid);
+			} else
+			{
+				$_cart = Cart::getActiveCart($_current_user->id);
+			}			
+		}
 	}
 }
 switch ($format)
