@@ -21,7 +21,11 @@ $users = User::get();
 		The row has been <?=$_REQUEST['sub_action']?> successfully!
 	</div>
 	<? endif; ?>
-	<p></p><a href="?action=edit" class="cmd-new">New User</a></p>
+	<div class="btn-group">
+		<a class="btn btn-sm btn-default glyphicon glyphicon-plus cmd-new" title = "Add Item" href = "?action=edit"></a>
+		<a class="btn btn-sm btn-default glyphicon glyphicon-open" title = "Add From CSV" href = "?action=csveditor"></a>
+	</div>
+	<hr/>
 	<table id = "users" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
 		<thead>
 			<tr>

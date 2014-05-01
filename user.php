@@ -17,7 +17,14 @@ if ($action = $_REQUEST['action'])
 //		echo jsonResponse(json_encode(User::getUserByID($_GET['id'])->username));
 	} else if ($action == "edit")
 	{
-		$view = "user/edit";
+		if ($layout == "admin" && isAdmin($_shop->id))
+			$view = "user/admin/edit";
+		else
+		{
+			$iid = $_current_user->id;
+			$_user = $_current_user->id;
+			$view = "user/edit";
+		}
 	} else if ($action == "login")
 	{
 		$username = $_REQUEST['username'];
@@ -130,13 +137,23 @@ if ($action = $_REQUEST['action'])
 	if ($layout == "admin" && isAdmin($_shop->id))
 		$view = "user/admin/list";
 	else
-		$view = "user/list";
+	{
+		if (isset($_user))
+			$view = "user/detailed";
+		else
+			$view = "user/list";
+	}
 }
-if ($format == "modal")
+switch ($format)
 {
-	$include = "view/$view.php";
-} else
-{
-	$include = "view/_base.php";
+	case "modal":
+	case "csv":
+	case "json":
+		$include = "view/$view.php";
+		break;
+	default:
+		$include = "view/_base.php";
 }
-include $include;
+
+if (isset($include))
+	include $include;

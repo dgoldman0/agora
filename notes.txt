@@ -27,3 +27,6 @@ File in Controller = Folder in Views, almost always matching file in models
 
 Working on changing over to MVC style format...
 Also rewriting all classes to include BaseObject. This stores id, created_on, updated_on
+
+Discussion OAUTH & REST and logging on using Facebook
+	Create a new function in javascrpt: fBStuff and use that to handle FB stuff

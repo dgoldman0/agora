@@ -10,7 +10,7 @@ $items = Item::get(null, $_shop->id);
 <div class="container col-md-10">
 	<h2>Item Management</h2>
 	<div class="btn-group">
-		<a class="btn btn-sm btn-default glyphicon glyphicon-plus" title = "Add Item" href = "?action=edit"></a>
+		<a class="btn btn-sm btn-default glyphicon glyphicon-plus cmd-new" title = "Add Item" href = "?action=edit"></a>
 		<a class="btn btn-sm btn-default glyphicon glyphicon-open" title = "Add From CSV" href = "?action=csveditor"></a>
 	</div>
 	<hr/>
@@ -58,7 +58,7 @@ function javascripts()
 		<script type="text/javascript">
 			$(document).ready(function() {
 	    		$('#items').dataTable();
-				$('.glyphicon-edit').click(function (event) {
+				$('.glyphicon-edit, .cmd-new').click(function (event) {
 					var that = this;
 					event.preventDefault();
 					$.get(that.href, { format: 'modal'}, function(data){

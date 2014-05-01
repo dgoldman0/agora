@@ -9,7 +9,11 @@ $pages = Page::get(null, $_shop->id);
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/css/jquery.dataTables.min.css" />
 <div class="col-md-10">
 	<h1>Page Management</h1>
-	<p></p><a href="?action=edit&sid=<?=$_shop->id?>" class="cmd-new">New Page</a></p>
+	<div class="btn-group">
+		<a class="btn btn-sm btn-default glyphicon glyphicon-plus cmd-new" title = "Add Item" href = "?action=edit"></a>
+		<a class="btn btn-sm btn-default glyphicon glyphicon-open" title = "Add From CSV" href = "?action=csveditor"></a>
+	</div>
+	<hr/>
 	<table id = "pages" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
 		<thead>
 			<tr>
