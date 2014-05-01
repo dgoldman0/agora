@@ -8,6 +8,20 @@ $users = User::get();
 ?>
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/css/jquery.dataTables.min.css" />
 <div class="container col-md-10">
+	<h1>User Management</h1>
+	<style type="text/css">
+		.highlighted td
+		{
+			background-color: #FFFFAA ; 
+		}
+	</style>
+	<? if(isset($_REQUEST['sub_action'])): ?>
+	<div class="alert alert-success">
+		<a class="close">&times;</a>
+		The row has been <?=$_REQUEST['sub_action']?> successfully!
+	</div>
+	<? endif; ?>
+	<p></p><a href="?action=edit" class="cmd-new">New User</a></p>
 	<table id = "users" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
 		<thead>
 			<tr>
@@ -24,7 +38,7 @@ $users = User::get();
 			foreach ($users as $user)
 			{
 				?>
-				<tr>
+				<tr class="<?=$user->id==$_user->id ? "highlighted" : "" ?>">
 					<td><?=$user->username?></td>
 					<td><?=$user->first?></td>
 					<td><?=$user->last?></td>
@@ -53,7 +67,8 @@ function javascripts()
 		<script type="text/javascript">
 			$(document).ready(function() {
 	    		$('#users').dataTable();
-				$('.glyphicon-edit').click(function (event) {
+				$(".highlighted td").delay(2000).animate({backgroundColor: ""}, 2000);
+				$('.glyphicon-edit, .cmd-new').click(function (event) {
 					var that = this;
 					event.preventDefault();
 					$.get(that.href, { format: 'modal'}, function(data){
@@ -65,6 +80,9 @@ function javascripts()
 				$('.glyphicon-delete').click(function (event) {
 					var that = $this;
 					event.preventDefault();
+				});
+				$(".close").click(function(){
+					$(this).closest(".alert").slideUp();
 				});
 			});
 		</script>

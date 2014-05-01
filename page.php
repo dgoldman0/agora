@@ -28,6 +28,7 @@ if ($action = $_REQUEST['action'])
 					$perma = toURLSafe($perma);
 				if (!isset($page))
 				{
+					$new = true;
 					$page = new Page($_REQUEST['title'], $perma, $shop_id, $_REQUEST['content'], 1);
 				} else
 				{
@@ -37,8 +38,15 @@ if ($action = $_REQUEST['action'])
 				if (sizeof($errors) == 0)
 				{
 					$pid = $page->write();
-					$page = Page::get($pid);
-					$view = "page/admin/list";
+					if ($new)
+					{
+						header("Location: page.php?pid=$pid&sub_action=added");
+						die();
+					} else
+					{
+						header("Location: page.php?pid=$pid&sub_action=updated");
+						die();
+					}
 				} else
 				{
 					// Do error stuff

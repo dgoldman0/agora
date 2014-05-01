@@ -1,16 +1,16 @@
 <?
-	require_once 'data.php';
-	$invite_code = $_REQUEST['invite_code'];
-	if ($format == "modal")
-	{
-		$lcs = "col-md-3";
-		$ics = "col-md-8";
-	}
-	else
-	{
-		$lcs = "col-md-2";
-		$ics = "col-md-4";
-	}
+require_once 'data.php';
+$invite_code = $_REQUEST['invite_code'];
+if ($format == "modal")
+{
+	$lcs = "col-md-3";
+	$ics = "col-md-8";
+}
+else
+{
+	$lcs = "col-md-2";
+	$ics = "col-md-4";
+}
 ?>
 	<form class="form-horizontal" action="user.php" method="post" id="register-form">
 		<fieldset>
@@ -18,25 +18,25 @@
 			<div class="form-group">
 				<label class="<?=$lcs?> control-label" for="username">Username</label>
 				<div class="<?=$ics?>">
-					<input id="username" name="username" type="text" placeholder="Username"<?= (isset($user)) ? " value=\"$user->username\"" : ""?> class="form-control input-md">
+					<input id="username" name="username" type="text" placeholder="Username"<?= (isset($_user)) ? " value=\"$_user->username\"" : ""?> class="form-control input-md">
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="<?=$lcs?> control-label" for="first">First Name</label>
            	   	<div class="<?=$ics?>">
-					<input id="first" name="first" type="text" placeholder="First"<?= (isset($user)) ? " value=\"$user->first\"" : ""?> class="form-control input-md">
+					<input id="first" name="first" type="text" placeholder="First"<?= (isset($_user)) ? " value=\"$_user->first\"" : ""?> class="form-control input-md">
             	</div>
 			</div>
 			<div class="form-group">
 				<label class="<?=$lcs?> control-label" for="last">Last Name</label>
            	   	<div class="<?=$ics?>">
-					<input id="last" name="last" type="text" placeholder="Last"<?= (isset($user)) ? " value=\"$user->last\"" : ""?> class="form-control input-md">
+					<input id="last" name="last" type="text" placeholder="Last"<?= (isset($_user)) ? " value=\"$_user->last\"" : ""?> class="form-control input-md">
             	</div>
 			</div>
 			<div class="form-group">
 				<label class="<?=$lcs?> control-label" for="email">Email</label>
            	   	<div class="<?=$ics?>">
-					<input id="email" name="email" type="text" placeholder="Email"<?= (isset($user)) ? " value=\"$user->email\"" : ""?> class="form-control input-md">
+					<input id="email" name="email" type="text" placeholder="Email"<?= (isset($_user)) ? " value=\"$_user->email\"" : ""?> class="form-control input-md">
             	</div>
 			</div>
 			<div class="form-group">
@@ -55,23 +55,49 @@
 	            	</div>
 				</div>
 			<?}?>
-			<? if (isset($_current_user)){?>
+			<? if (isset($_current_user) && isAdmin($_shop->id)){?>
 			<div class="form-group">
 				<label class="<?=$lcs?> control-label" for="autogenerate">Autogenerate</label>
 				<div class="col-md-1"><input id="autogenerate" name="autogenerate" type="checkbox" class="form-control input-md"></div>
+			</div>
+			<div class="form-group">
+				<label class="<?=$lcs?> control-label" for="user_role">Role</label>
+				<div class="<?=$ics?>">
+					<select id="user_role" name="user_role" class="form-control input-md">						
+						<?
+						$roles = UserRole::get(null, $_shop->id);
+						foreach ($roles as $role)
+						{
+							?>
+							<option <?=(isset($_user) && $role->id == $_user->user_role) ? "selected" : ""?> value = "<?=$role->id?>"><?=$role->title?></option>
+							<?
+						}
+						?>
+					</select>
+				</div>
 			</div>
 			<?}?>
 			<div class="form-group">
 				<label class="<?=$lcs?> control-label" for="singlebutton">Register</label>
 				<div class="<?=$lcs?>">
-					<button id="singlebutton" name="singlebutton" class="btn btn-primary"><?= (isset($user)) ? "Update" : "Register"?></button>
+					<button id="singlebutton" name="singlebutton" class="btn btn-primary"><?= (isset($_user)) ? "Update" : "Register"?></button>
 				</div>
 				<div class="<?=$lcs?>">
 					<a href="login.php">Already registered?</a>
 				</div>
 			</div>
 			<input type = "hidden" name = "action" value = "save"/>
-			<?= (isset($user)) ? "<input type = \"hidden\" name = \"uid\" value = \"$user->id\"/>" : ""?>
+			<?= (isset($_user)) ? "<input type = \"hidden\" name = \"uid\" value = \"$_user->id\"/>" : ""?>
 		</fieldset>
 	</form>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('input').prop('autocomplete', 'off');
+			$( "#autogenerate" ).click(function()
+			{
+				$( ".register-password-field" ).prop("disabled", $( "#autogenerate" ).prop("checked"));
+				$( "#autogenerate" ).blur();
+			});
+		});
+	</script>
 <?

@@ -24,10 +24,10 @@ class Invite extends BaseObject
 			$uuid = 0;
 			do
 			{
-					$uuid = uniqid();
-					$expires = time()+3600;
-					$stmt->execute();
-					$first = false;
+				$uuid = uniqid();
+				$expires = time()+3600;
+				$stmt->execute();
+				$first = false;
 			} while (mysql_errno() == 1062 || $first);
 			$stmt->close();
 			$this->invite_code = $uuid;

@@ -1,14 +1,10 @@
 <?php
 require_once 'data.php';
 
+// Need to add salting in order to add more security
 class User extends BaseObject
 {
-	public $username;
-	public $password;
-	public $user_role;
-	public $email;
-	public $first;
-	public $last;
+	public $username, $password, $user_role, $email, $first, $last;
 	
 	function __construct($username, $password, $user_role, $email, $first, $last)
 	{
@@ -22,7 +18,7 @@ class User extends BaseObject
 	public static function get($id = null)
 	{
 		$con = BaseObject::$con;
-		if ($id)
+		if (isset($id))
 		{
 			if (is_numeric($id))
 			{
@@ -69,28 +65,36 @@ class User extends BaseObject
 	}
 	public function write()
 	{
+		$con = BaseObject::$con;
 		if (!$this->live)
 		{
-			$con = BaseObject::$con;
-			$sql = "INSERT INTO users (username, password, user_role, email, first, last) VALUES (?,?,?,?,?,?);";
+			$sql = "INSERT INTO users (username, password, user_role, email, first, last) VALUES (?,SHA2(?, 512),?,?,?,?);";
 			$stmt = $con->prepare($sql);
 			$stmt->bind_param('ssisss', $this->username, $this->password, $this->user_role, $this->email, $this->first, $this->last);
 			$stmt->execute();
 			$stmt->close();
-			return $con->insert_id;
+			$this->id = $con->insert_id;
+			return $this->id;
 		} else
 		{
-			$con = BaseObject::$con;
-			$sql = "UPDATE users SET username = ?, password = ?, user_role = ?, email = ?, first = ?, last = ? WHERE id = ?;";
+			$sql = "UPDATE users SET username = ?, password = SHA2(?, 512), user_role = ?, email = ?, first = ?, last = ? WHERE id = ?;";
 			$stmt = $con->prepare($sql);
 			$stmt->bind_param('ssisssi', $this->username, $this->password, $this->user_role, $this->email, $this->first, $this->last, $this->id);
 			$stmt->execute();
 			$stmt->close();
-			return $id;
+			return $this->id;
 		}
 	}
 	public static function validate(User $user)
 	{
-		
+		$errors = array();
+		if (isset($user->password))
+		{
+			
+		} else
+		{
+			$errors[] = "Password must be set...";
+		}
+		return $errors;
 	}
 }

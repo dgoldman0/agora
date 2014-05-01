@@ -22,7 +22,10 @@ if ($action = $_REQUEST['action'])
 	}
 	else
 	{
-		$view = "shop/home";	
+		if (isset($_REQUEST['sid']))
+			$view = "shop/home";
+		else
+			$view = "shop/list";	
 	}
 }
 
@@ -31,6 +34,6 @@ if ($format == "modal")
 	$include = "view/$view.php";
 } else
 {
-	$include = "view/{$root}_base.php";
+	$include = "view/_base.php";
 }
 include $include;

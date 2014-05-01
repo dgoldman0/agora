@@ -5,9 +5,9 @@ $uid = $_REQUEST['uid'];
 $format = $_REQUEST['format'];
 $layout = $_REQUEST['layout'];
 
-if ($uid)
+if (isset($uid))
 {
-	$user = User::get($uid);
+	$_user = User::get($uid);
 }
 
 if ($action = $_REQUEST['action'])
@@ -25,8 +25,17 @@ if ($action = $_REQUEST['action'])
 		if ($username)
 		{
 			// Validate Form Data and Check for Security Problems
-			$result = mysqli_query($con, "SELECT password=SHA2('{$password}', 512), id FROM users where username='{$username}';");
-			$row = mysqli_fetch_array($result);
+			/* I want to use this code instead, but it's not working...
+			$stmt = $con->prepare("SELECT password=SHA2('?', 512), id FROM users where username='?';");
+			$stmt->bind_param('ss', $password, $username);
+			$stmt->execute();
+			$row = $stmt->fetch();
+			$stmt->close();
+			 */
+			$password = $con->real_escape_string($password); 
+			$username = $con->real_escape_string($username); 
+			$result = mysqli_query($con, "SELECT password=SHA2('$password', 512), id FROM users where username='{$username}';");
+			$row = $result->fetch_array();
 			$rkeys = array_keys($row);
 			if (!$ref = $_REQUEST['ref'])
 				$ref = "index.php";
@@ -56,61 +65,78 @@ if ($action = $_REQUEST['action'])
 		} else {
 			$view = "user/login";
 		}
-	} else if ($action = "logout")
+	} else if ($action == "logout")
 	{
 		setcookie("session", "", time() - 3600);
 		mysqli_query($con, "DELETE FROM sessions WHERE session='$session';");
 		header("Location: index.php");
 		die();
-	} else if ($action = "save")
+	} else if ($action == "save")
 	{
-		if ($uid = $_REQUEST['uid'])
+		$uid = ($_REQUEST['uid']);
+		if (isset($uid))
 		{
 			$user = User::get($uid);
-			$user->first = $_REQUEST['first'];
-			$user->last = $_REQUEST['last'];
-			$user->email = $_REQUEST['email'];
-			// Check passwords match
-			if ($_REQUEST['password1'] == $_REQUSET['password2'])
+			if (!isset($user))
 			{
-				if ($_REQUEST['pasword1'] != "")
-				{
-					$user->password = $_REQUEST['password'];
-				}
-				$errors = User::validate($user);
-				if (isset($errors))
-				{
-					
-				} else
-				{
-					$user->write();
-				}
-			} else
-			{
-				$errors = array();
-				$errors[] = new Error("Passwords do not match.");
+				// Unknown user error
+				die();
 			}
+		} else
+		{
+			$user = new User();
+			$user->username = $_REQUEST['username'];
+		}
+		$user->first = $_REQUEST['first'];
+		$user->last = $_REQUEST['last'];
+		$user->email = $_REQUEST['email'];
+		$user->user_role = $_REQUEST['user_role'];
+		if (($auto = $_REQUEST['autogenerate']) && $auto == "on")
+		{
+			$pass = file_get_contents("https://www.random.org/strings/?num=1&len=10&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new");
+			$user->password = $pass;
+		} else
+		{
+			// Check passwords match
+			$p1 = $_REQUEST['password1'];
+			$p2 = $_REQUEST['password2'];
+			if ($p1 == $p2)
+			{
+				if ($p1 != "")
+				{
+					$user->password = $p1;
+				}
+			} else {
+				$user->password = null;
+			}
+		}
+		$errors = User::validate($user);
+		if (sizeof($errors) > 0)
+		{
+			print_r($errors);
+			die();
+		} else
+		{
+			$user->write();
+			if ($auto == "on")
+			{
+				// Send email to user regarding registration...
+			}
+			header("Location: user.php?layout=admin&sub_action=updated&uid=$user->id");
 		}
 	}
 } else
 {
-	if ($uid)
-	{
-		$view = "user/profile";
-	}
+	if ($layout == "admin" && isAdmin($_shop->id))
+		$view = "user/admin/list";
 	else
-	{
-		if ($layout == "admin" && isAdmin($_shop->id))
-			$view = "user/admin/list";
-		else
-			$view = "user/list";
-	}
+		$view = "user/list";
 }
 if ($format == "modal")
 {
 	$include = "view/$view.php";
 } else
 {
-	$include = "view/{$root}_base.php";
+	$include = "view/_base.php";
 }
 include $include;

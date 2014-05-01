@@ -34,7 +34,7 @@ require_once 'data.php';
 	
 </div>
 <?
-function JavaScripts()
+function javascripts()
 {
 	global $_shop; 
 	?>

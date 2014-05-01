@@ -50,7 +50,6 @@ if ($format == "json")
 				$(document).ready(function(){
 					$.get("friend.php?format=json", function(data){
 						$("#friend_block").html(tmpl(data));
-						alert(data);
 						$('friend_cnt').html(data['data'].length);
 					}, 'json');
 					return false;

@@ -87,8 +87,8 @@ if (!mysqli_connect_errno($con))
 					// Rename user->user_id
 					if ($con->error == "") $con->query("CREATE TABLE sessions (id VARCHAR (255) NOT NULL DEFAULT '', user INT(11) UNSIGNED NOT NULL, expires BIGINT(12) UNSIGNED, PRIMARY KEY(id), FOREIGN KEY (user) REFERENCES users(id) ON DELETE CASCADE) ENGINE = MEMORY;");
 					if ($con->error == "") $con->query("CREATE TABLE session_notifications (id INT(11) NOT NULL AUTO_INCREMENT, created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, session_id VARCHAR(255) NOT NULL, activity_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(session_id) REFERENCES sessions(id) ON DELETE CASCADE, FOREIGN KEY(activity_id) REFERENCES activity(id) ON DELETE CASCADE) ENGINE=MEMORY;");
-					if ($con->error == "") $con->query("CREATE TABLE user_roles (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, PRIMARY KEY(id));");
-					if ($con->error == "") $con->query("CREATE TABLE user_role_capabilities (capability INT(11) UNSIGNED NOT NULL DEFAULT 0, role_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(capability, role_id), FOREIGN KEY(role_id) REFERENCES user_roles(id) ON DELETE CASCADE) ENGINE=InnoDB;");
+					if ($con->error == "") $con->query("CREATE TABLE user_roles (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, id INT(11) NOT NULL AUTO_INCREMENT, created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, shop_id INT(11) UNSIGNED NOT NULL, title VARCHAR(60) NOT NULL, PRIMARY KEY(id)) ENGINE=InnoDB;");
+					if ($con->error == "") $con->query("CREATE TABLE user_role_capabilities (id INT(11) NOT NULL AUTO_INCREMENT, created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, capability INT(11) UNSIGNED NOT NULL DEFAULT 0, role_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(role_id) REFERENCES user_roles(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					if ($con->error == "") $con->query("CREATE TABLE shipping (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, user_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, first VARCHAR(50) NOT NULL, last VARCHAR(50) NOT NULL, street1 VARCHAR(255) NOT NULL, street2 VARCHAR(255) NOT NULL, locality VARCHAR(50) NOT NULL, postal VARCHAR(20) NOT NULL, state VARCHAR(50) NOT NULL, country VARCHAR(50) NOT NULL, PRIMARY KEY(id), FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					if ($con->error == "") $con->query("CREATE TABLE billing (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, user_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, first VARCHAR(50) NOT NULL, last VARCHAR(50) NOT NULL, street1 VARCHAR(255) NOT NULL, street2 VARCHAR(255) NOT NULL, locality VARCHAR(50) NOT NULL, postal VARCHAR(20) NOT NULL, state VARCHAR(50) NOT NULL, country VARCHAR(50) NOT NULL, PRIMARY KEY(id), FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 
@@ -99,7 +99,8 @@ if (!mysqli_connect_errno($con))
 					if ($con->error == "") $con->query("CREATE TABLE shop_hours (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, day SMALLINT(5) UNSIGNED NOT NULL, open TIME NOT NULL, close TIME NOT NULL, shop_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					
 					// Items
-					if ($con->error == "") $con->query("CREATE TABLE items (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, shop_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, sku VARCHAR(50) NOT NULL, short_desc VARCHAR(156), long_desc TEXT NOT NULL, PRIMARY KEY(id), UNIQUE KEY(sku), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
+					if ($con->error == "") $con->query("CREATE TABLE items ($base, shop_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, sku VARCHAR(50) NOT NULL, short_desc VARCHAR(156), long_desc TEXT NOT NULL, PRIMARY KEY(id), UNIQUE KEY(sku), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
+					if ($con->error == "") $con->query("CREATE TABLE item_reviews ($base, item_id INT(11) UNSIGNED NOT NULL, reviewer_id INT(11) UNSIGNED NOT NULL, title VARCHAR(60) NOT NULL DEFAULT '', content LONGBLOB NOT NULL, score SMALL INT NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(item_id) REFERENCES items(id), FOREIGN KEY(reviewer_id) REFERENCES items(id) ON DELETE CASCADE) Engine=InnoDB;");
 					if ($con->error == "") $con->query("CREATE TABLE item_images (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, item_id INT(11) UNSIGNED NOT NULL, medium_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE, FOREIGN KEY(medium_id) REFERENCES media(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					
 					// Default shop id is 0 ie marketwide
@@ -155,6 +156,7 @@ if (!mysqli_connect_errno($con))
 					if ($con->error == "") $con->query("INSERT INTO shop_types (id, title, description) VALUES (0, 'store', '');");
 					if ($con->error == "") $con->query("INSERT INTO shop_types (id, title, description) VALUES (1, 'restaurant', '');");
 					if ($con->error == "") $con->query("INSERT INTO shops (id, name, url, short_desc, stylized) VALUES (0, '{$site_name}', '{$url}', '', '{$site_name}');");
+					if ($con->error == "") $con->query("INSERT INTO user_roles (id, title) VALUES (0, 'admin');");
 					if ($con->error == "") $con->query("INSERT INTO users (id, username, password, user_role, email) VALUES (0, '{$username}', SHA2('{$password}', 512), 0, '{$email}');");
 					if ($con->error == "") $con->query("INSERT INTO item_price_categories (id, shop_id, description) VALUES (0, 0, 'list');");
 
