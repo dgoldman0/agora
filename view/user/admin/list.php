@@ -22,7 +22,7 @@ $users = User::get();
 	</div>
 	<? endif; ?>
 	<div class="btn-group">
-		<a class="btn btn-sm btn-default glyphicon glyphicon-plus cmd-new" title = "Add Item" href = "?action=edit"></a>
+		<a class="btn btn-sm btn-default glyphicon glyphicon-plus cmd-new" title = "Add User" href = "?layout=admin&action=edit"></a>
 		<a class="btn btn-sm btn-default glyphicon glyphicon-open" title = "Add From CSV" href = "?action=csveditor"></a>
 	</div>
 	<hr/>
@@ -50,7 +50,7 @@ $users = User::get();
 					<td><?=$user->role?></td>
 					<td>
 						<div class="btn-group">
-							<a class="btn btn-sm btn-default glyphicon glyphicon-edit" title="Edit" href="?action=edit&uid=<?=$user->id?>"></a>
+							<a class="btn btn-sm btn-default glyphicon glyphicon-edit" title="Edit" href="?layout=admin&action=edit&uid=<?=$user->id?>"></a>
 							<a class="btn btn-sm btn-default glyphicon glyphicon-eye-open" title="Details" href="?action=edit&uid=<?=$user->id?>"></a>
 							<a class="btn btn-sm btn-default glyphicon glyphicon-trash" title="Delete" href="?action=delete&uid=<?=$user->id?>"></a>
 						</div>

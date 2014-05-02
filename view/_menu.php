@@ -55,7 +55,7 @@ isLoggedIn();
 	        	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
 	        	<ul class="dropdown-menu">
 	        		<li><a href="user.php?uid=<?=$_current_user->id?>">Profile</a></li>
-	          		<li><a href="/settings.php">Settings</a></li>
+	          		<li><a href="/user.php?uid=<?=$_current_user->id?>&action=edit">Settings</a></li>
 			  		<?= (isLoggedIn()) ? '<li><a href="cart.php">Cart</a></li>' : ''?>
 	          		<li class="divider"></li>
 			  		<?= (isLoggedIn()) ? '<li><a href="user.php?action=logout">Logout</a></li>' : '<li><a id="login" href="user.php?action=login">Login</a></li>'?>

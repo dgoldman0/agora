@@ -26,6 +26,10 @@ class Bag extends BaseObject
 		if ($row = mysqli_fetch_array($response))
 		{
 			return Bag::getFromRow($row);
+		} else
+		{
+			$bag = new Bag($cart_id, $shop_id, true);
+			return $bag->write();
 		}
 	}
 	public static function get($id = null, $cart_id = null, $owner_id = null)
@@ -71,7 +75,25 @@ class Bag extends BaseObject
 		}
 	}
 	public function write()
-	{	
+	{
+		$con = BaseObject::$con;
+		if (!$this->live)
+		{
+			$sql = "INSERT INTO shopping_bags (cart_id, shop_id, active) VALUES (?,?,?);";
+			$stmt = $con->prepare($sql);
+			$stmt->bind_param('iii', $this->cart_id, $this->shop_id, $this->active);
+			$stmt->execute();
+			$stmt->close();
+			return $con->insert_id;
+		} else
+		{
+			$sql = "UPDATE shopping_bags SET owner_id = ?, name = ?, wishlist = ?, active = ? WHERE id = ?;";
+			$stmt = $con->prepare($sql);
+			$stmt->bind_param('iiii', $this->cart_id, $this->shop_id, $this->active, $this->id);
+			$stmt->execute();
+			$stmt->close();
+			return $id;
+		}
 	}
 	public static function getFromRow($row)
 	{

@@ -100,7 +100,7 @@ if (!mysqli_connect_errno($con))
 					
 					// Items
 					if ($con->error == "") $con->query("CREATE TABLE items ($base, shop_id INT(11) UNSIGNED NOT NULL, name VARCHAR(50) NOT NULL, sku VARCHAR(50) NOT NULL, short_desc VARCHAR(156), long_desc TEXT NOT NULL, PRIMARY KEY(id), UNIQUE KEY(sku), FOREIGN KEY(shop_id) REFERENCES shops(id) ON DELETE CASCADE) ENGINE=InnoDB;");
-					if ($con->error == "") $con->query("CREATE TABLE item_reviews ($base, item_id INT(11) UNSIGNED NOT NULL, reviewer_id INT(11) UNSIGNED NOT NULL, title VARCHAR(60) NOT NULL DEFAULT '', content LONGBLOB NOT NULL, score SMALL INT NOT NULL DEFAULT 0, PRIMARY KEY(id), FOREIGN KEY(item_id) REFERENCES items(id), FOREIGN KEY(reviewer_id) REFERENCES items(id) ON DELETE CASCADE) Engine=InnoDB;");
+					if ($con->error == "") $con->query("CREATE TABLE item_reviews ($base, item_id INT(11) UNSIGNED NOT NULL, reviewer_id INT(11) UNSIGNED NOT NULL, title VARCHAR(60) NOT NULL DEFAULT '', content LONGBLOB NOT NULL, score DECIMAL(2, 1) DEFAULT 0 NOT NULL, PRIMARY KEY(id), FOREIGN KEY(item_id) REFERENCES items(id), FOREIGN KEY(reviewer_id) REFERENCES items(id) ON DELETE CASCADE) Engine=InnoDB;");
 					if ($con->error == "") $con->query("CREATE TABLE item_images (id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, item_id INT(11) UNSIGNED NOT NULL, medium_id INT(11) UNSIGNED NOT NULL, PRIMARY KEY(id), FOREIGN KEY(item_id) REFERENCES items(id) ON DELETE CASCADE, FOREIGN KEY(medium_id) REFERENCES media(id) ON DELETE CASCADE) ENGINE=InnoDB;");
 					
 					// Default shop id is 0 ie marketwide

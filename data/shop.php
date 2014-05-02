@@ -77,7 +77,26 @@ class Shop extends BaseObject
 		$shop->init($row);
 		return $shop;
 	}
-	public function write() {}
+	public function write()
+	{
+		$con = BaseObject::$con;
+		if (!$this->live)
+		{
+			$sql = "INSERT INTO shops (?, ?, ?, ?, ?);";
+			$stmt->bind_param('ssiss', $this->name, $this->url, $this->shop_type, $this->short_desc, $this->stylized);
+			$stmt->execute();
+			$stmt->close();
+			return $con->insert_id;
+		} else
+		{
+			$sql = "UPDATE shops SET name = ?, url = ?, shop_type = ?, short_desc = ?, stylized = ? WHERE id = ?;";
+			$stmt = $con->prepare($sql);
+			$stmt->bind_param('ssissi', $this->name, $this->url, $this->shop_type, $this->short_desc, $this->stylized, $this->id);
+			$stmt->execute();
+			$stmt->close();
+			return $this->id;
+		}
+	}
 	public static function validate() {}
 }
 ?>

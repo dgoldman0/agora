@@ -25,7 +25,10 @@ $shops = Shop::get();
 		The row has been <?=$_REQUEST['sub_action']?> successfully!
 	</div>
 	<? endif; ?>
-	<p></p><a href="?action=edit" class="cmd-new">New Shop</a></p>
+	<div class="btn-group">
+		<a class="btn btn-sm btn-default glyphicon glyphicon-plus cmd-new" title = "Add Shop" href = "?action=edit&layout=admin"></a>
+	</div>
+	<hr/>
 	<table id = "shops" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
 		<thead>
 			<tr>
@@ -48,7 +51,7 @@ $shops = Shop::get();
 					<td><?=$shop->short_desc?></td>
 					<td class = "actiongroup">
 						<div class="btn-group">
-							<a class="btn btn-sm btn-default glyphicon glyphicon-edit" title="Edit" href="?action=edit&sid=<?=$shop->id?>"></a>
+							<a class="btn btn-sm btn-default glyphicon glyphicon-edit" title="Edit" href="?action=edit&layout=admin&sid=<?=$shop->id?>"></a>
 							<a class="btn btn-sm btn-default glyphicon glyphicon-eye-open" title="Details" href="?action=edit&sid=<?=$shop->id?>"></a>
 							<a class="btn btn-sm btn-default glyphicon glyphicon-trash" title="Delete" href="?action=delete&sid=<?=$shop->id?>"></a>
 						</div>
@@ -70,7 +73,7 @@ function javascripts()
 			$(document).ready(function() {
 	    		$('#shops').dataTable();
 				$(".highlighted td").delay(2000).animate({backgroundColor: ""}, 2000);
-				$('.glyphicon-edit .cmd-new').click(function (event) {
+				$('.glyphicon-edit, .cmd-new').click(function (event) {
 					var that = this;
 					event.preventDefault();
 					$.get(that.href, { format: 'modal'}, function(data){

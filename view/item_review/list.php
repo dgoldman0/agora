@@ -7,6 +7,17 @@ if (isset($_item))
 else if (isset($_current_user))
 	$reviews = ItemReview::get(null, null, $_current_user->id);
 
+if ($_REQUEST['excludeself'] == true && isset($_current_user))
+{
+	$rev = array();
+	foreach ($reviews as $review)
+	{
+		if (!($review->reviewer_id == $_current_user->id))
+			$rev[] = $review;
+	}
+	$reviews = $rev;
+}
+
 switch ($format)
 {
 	case "json":

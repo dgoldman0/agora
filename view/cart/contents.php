@@ -27,8 +27,8 @@ switch ($format)
 		<script type="text/template" id = "list-tmpl">
 			<h2>Cart Summary</h2>
 			Bags: {{data.bagcnt}}
-			<br/><br/>
 			{{#each data.bagitems}}
+			<br/><br/>
 			<table class="item_table" id = "items_{{id}}" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
 				<thead>
 					<tr>
@@ -41,10 +41,10 @@ switch ($format)
 				<tbody>		
 					{{#each this}}
 						<tr>
-							<td>{{name}}</td>
-							<td>{{sku}}</td>
-							<td class="item-cnt" id="item-cnt-{id}">{{cnt}}</td>
-							<td>
+							<td class="col-md-8"><a href = "item.php?iid={{item_id}}">{{name}}</a></td>
+							<td class="col-md-2">{{sku}}</td>
+							<td class="col-md-1 item-cnt" id="item-cnt-{id}">{{cnt}}</td>
+							<td class="col-md-1">
 								<div class="btn-group">
 									<a class="btn btn-sm btn-default glyphicon glyphicon-trash" title="Delete" href="?action=delete&iid={{id}}"></a>
 								</div>
@@ -72,7 +72,9 @@ switch ($format)
 					$(document).ready(function(){
 						$.get("cart.php?format=json&cid=<?=$_cart->id?>", function(data){
 							$("#list_block").html(tmpl(data));
-				    		$('.item_table').dataTable();
+				    		$('.item_table').dataTable({
+				    			"bFilter": false
+				    		});
 				    		$('.item-cnt').click(function ()
 				    		{
 								this.innerHTML = '<input type = "text" id = "_' + this.attr('id') + '" name = "' + this.attr('id') + '" value = "'+this.innerHTML+'"></input>';

@@ -3,11 +3,11 @@ require_once 'data.php';
 
 class ItemReview extends BaseObject
 {
-	public $item_id, $reviewer_id, $content, $score;
+	public $item_id, $reviewer_id, $title, $content, $score;
 	
 	public function __construct($item_id, $reviewer_id, $title, $content, $score)
 	{
-		$this->$item_id = $item_id;
+		$this->item_id = $item_id;
 		$this->reviewer_id = $reviewer_id;
 		$this->title = $title;
 		$this->content = $content;
@@ -75,19 +75,18 @@ class ItemReview extends BaseObject
 	}
 	public function write()
 	{
+		$con = BaseObject::$con;
 		if (!$this->live)
 		{
-			$con = BaseObject::$con;
-			$sql = "INSERT INTO user_roles (item_id, reviewer_id, title, content, score) VALUES (?,?, ?, ?, ?);";
-			$stmt = $con->prepare($sql);
+			$sql = "INSERT INTO item_reviews (?, ?, ?, ?, ?);";
+			print_r($this);
 			$stmt->bind_param('iissi', $this->item_id, $this->reviewer_id, $this->title, $this->content, $this->score);
 			$stmt->execute();
 			$stmt->close();
 			return $con->insert_id;
 		} else
 		{
-			$con = BaseObject::$con;
-			$sql = "UPDATE user_roles SET item_id = ?, reviewer_id = ?, title = '?', content = '?', score = ? WHERE id = ?;";
+			$sql = "UPDATE item_reviews SET item_id = ?, reviewer_id = ?, title = ?, content = ?, score = ? WHERE id = ?;";
 			$stmt = $con->prepare($sql);
 			$stmt->bind_param('iisssii', $this->item_id, $this->reviewer_id, $this->title, $this->content, $this->score, $this->id);
 			$stmt->execute();

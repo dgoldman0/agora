@@ -16,17 +16,28 @@ if ($action = $_REQUEST['action'])
 	switch ($action)
 	{
 		case "edit":
-			if (isset($_item))
-			{
-				$_shop = Shop::get($_item->shop_id);
-				if ($isAdmin($_shop->id))
-					$view = "item/admin/edit";
-			}
+			if (isAdmin($_shop->id))
+				$view = "item/admin/edit";
 			break;
 		case "csveditor":
-			$view = "item/csvEditor";
+			if (isAdmin($_shop->id))
+				$view = "item/admin/csv_editor";
 			break;
 		case "save":
+			if (!isset($_item))
+			{
+				$_item = new Item();
+			}
+			$_item->shop_id = $_shop->id;
+			$_item->name = $_REQUEST['name'];
+			$_item->sku = $_REQUEST['sku'];
+			$_item->short_desc = $_REQUEST['short_desc'];
+			$_item->long_desc = $_REQUEST['desc'];
+			if ($id = $_item->write())
+				header("location: item.php?iid=$id");
+			else
+				echo BaseObject::$con->error;
+			die();
 			break;
 		case "csvsave":
 			break;

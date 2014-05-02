@@ -97,24 +97,29 @@ $item = $_item;
 <!--Templates-->
 <script type="text/template" id = "review-tmpl">
 	<? if (isset($_current_user)):?>
-		<legend><a href = "#" id = "minimize" class = "glyphicon glyphicon-resize-small"></a> Review <?=$_item->name?></legend>
-		<div id = "my_review">
-			<div class="col-md-8">
-				<form class="form-horizontal" action="item_review.php?action=save&iid=<?=$_item->id?>" method="post" id="register-form">
-					<fieldset>
-						<input type="text" name="title" class="form-control input-md" placeholder="" style="margin-bottom: 5px;">
-						<textarea name="content"><?=$content?></textarea>
-					</fieldset>
-				</form>
-			</div>
-			<div class="col-md-4">
-				<legend>Rate</legend>
-				<div id = "rating"></div>
+		<div class="well col-md-12">
+			<legend><a href = "#" id = "minimize" class = "glyphicon glyphicon-resize-small"></a> Review <?=$_item->name?></legend>
+			<div id = "my_review">
+				<div class="col-md-8">
+					<form class="form-horizontal" action="item_review.php?action=save&iid=<?=$_item->id?>" method="post" id="review-form">
+						<fieldset>
+							<input type="text" name="title" class="form-control input-md" placeholder="" style="margin-bottom: 5px;">
+							<textarea name="content"><?=$content?></textarea>
+						</fieldset>
+						<input type = "hidden" name = "score" id = "score"/>
+					</form>
+				</div>
+				<div class="col-md-4">
+					<legend>Rate</legend>
+					<div id = "rating"></div>
+				</div>
 			</div>
 		</div>
 	<? endif;?>
 	{{#each data}}
-	<div class="col-md-12">
+	<div class="well col-md-12">
+		<legend>{{title}}</legend>
+		<p>{{content}}</p>
 	</div>
 	{{/each}}
 </script>
@@ -129,9 +134,8 @@ function javascripts()
 	<script type="text/javascript">
 		$('document').ready(function() {			
 			var tmpl = Handlebars.compile($("#review-tmpl").html());
-			review_score = 0;
 			$(document).ready(function(){
-				$.get("item_review.php?format=json&iid=<?=$_item->id?>", function(data){
+				$.get("item_review.php?format=json&excludeself=true&iid=<?=$_item->id?>", function(data){
 					$("#reviews").html(tmpl(data));
 
 					$('#minimize').click(function (event)
@@ -158,7 +162,7 @@ function javascripts()
 							number: 5,
 							score : 0,
 		       				click: function(score, evt) {
-		       					review_score = score;
+		       					$('#score').val(score);
 		      				}
 		      			});	
 		      		<? endif;?>

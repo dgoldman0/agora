@@ -37,7 +37,8 @@ if ($action = $_REQUEST['action'])
 			$bitem->write();
 			if (BaseObject::$con->errorno == 0)
 			{
-				
+				header("location: cart.php");
+				die();
 			}
 		}
 	}

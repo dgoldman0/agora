@@ -10,8 +10,7 @@ $pages = Page::get(null, $_shop->id);
 <div class="col-md-10">
 	<h1>Page Management</h1>
 	<div class="btn-group">
-		<a class="btn btn-sm btn-default glyphicon glyphicon-plus cmd-new" title = "Add Item" href = "?action=edit"></a>
-		<a class="btn btn-sm btn-default glyphicon glyphicon-open" title = "Add From CSV" href = "?action=csveditor"></a>
+		<a class="btn btn-sm btn-default glyphicon glyphicon-plus cmd-new" title = "Add Shop" href = "?layout=admin&action=edit"></a>
 	</div>
 	<hr/>
 	<table id = "pages" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
