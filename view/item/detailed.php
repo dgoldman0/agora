@@ -12,59 +12,60 @@ $item = $_item;
 				<?=$item->name?>
 			</div>
 			<div class="panel-body">
-						<div id="images" class="carousel slide" data-ride="carousel">
-							<ol class="carousel-indicators">
-								<?php
-								$c = count($media);
-								if (c == 0)
+				<div id="images" class="carousel slide col-md-3" data-ride="carousel">
+					<ol class="carousel-indicators">
+						<?php
+						$c = count($media);
+						if (c == 0)
+						{
+							echo "<li data-target=\"#images\" data-slide-to=\"0\" class=\"active\"></li>";
+						} else
+						{
+							for ($i = 0; $i < c; $i++)
+							{
+								if ($i = 0)
+									echo "<li data-target=\"#images\" data-slide-to=\"{$i}\" class=\"active\"></li>";
+								else
+									echo "<li data-target=\"#images\" data-slide-to=\"{$i}\"></li>";
+							}
+						}
+						?>
+					</ol>
+					<div class="carousel-inner">
+						<?php
+						if (c == 0)
+						{
+							echo "<div class=\"item active\"><img src=\"images/default.png\" alt=\"Default\"/></div>";
+						} else
+						{
+							$first = true;
+							foreach ($media as $medium)
+							{
+								if ($first)
 								{
-									echo "<li data-target=\"#images\" data-slide-to=\"0\" class=\"active\"></li>";
+									$first = false;
+									echo '<div class="item active">';
 								} else
 								{
-									for ($i = 0; $i < c; $i++)
-									{
-										if ($i = 0)
-											echo "<li data-target=\"#images\" data-slide-to=\"{$i}\" class=\"active\"></li>";
-										else
-											echo "<li data-target=\"#images\" data-slide-to=\"{$i}\"></li>";
-									}
+									echo '<div class="item">';
 								}
-								?>
-							</ol>
-							<div class="carousel-inner">
-								<?php
-								if (c == 0)
-								{
-									echo "<div class=\"item active\"><img src=\"images/default.png\" alt=\"Default\"/></div>";
-								} else
-								{
-									$first = true;
-									foreach ($media as $medium)
-									{
-										if ($first)
-										{
-											$first = false;
-											echo '<div class="item active">';
-										} else
-										{
-											echo '<div class="item">';
-										}
-										echo "<img data-src=\"medium.php?name={$medium->$name}\" alt=\"{$medium->alt_text}\"></div>";
-									}
-								}
-								?>
-							</div>
-						  <!-- Controls -->
-						  <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
-						    <span class="glyphicon glyphicon-chevron-left"></span>
-						  </a>
-						  <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
-						    <span class="glyphicon glyphicon-chevron-right"></span>
-						  </a>
-						</div>
-				<?=$item->short_desc?>
-				<hr/>
-				<?=$item->long_desc?>
+								echo "<img data-src=\"medium.php?name={$medium->$name}\" alt=\"{$medium->alt_text}\"></div>";
+							}
+						}
+						?>
+					</div>
+				  <!-- Controls -->
+				  <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+				    <span class="glyphicon glyphicon-chevron-left"></span>
+				  </a>
+				  <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+				    <span class="glyphicon glyphicon-chevron-right"></span>
+				  </a>
+				</div>
+				<div class = "col-md-9">
+					<legend><?=$item->short_desc?></legend>
+					<?=$item->long_desc?>
+				</div>
 			</div>
 		</div>
 		<div class="panel panel-default">
@@ -88,7 +89,7 @@ $item = $_item;
 				</div>
 				<hr/>
 				Price: <br/>
-				Score: 
+				Score: <?=round($item->score, 2)?>
 			</div>
 		</div>
 	</div>
@@ -103,10 +104,11 @@ $item = $_item;
 				<div class="col-md-8">
 					<form class="form-horizontal" action="item_review.php?action=save&iid=<?=$_item->id?>" method="post" id="review-form">
 						<fieldset>
-							<input type="text" name="title" class="form-control input-md" placeholder="" style="margin-bottom: 5px;">
-							<textarea name="content"><?=$content?></textarea>
+							<input type="text" id = "title" name="title" class="form-control input-md" placeholder="" style="margin-bottom: 5px;">
+							<textarea id = "content" name="content"><?=$content?></textarea>
 						</fieldset>
 						<input type = "hidden" name = "score" id = "score"/>
+						<input type = "hidden" name = "rid" id = "rid"/>
 					</form>
 				</div>
 				<div class="col-md-4">
@@ -117,10 +119,12 @@ $item = $_item;
 		</div>
 	<? endif;?>
 	{{#each data}}
+	<?= (isset($_current_user)) ? "{{#ifCond reviewer_id '!=' $_current_user->id}}" : ""?>
 	<div class="well col-md-12">
 		<legend>{{title}}</legend>
-		<p>{{content}}</p>
+		{{& content}}
 	</div>
+	<?= (isset($_current_user)) ? "{{/ifCond}}" : ""?>
 	{{/each}}
 </script>
 <!--End of Templates-->
@@ -132,17 +136,68 @@ function javascripts()
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.2/handlebars.min.js"></script>
 	<script type="text/javascript" src="js/jquery.raty.min.js"></script>
 	<script type="text/javascript">
-		$('document').ready(function() {			
+		$('document').ready(function() {
+			Handlebars.registerHelper("ifCond",function(v1,operator,v2,options) {
+				switch (operator)
+				{
+				    case "==":
+				        return (v1==v2)?options.fn(this):options.inverse(this);
+				
+				    case "!=":
+				        return (v1!=v2)?options.fn(this):options.inverse(this);
+				
+				    case "===":
+				        return (v1===v2)?options.fn(this):options.inverse(this);
+				
+				    case "!==":
+				        return (v1!==v2)?options.fn(this):options.inverse(this);
+				
+				    case "&&":
+				        return (v1&&v2)?options.fn(this):options.inverse(this);
+				
+				    case "||":
+				        return (v1||v2)?options.fn(this):options.inverse(this);
+				
+				    case "<":
+				        return (v1<v2)?options.fn(this):options.inverse(this);
+				
+				    case "<=":
+				        return (v1<=v2)?options.fn(this):options.inverse(this);
+				
+				    case ">":
+				        return (v1>v2)?options.fn(this):options.inverse(this);
+				
+				    case ">=":
+				     return (v1>=v2)?options.fn(this):options.inverse(this);
+				
+				    default:
+				        return eval(""+v1+operator+v2)?options.fn(this):options.inverse(this);
+				}
+			});
 			var tmpl = Handlebars.compile($("#review-tmpl").html());
 			$(document).ready(function(){
-				$.get("item_review.php?format=json&excludeself=true&iid=<?=$_item->id?>", function(data){
+				var the_score = 0.0;
+				$.get("item_review.php?format=json&iid=<?=$_item->id?>", function(data){
 					$("#reviews").html(tmpl(data));
-
+					<? if (isset($_current_user)):?>
+						data.data.forEach(function(entry)
+						{
+							console.log(entry);
+							if (entry.reviewer_id == <?=$_current_user->id?>)
+							{
+								$('#title').val(entry.title);
+								$('#content').val(entry.content);
+								$('#rid').val(entry.id);
+								the_score = entry.score;
+								$('#score').val(the_score);
+							}
+						});
+					<? endif;?>
 					$('#minimize').click(function (event)
 					{
 						var that = this;
 						event.preventDefault();
-						$('#my_review').toggle(1000);
+						$('#my_review').toggle(100);
 					});
 					
 					tinymce.init({
@@ -160,7 +215,7 @@ function javascripts()
 						$('#rating').raty({
 							half  : true,
 							number: 5,
-							score : 0,
+							score : the_score,
 		       				click: function(score, evt) {
 		       					$('#score').val(score);
 		      				}

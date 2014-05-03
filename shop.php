@@ -38,15 +38,25 @@ if ($action = $_REQUEST['action'])
 	else
 	{
 		if (isset($_REQUEST['sid']))
-			$view = "shop/home";
+		{
+			if ($format == "pos")
+				$view = "shop/pos";
+			else
+				$view = "shop/home";
+		}
 		else
+		{
 			$view = "shop/list";	
+		}
 	}
 }
 
 if ($format == "modal")
 {
 	$include = "view/$view.php";
+} else if ($format == "pos")
+{
+	
 } else
 {
 	$include = "view/_base.php";

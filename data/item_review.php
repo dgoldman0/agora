@@ -80,7 +80,7 @@ class ItemReview extends BaseObject
 		{
 			$sql = "INSERT INTO item_reviews (?, ?, ?, ?, ?);";
 			print_r($this);
-			$stmt->bind_param('iissi', $this->item_id, $this->reviewer_id, $this->title, $this->content, $this->score);
+			$stmt->bind_param('iissd', $this->item_id, $this->reviewer_id, $this->title, $this->content, $this->score);
 			$stmt->execute();
 			$stmt->close();
 			return $con->insert_id;
@@ -88,10 +88,10 @@ class ItemReview extends BaseObject
 		{
 			$sql = "UPDATE item_reviews SET item_id = ?, reviewer_id = ?, title = ?, content = ?, score = ? WHERE id = ?;";
 			$stmt = $con->prepare($sql);
-			$stmt->bind_param('iisssii', $this->item_id, $this->reviewer_id, $this->title, $this->content, $this->score, $this->id);
+			$stmt->bind_param('iissdi', $this->item_id, $this->reviewer_id, $this->title, $this->content, $this->score, $this->id);
 			$stmt->execute();
 			$stmt->close();
-			return $id;
+			return $this->id;
 		}
 	}
 	// Returns an erray of error messages

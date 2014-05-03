@@ -22,12 +22,20 @@ if ($action = $_REQUEST['action'])
 			if (!isset($_review))
 			{
 				$_review = new ItemReview();
+			} else
+			{
+				if ($_current_user->id != $_review->id && !isAdmin($_shop->id))
+				{
+					// Throw error eventually
+					$_review = new ItemReview();
+				}
 			}
 			$_review->item_id = $_REQUEST['iid'];
 			$_review->reviewer_id = $_current_user->id;
 			$_review->title = $_REQUEST['title'];
 			$_review->content = $_REQUEST['content'];
 			$_review->score = $_REQUEST['score'];
+			print_r($_review);
 			if ($id = $_review->write())
 				header("location: item_review.php?rid=$id");
 			else
