@@ -9,6 +9,7 @@ require_once 'data.php';
 				<a href="user.php?user=<?=$_user->username?>"><?=$_user->username?></a>
 			</div>
 			<div class="panel-body">
+				<legend>Info</legend>
 				<div class="col-md-6"><p><?=$_user->first?> <?=$_user->last?></p></div>
 				<div class="col-md-6">
 					<div class="btn-toolbar" role="toolbar">
@@ -18,6 +19,7 @@ require_once 'data.php';
 						</div>
 					</div>
 				</div>
+				<legend>Badges</legend>
 			</div>
 		</div>
 	</div>

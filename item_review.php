@@ -35,7 +35,6 @@ if ($action = $_REQUEST['action'])
 			$_review->title = $_REQUEST['title'];
 			$_review->content = $_REQUEST['content'];
 			$_review->score = $_REQUEST['score'];
-			print_r($_review);
 			if ($id = $_review->write())
 				header("location: item_review.php?rid=$id");
 			else

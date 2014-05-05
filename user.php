@@ -153,15 +153,17 @@ if ($action = $_REQUEST['action'])
 		case "fb-disconnect":
 			break;
 		default:
-			if ($layout == "admin" && isAdmin($_shop->id))
-				$view = "user/admin/list";
-			else
-			{
-				if (isset($_user))
-					$view = "user/detailed";
-				else
-					$view = "user/list";
-			}
+	}
+} else
+{
+	if ($layout == "admin" && isAdmin($_shop->id))
+		$view = "user/admin/list";
+	else
+	{
+		if (isset($_user))
+			$view = "user/detailed";
+		else
+			$view = "user/list";
 	}
 }
 switch ($format)
