@@ -1,4 +1,4 @@
 <?
 require_once 'data.php';
 
-echo $page->content;
+echo $_page->content;

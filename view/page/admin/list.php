@@ -35,9 +35,9 @@ $pages = Page::get(null, $_shop->id);
 					<td></td>
 					<td>
 						<div class="btn-group">
-							<a class="btn btn-sm btn-default glyphicon glyphicon-edit" title="Edit" href="?action=edit&id=<?=$user->id?>"></a>
-							<a class="btn btn-sm btn-default glyphicon glyphicon-eye-open" title="Details" href="?action=edit&id=<?=$user->id?>"></a>
-							<a class="btn btn-sm btn-default glyphicon glyphicon-trash" title="Delete" href="?action=edit&id=<?=$user->id?>"></a>
+							<a class="btn btn-sm btn-default glyphicon glyphicon-edit" title="Edit" href="?layout=admin&action=edit&pid=<?=$page->id?>"></a>
+							<a class="btn btn-sm btn-default glyphicon glyphicon-eye-open" title="Details" href="?layout=admin&action=edit&pid=<?=$page->id?>"></a>
+							<a class="btn btn-sm btn-default glyphicon glyphicon-trash" title="Delete" href="?layout=admin&action=delete&pid=<?=$page->id?>"></a>
 						</div>
 					</td>
 				</tr>

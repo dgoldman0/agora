@@ -7,7 +7,7 @@ $layout = $_REQUEST['layout'];
 
 if ($pid = $_REQUEST['pid'])
 {
-	$page = Page::get($pid);
+	$_page = Page::get($pid);
 }
 
 if ($action = $_REQUEST['action'])
@@ -16,7 +16,7 @@ if ($action = $_REQUEST['action'])
 	{
 		case "edit":
 		case "new":
-			$view = "page/edit";
+			$view = "page/admin/edit";
 			break;
 		case "save":
 			if (isAdmin($_current_user->id))
@@ -58,9 +58,9 @@ if ($action = $_REQUEST['action'])
 	}
 } else
 {
-	if (isset($page))
+	if (isset($_page))
 	{
-		$view = "page/view";
+		$view = "page/detailed";
 	} else
 	{
 		if ($layout == "admin" && isAdmin($_current_user->id))
@@ -69,7 +69,6 @@ if ($action = $_REQUEST['action'])
 			$view = "page/list";
 	}
 }
-
 if ($format == "modal")
 {
 	$include = "view/$view.php";

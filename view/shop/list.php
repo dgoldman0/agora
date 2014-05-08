@@ -17,16 +17,26 @@ function printShop($shop)
 <?
 }
 
+
 $shops = Shop::get();
 
-foreach ($shops as $shop)
+switch ($format)
 {
-	printShop($shop);
-}
-	
-function javascripts()
-{
-	?>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-	<?
+	case "json":
+		$response = array();
+		$response['data'] = $shops;
+		echo json_encode($response);
+		break;
+	default:
+		foreach ($shops as $shop)
+		{
+			printShop($shop);
+		}
+			
+		function javascripts()
+		{
+			?>
+				<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+			<?
+		}
 }

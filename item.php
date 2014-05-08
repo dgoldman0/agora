@@ -9,6 +9,7 @@ $layout = $_REQUEST['layout'];
 if ($iid = $_REQUEST['iid'])
 {
 	$_item = Item::get($iid);
+	$_shop = Shop::get($_item->shop_id);
 }
 
 if ($action = $_REQUEST['action'])

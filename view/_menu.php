@@ -14,7 +14,7 @@ isLoggedIn();
 	      	<?
 			if (!$_shop == null)
 			{
-	   			echo "shop.php?shop={$_shop->name}\">{$_shop->stylized}";
+	   			echo "shop.php?sid={$_shop->id}\">{$_shop->stylized}";
 			} else
 			{
 				echo 'index.php">Agora';

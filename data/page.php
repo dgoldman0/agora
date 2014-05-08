@@ -74,13 +74,14 @@ class Page extends BaseObject
 			if (isset($shop_id))
 			{
 				$sql = "SELECT * FROM pages WHERE shop_id = $shop_id";
+				$multi = true;
 			}
 		}
 		if (isset($sql))
 		{
-			if (isset($all))
+			$response = $con->query($sql." ORDER BY created_on DESC;");
+			if ($all || $multi)
 			{
-				$response = $con->query($sql." ORDER BY created_on DESC;");
 				$pages = array();
 				while ($row = $response->fetch_array())
 				{
@@ -88,8 +89,7 @@ class Page extends BaseObject
 				}
 				return $pages;
 			} else {
-				$response = $con->query($sql.";");
-				if ($row = $response->fetch_arra())
+				if ($row = $response->fetch_array())
 				{
 					return Page::getFromRow($row);
 				}
@@ -112,9 +112,9 @@ class Page extends BaseObject
 			$stmt->bind_param('ssiis', $this->title, $this->perma, $this->shop_id, $this->type, $this->content);
 		} else
 		{
-			$sql = "INSERT INTO pages (title, perma, shop_id, type, content) VALUES (?,?,?,?,?) WHERE id = ?;";
+			$sql = "INSERT INTO pages (id, title, perma, shop_id, type, content) VALUES (?, ?,?,?,?,?);";
 			$stmt = $con->prepare($sql);
-			$stmt->bind_param('ssiisi', $this->title, $this->perma, $this->shop_id, $this->type, $this->content, $this->id);
+			$stmt->bind_param('issiis', $this->id, $this->title, $this->perma, $this->shop_id, $this->type, $this->content);
 		}
 		$stmt->execute();
 		$stmt->close();

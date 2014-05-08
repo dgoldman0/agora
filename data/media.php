@@ -67,5 +67,7 @@ class Media extends BaseObject
 		}
 	}
 	// Returns an erray of error messages
-	public static function validate() {}
+	public static function validate() {
+		
+	}
 }

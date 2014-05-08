@@ -5,12 +5,13 @@ require_once 'data.php';
 $placeholder = "New Page";
 $content = "";
 $legend = "New Page";
-if ($page && $edit)
+if (isset($_page))
 {
-	$title = $page->title;
-	$content = $page->content;
+	$title = $_page->title;
+	$placeholder = "";
+	$content = $_page->content;
 	$legend = "Edit Page";
-	$final = "&id={$page->id}";
+	$final = "&pid={$_page->id}";
 }
 function javascripts()
 {

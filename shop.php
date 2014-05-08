@@ -42,7 +42,7 @@ if ($action = $_REQUEST['action'])
 			if ($format == "pos")
 				$view = "shop/pos";
 			else
-				$view = "shop/home";
+				$view = "shop/detailed";
 		}
 		else
 		{
@@ -51,14 +51,16 @@ if ($action = $_REQUEST['action'])
 	}
 }
 
-if ($format == "modal")
+switch ($format)
 {
-	$include = "view/$view.php";
-} else if ($format == "pos")
-{
-	
-} else
-{
-	$include = "view/_base.php";
+	case "modal":
+	case "json":
+		$include = "view/$view.php";
+		break;
+	case "pos":
+		$include = "view/_pos.php";
+		break;
+	default:
+		$include = "view/_base.php";
 }
 include $include;
