@@ -2,9 +2,3 @@ Options -Multiviews
 
 RewriteEngine On
 RewriteBase /
-
-RewriteCond %{REQUEST_URI} !\.(.*)$
-RewriteRule shop/(.*)$ /shop.php?shop=$1 [L,PT]
-
-RewriteRule shop/(.*)$ /$1 [L,PT]
-

@@ -28,33 +28,33 @@ else
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="<?=$lcs?> control-label" for="price">Price</label>
-   	   		<div class="<?=$lcs?>">
-				<input id="price-1" name="price[]" type="text" placeholder="$0.00" class="form-control input-md">
-			</div>
-			<!--
-			<label class="col-md-1 control-label" for="price">Category</label>
-   	   		<div class="<?=$lcs?>">
-				<select id="pcat-1" name="pcat[]" class="form-control input-md">
-					<option value="0">List</option>
-				</select>
-			</div>
-			<label class="col-md-1 control-label" for="price">Currency</label>
-   	   		<div class="<?=$lcs?>">
-				<select id="pcur-1" name="pcur[]" class="form-control input-md">
-					<option value="1">USD</option>
-				</select>
-			</div>
-			<a href=""><label class="col-md-1 control-label" for="none">Remove</label></a>
-			<a href=""><label class="col-md-1 control-label" for="none">Add</label></a>
-			-->
-		</div>
-		<div class="form-group">
 			<label class="<?=$lcs?> control-label" for="short_desc">Short Description</label>
    	   		<div class="<?=$ics?>">
 				<input id="short_desc" name="short_desc" type="text" placeholder="Short Description (156 characters or less)..." class="form-control input-md">
 			</div>
 		</div>
+		<legend>Pricing</legend>
+		<div class="form-group">
+			<label class="<?=$lcs?> control-label" for="price_category">Price Category</label>
+   	   		<div class="<?=$lcs?>">
+				<select id="price_category" name="price_category" class="form-control input-md">
+					<option value="0">List</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="<?=$lcs?> control-label" for="currency">Currency</label>
+   	   		<div class="<?=$lcs?>">
+				<select id="currency" name="currency" class="form-control input-md">
+					<option value="0">USD</option>
+				</select>
+			</div>
+			<!--
+			<a href=""><label class="col-md-1 control-label" for="none">Remove</label></a>
+			<a href=""><label class="col-md-1 control-label" for="none">Add</label></a>
+			-->
+		</div>
+		<legend>Optional</legend>
 		<div class="form-group">
 			<label class="<?=$lcs?> control-label" for="desc">Description</label>
 			<div class="<?=$ics?>">

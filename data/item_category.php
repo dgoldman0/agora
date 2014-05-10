@@ -12,7 +12,7 @@ class ItemCategory extends BaseObject
 	public static function get($id = null, $shop_id = null)
 	{
 		$con = BaseObject::$con;
-		if ($id)
+		if (isset($id))
 		{
 			if (is_numeric($id))
 			{
@@ -53,7 +53,7 @@ class ItemCategory extends BaseObject
 		if (!$this->live)
 		{
 			$con = BaseObject::$con;
-			$sql = "INSERT INTO users (name, shop_id, parent) VALUES (?,?,?);";
+			$sql = "INSERT INTO item_categories (name, shop_id, parent) VALUES (?,?,?);";
 			$stmt = $con->prepare($sql);
 			$stmt->bind_param('sii', $this->name, $this->shop_id, $this->parent);
 			$stmt->execute();
@@ -62,12 +62,12 @@ class ItemCategory extends BaseObject
 		} else
 		{
 			$con = BaseObject::$con;
-			$sql = "UPDATE users SET name = ?, shop_id = ?, parent = ?) WHERE id = ?;";
+			$sql = "UPDATE item_categories SET name = ?, shop_id = ?, parent = ?) WHERE id = ?;";
 			$stmt = $con->prepare($sql);
 			$stmt->bind_param('siii', $this->name, $this->shop_id, $this->parent);
 			$stmt->execute();
 			$stmt->close();
-			return $id;
+			return $this->id;
 		}
 	}
 	public static function validate($object)

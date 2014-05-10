@@ -16,6 +16,8 @@ require_once 'data/error.php';
 require_once 'data/user_role.php';
 require_once 'data/item_review.php';
 require_once 'data/item_image.php';
+require_once 'data/item_category.php';
+require_once 'data/item_price.php';
 
 DEFINE("USER_PERMISSION_VIEW_SHOP", 4);
 DEFINE("USER_PERMISSION_EDIT_SHOP", 8);

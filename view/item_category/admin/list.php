@@ -10,8 +10,7 @@ $objects = ItemCategory::get(null, $_shop->id);
 <div class="container col-md-10">
 	<h2>Item Category Management</h2>
 	<div class="btn-group">
-		<a class="btn btn-sm btn-default glyphicon glyphicon-plus" title = "Add Item" href = "?action=edit"></a>
-		<a class="btn btn-sm btn-default glyphicon glyphicon-open" title = "Add From CSV" href = "?action=csveditor"></a>
+		<a class="btn btn-sm btn-default glyphicon glyphicon-plus" title = "Add Category" href = "?layout=admin&action=edit&sid=<?=$_shop->id?>"></a>
 	</div>
 	<hr/>
 	<table id = "items" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
@@ -30,8 +29,6 @@ $objects = ItemCategory::get(null, $_shop->id);
 				<tr>
 					<td><?=$object->name?></td>
 					<td><?=$object->parent?></td>
-					<td><?=$object->sku?></td>
-					<td title="<?=$object->short_desc?>"><?=$sd?></td>
 					<td>
 						<div class="btn-group">
 							<a class="btn btn-sm btn-default glyphicon glyphicon-edit" title="Edit" href="?action=edit&iid=<?=$item->id?>"></a>
@@ -55,7 +52,7 @@ function javascripts()
 		<script type="text/javascript">
 			$(document).ready(function() {
 	    		$('#items').dataTable();
-				$('.glyphicon-edit').click(function (event) {
+				$('.glyphicon-edit, .glyphicon-plus').click(function (event) {
 					var that = this;
 					event.preventDefault();
 					$.get(that.href, { format: 'modal'}, function(data){
