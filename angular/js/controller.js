@@ -10,52 +10,55 @@ agoraApp.config(function($routeProvider) {
 	}).when('/shop/:sid/items/', {
 		templateUrl: 'partials/item/list.html',
 		controller: 'ItemListCtrl'
+	}).when('/shop/:sid/items/:cid/', {
+		templateUrl: 'partials/item/list.html',
+		controller: 'ItemListCtrl'
+	}).when('/shop/:sid/items/:cid/:ms', {
+		templateUrl: 'partials/item/list.html',
+		controller: 'ItemListCtrl'
 	}).when('/shop/:sid/item/:iid', {
 		templateUrl: 'partials/item/detailed.html',
 		controller: 'ItemDetailCtrl'
+	}).when('/cart', {
+		templateUrl: 'partials/cart/detailed.html',
+		controller: 'CartDetailCtrl'
 	}).otherwise({
 		redirectTo: '/shops'
 	});
 });
 
-agoraApp.controller('MainCtrl', function($scope, $http) {
+agoraApp.controller('MainCtrl', function($scope, $http, $routeParams) {
 	$.fn.raty.defaults.path = '/images';
+	$scope.$on('$viewContentLoaded', function() {
+		if ($scope.shop == null || $scope.shop.id != $routeParams.sid)
+		{
+			var params;
+			if ($routeParams.sid != null)
+			{
+				params = {sid: $routeParams.sid};
+			} else
+			{
+				params = {sid: 0};
+			}
+			$http.get("/shop.php?format=json", {params: params })
+			.success(function (results) {
+				$scope.shop = results.data;
+				$scope.session = results.session;
+			});
+		}
+	});
 });
 
 agoraApp.controller('MenuCtrl', function($scope, $http, $routeParams) {
-	$http.get("/shop.php?format=json", {params: {sid: 0} })
-	.success(function (results) {
-		$scope.$parent.shop = results.data;
-	});		    	
-});
-
-agoraApp.controller('ShopListCtrl', function($scope, $http){
-	$http.get("/shop.php?format=json").success(function (results) {
-		$scope.shops = results.data;
-	});		    	
-});
-
-agoraApp.controller('ShopDetailCtrl', function($scope, $http, $routeParams){
-	$http.get("/item.php?format=json", {params: {sid: $routeParams.sid} })
-	.success(function (results) {
-		$scope.items = results.data;
-	});
-	$http.get("/shop.php?format=json", {params: {sid: $routeParams.sid} })
-	.success(function (results) {
-		$scope.$parent.shop = results.data;
-	});		    	
-});
-
-agoraApp.controller('ItemListCtrl', function($scope, $http, $routeParams){
-	$scope.min_score = 3.5;
-	$http.get("/item.php?format=json", {params: {sid: $routeParams.sid} })
-	.success(function (results) {
-		$scope.items = results.data;
-	});
-	$http.get("/shop.php?format=json", {params: {sid: $routeParams.sid} })
-	.success(function (results) {
-		$scope.$parent.shop = results.data;
-	});		    	
+	$scope.login = function()
+	{
+		
+	};
+	
+	$scope.logout = function()
+	{
+		
+	};
 });
 
 agoraApp.controller('ItemDetailCtrl', function($scope, $http, $routeParams){
@@ -63,84 +66,89 @@ agoraApp.controller('ItemDetailCtrl', function($scope, $http, $routeParams){
 	.success(function (results) {
 		$scope.item = results.data;
 	});
-	$http.get("/shop.php?format=json", {params: {sid: $routeParams.sid} })
-	.success(function (results) {
-		$scope.$parent.shop = results.data;
-	});		    	
 });
 
-agoraApp.controller('ItemSortCtrl', function ($scope, $http, $routeParams) {
-	$http.get("/item_category.php?format=json", {params: {sid: $routeParams.sid} }).success(function (results) {
-		$scope.categories = results.data;
-	});
-}).directive('categories', function() { // Quickly thrown together without knowing what I'm doing. Works, but probably not right
+agoraApp.controller('ItemListCtrl', function($scope, $http, $routeParams){
+	if ($scope.categories == null)
+	{
+		$http.get("/item.php?format=json", {params: {sid: $routeParams.sid} })
+		.success(function (results) {
+			$scope.items = results.data;
+			$http.get("/item_category.php?format=json", {params: {sid: $routeParams.sid} }).success(function (results) {
+				$scope.categories = ItemCategory.convertFormat(results.data, $routeParams.cid);
+				if ($routeParams.cid != null)
+					$scope.category = 'cat-' + $routeParams.cid;
+				else
+					$scope.category = 'cat-0';
+				if ($routeParams.ms != null)
+					$scope.min_score = $routeParams.ms;
+				else
+					$scope.min_score = 3.5;
+			});
+		});
+	}
+}).directive('categories', function($routeParams) { // Quickly thrown together without knowing what I'm doing. Works, but probably not right
+	var linkFunction = function ($scope, $element, $attrs)
+	{
+		$scope.$watch('categories', function() {
+			if ($scope.categories != null)
+			{
+				var params = {"types" : {
+			    	"default" : {
+			        	"icon" : "glyphicon glyphicon-tower"
+			      	},
+			      	"demo" : {
+			        	"icon" : "glyphicon glyphicon-ok"
+			      		}
+			   		},
+			    	"plugins" : [ "types" ],
+					'core' : {
+			    		'data' : $scope.categories
+			    	}
+				};
+				jsChange = function (event, data) {
+					$scope.category = data.selected[0];
+					var loc = "#" + '/shop/' + $routeParams.sid + '/items/' + $scope.category.substring(4) + '/' + $scope.min_score;
+					document.location.hash = loc;
+				};
+				$scope.itemFilter = function(item)
+				{
+					
+					return item.score >= $scope.min_score;
+				};
+			}
+		});
+	};
 	return {
 		restrict: 'A',
-		link: function($scope, $element, $attrs)
+		compile: function ($element, $attrs)
 		{
-			$scope.$watch('categories', function() {
-				// Build category structure
-				var root = $scope.cat_tree;
-				if (root == null)
-				{
-					root = $('<ul id="cat_root"><li>All Items</li></ul>');
-					$($element).append(root);
-					$scope.cat_tree = root;
-				}
-				var rootli = root.find('li').first();
-				var categories = $scope.categories;
-				if (categories != null)
-				{
-					var h = new Object();
-					// Required ordering by last updated or something in order to prevent category being created before parent
-					for (i = 0; i < categories.length; i++)
-					{
-						var cat = categories[i];
-						var text = '<ul id="cat-'+cat.id+'"><li>'+cat.name+'</li></ul>';
-						h[cat.id] = $(text);
-						if (cat.parent == null)
-						{
-							rootli.append(h[cat.id]);
-						} else
-						{
-							h[cat.parent].find('li').first().append(h[cat.id]);
-						}
-					}
-					$($element).jstree({"types" : {
-				    	"default" : {
-				        	"icon" : "glyphicon glyphicon-tower"
-				      	},
-				      	"demo" : {
-				        	"icon" : "glyphicon glyphicon-ok"
-				      		}
-				   		},
-				    	"plugins" : [ "types" ]
-					});
-				}
-			});
+			return linkFunction;
 		}
 	};
-}).directive('scores', function($compile) {
-	return {
-		restrict: 'A',
-      	link: function($scope, $element, $attrs)
-		{
-			var div = $('<div/>');
+}).directive('scores', function($routeParams) {
+	var linkFunction = function ($scope, $element, $attrs)
+	{
+		$scope.$watch('min_score', function () {
 			var onClick = function(score, evt)
 			{
-				$scope.$parent.$parent.min_score = score;
+				$scope.min_score = score;
+				var loc = "#" + '/shop/' + $routeParams.sid + '/items/' + $scope.category.substring(4) + '/' + $scope.min_score;
+				document.location.hash = loc;
 			};
-			div.raty({
+			$element.raty({
 				number: 5,
 				half: true,
-				score: 3.5,
+				score: $scope.min_score,
 				click: onClick
-  			});
-			$compile(div)($scope);
-			$($element.append(div));
-			$scope.$watch('min_score', function () {
-				console.log($scope.min_score);
 			});
+		});
+	};
+	return {
+		restrict: 'A',
+		compile: function ($element, $attrs)
+		{
+			return linkFunction;
 		}
 	};
 });
@@ -148,6 +156,45 @@ agoraApp.controller('ItemSortCtrl', function ($scope, $http, $routeParams) {
 agoraApp.controller('ItemReviewListCtrl', function ($scope, $http, $routeParams) {
 	$http.get("/item_review.php?format=json", {params: {iid: $routeParams.iid} }).success(function (results) {
 		$scope.reviews = results.data;
-		
 	});
+});
+
+agoraApp.controller('CartDetailCtrl', function ($scope, $http, $routeParams) {
+	var params;
+	if ($routeParams.cid == null)
+	{
+		params = new Object();
+	} else
+	{
+		params = {cid: $routeParams.cid};
+	}
+	$http.get("/cart.php?format=json", {params: params }).success(function (results) {
+		$scope.cdata = results.data;
+	});
+}).directive('bag', function($compile)
+{
+	return {
+		restrict: 'E',
+		scope: true,
+		templateUrl: 'partials/bag/detailed.html',
+		link: function($scope, $element, $attrs)
+		{
+			$scope.$watch('scope.cdata', function(value)
+			{
+				var val = value || null;            
+            	if (val)
+            	{
+					$element.find('.item_table').dataTable({
+						"bDestroy": true,
+						"bFilter": false
+					});
+				} else
+				{
+					$element.find('.item_table').dataTable({
+						"bFilter": false
+					});
+				}
+			});
+		}
+	};	
 });

@@ -3,8 +3,8 @@ require_once 'data.php';
 
 class Item extends BaseObject
 {
-	public $shop_id, $name, $sku, $short_desc, $long_desc, $score;
-	public function __construct($shop_id, $name, $sku, $short_desc, $long_desc, $score)
+	public $shop_id, $name, $sku, $short_desc, $long_desc, $score, $list;
+	public function __construct($shop_id, $name, $sku, $short_desc, $long_desc, $score, $list)
 	{
 		$this->shop_id = $shop_id;
 		$this->name = $name;
@@ -12,10 +12,11 @@ class Item extends BaseObject
 		$this->short_desc = $short_desc;
 		$this->long_desc = $long_desc;
 		$this->score = $score;
+		$this->list = $list;
 	}
 	public static function get($id = null, $shop_id = null)
 	{
-		$select = "SELECT *, (SELECT avg(score) FROM item_reviews WHERE item_id = items.id) as score FROM items";
+		$select = "SELECT *, (SELECT avg(score) FROM item_reviews WHERE item_id = items.id) as score, (SELECT value FROM item_prices WHERE item_id = items.id) as list FROM items";
 		$con = BaseObject::$con;
 		if ($id)
 		{
@@ -49,7 +50,7 @@ class Item extends BaseObject
 	}
 	public static function getFromRow($row)
 	{
-		$object = new Item($row['shop_id'], $row['name'], $row['sku'], $row['short_desc'], $row['long_desc'], $row['score']);
+		$object = new Item($row['shop_id'], $row['name'], $row['sku'], $row['short_desc'], $row['long_desc'], $row['score'], $row['list']);
 		$object->init($row);
 		return $object;
 	}

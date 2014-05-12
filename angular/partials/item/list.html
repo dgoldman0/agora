@@ -1,18 +1,20 @@
-<div class="row" ng-controller="ItemListCtrl">
+<div class="row">
 	<div class="col-md-3">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				Find Items
 			</div>
-			<div class="panel-body" ng-controller="ItemSortCtrl">
+			{{category}}
+			<div class="panel-body">
 				<legend>Categories</legend>
-				<div categories></div>
+				<div categories>
+				</div>
 				<legend>Minimum Score</legend>
 				<div scores></div>
 			</div>
 		</div>
 	</div>
-	<div ng-repeat="item in items" class="col-md-3">
+	<div ng-repeat="item in items | filter:itemFilter" class="col-md-3">
 		<div class="panel panel-info">
 		  <div class="panel-heading">
 		    <h3 class="panel-title">

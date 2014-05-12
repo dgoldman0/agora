@@ -7,9 +7,7 @@ $items = Item::get(null, $_shop->id);
 switch ($format)
 {
 	case "json":
-		$response = array();
-		$response['data'] = $items;
-		echo json_encode($response);
+		echo jsonResponse($items);
 		break;
 	case "csv":
 		echo str_putcsv($items);

@@ -221,6 +221,7 @@ function toURLSafe($str)
 }
 function jsonResponse($data)
 {
+	global $session;
 	$response = array();
 	$response['session'] = $session;
 	$response['data'] = $data;

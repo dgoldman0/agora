@@ -109,9 +109,9 @@ class Bag extends BaseObject
 class BagItem extends Item
 {
 	public $bag_id, $item_id, $cnt;
-	public function __construct($bag_id, $item_id, $cnt, $shop_id = null, $name = null, $sku = null, $short_desc = null, $long_desc = null)
+	public function __construct($bag_id, $item_id, $cnt, $shop_id = null, $name = null, $sku = null, $short_desc = null, $long_desc = null, $list)
 	{
-		parent::__construct($shop_id, $name, $sku, $short_desc, $long_desc);
+		parent::__construct($shop_id, $name, $sku, $short_desc, $long_desc, null, $list);
 		$this->bag_id = $bag_id;
 		$this->item_id = $item_id;
 		$this->cnt = $cnt;
@@ -131,11 +131,12 @@ class BagItem extends Item
 	public static function get($id = null, $bag_id, $item_id = null)
 	{
 		$con = BaseObject::$con;
+		$select = "SELECT items.*, bag_items.*, (SELECT value FROM item_prices WHERE item_id = items.id) as list FROM bag_items INNER JOIN items ON bag_items.item_id=items.id";
 		if (isset($id))
 		{
 			if (is_numeric($id))
 			{
-				$response = $con->query("SELECT items.*, bag_items.* FROM bag_items INNER JOIN items ON bag_items.item_id=items.id WHERE bag_items.id=$id;");
+				$response = $con->query("$select WHERE bag_items.id=$id;");
 				if ($row = $response->fetch_array())
 				{
 					$object = BagItem::getFromRow($row);
@@ -150,7 +151,7 @@ class BagItem extends Item
 				{
 					if (is_numeric($item_id))
 					{
-						$sql = "SELECT items.*, bag_items.* FROM bag_items INNER JOIN items ON bag_items.item_id=items.id WHERE bag_items.bag_id=$bag_id AND bag_items.item_id = $item_id;";
+						$sql = "$select WHERE bag_items.bag_id=$bag_id AND bag_items.item_id = $item_id;";
 						$response = $con->query($sql);
 						if ($row = $response->fetch_array())
 						{
@@ -159,7 +160,7 @@ class BagItem extends Item
 						}
 					}
 				} else {
-					$response = $con->query("SELECT items.*, bag_items.* FROM bag_items INNER JOIN items ON bag_items.item_id=items.id WHERE bag_items.bag_id = $bag_id;");
+					$response = $con->query("$select WHERE bag_items.bag_id = $bag_id;");
 					$objects = array();
 					while ($row = $response->fetch_array())
 					{
@@ -194,7 +195,7 @@ class BagItem extends Item
 	}
 	public static function getFromRow($row)
 	{	
-		$object = new BagItem($row['bag_id'], $row['item_id'], $row['cnt'], $row['shop_id'], $row['name'], $row['sku'], $row['short_desc'], $row['long_desc']);
+		$object = new BagItem($row['bag_id'], $row['item_id'], $row['cnt'], $row['shop_id'], $row['name'], $row['sku'], $row['short_desc'], $row['long_desc'], $row['list']);
 		$object->init($row);
 		return $object;
 	}

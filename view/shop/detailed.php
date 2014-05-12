@@ -4,10 +4,7 @@ require_once 'data.php';
 switch ($format)
 {
 	case "json":
-		$response = array();
-		$response['data'] = $_shop;
-		echo json_encode($response);
-		break;
+		echo jsonResponse($_shop);
 		break;
 	default:
 		?>

@@ -33,11 +33,26 @@ if ($action = $_REQUEST['action'])
 			$_item->name = $_REQUEST['name'];
 			$_item->sku = $_REQUEST['sku'];
 			$_item->short_desc = $_REQUEST['short_desc'];
-			$_item->long_desc = $_REQUEST['desc'];
+			$_item->long_desc = $_REQUEST['long_desc'];
+			
 			if ($id = $_item->write())
+			{
+				$price = ItemPrice::get(null, $id);
+				if (!isset($price))
+				{
+					$price = new ItemPrice();
+				}
+				$price->item_id = $id;
+				$price->price_category = $_REQUEST['price_category'];
+				$price->currency = $_REQUEST['currency'];
+				$price->value = $_REQUEST['price'];
+				$price->write();
 				header("location: item.php?iid=$id");
+			}
 			else
+			{
 				echo BaseObject::$con->error;
+			}
 			die();
 			break;
 		case "csvsave":

@@ -23,9 +23,7 @@ $shops = Shop::get();
 switch ($format)
 {
 	case "json":
-		$response = array();
-		$response['data'] = $shops;
-		echo json_encode($response);
+		echo jsonResponse($shops);
 		break;
 	default:
 		foreach ($shops as $shop)

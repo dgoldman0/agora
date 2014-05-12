@@ -29,21 +29,25 @@ switch ($format)
 			Bags: {{data.bagcnt}}
 			{{#each data.bagitems}}
 			<br/><br/>
-			<table class="item_table" id = "items_{{id}}" cellpadding="0" cellspacing="0" border="0" class="display" width="100%">
+			<table class="item_table display" id = "items_{{id}}" cellpadding="0" cellspacing="0" border="0" width="100%">
 				<thead>
 					<tr>
 						<th>Name</th>
 						<th>SKU</th>
 						<th>CNT</th>
+						<th>Unit Price</th>
+						<th>Price</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>		
 					{{#each this}}
 						<tr>
-							<td class="col-md-8"><a href = "item.php?iid={{item_id}}">{{name}}</a></td>
+							<td class="col-md-5"><a href = "item.php?iid={{item_id}}">{{name}}</a></td>
 							<td class="col-md-2">{{sku}}</td>
 							<td class="col-md-1 item-cnt" id="item-cnt-{id}">{{cnt}}</td>
+							<td class="col-md-1">{{list}}</td>
+							<td class="col-md-2"></td>
 							<td class="col-md-1">
 								<div class="btn-group">
 									<a class="btn btn-sm btn-default glyphicon glyphicon-trash" title="Delete" href="?action=delete&iid={{id}}"></a>
