@@ -62,6 +62,9 @@ agoraApp.controller('ItemDetailCtrl', function($scope, $http, $routeParams){
 	});
 });
 
+agoraApp.controller('UserDetailCtrl', function($scope, $http, $routeParams){
+});
+
 agoraApp.controller('ItemListCtrl', function($scope, $http, $routeParams){
 	if ($scope.categories == null)
 	{
@@ -227,11 +230,49 @@ agoraApp.controller('CartDetailCtrl', function ($scope, $http, $routeParams) {
 {
 	var linkFunction = function($scope, $element, $attrs)
 	{
+		function handleResponse(response) {
+			if (response.status_code === 201) {
+				var fundingInstrument = response.cards != null ? response.cards[0] : response.bank_accounts[0];
+				console.log(fundingInstrament);
+				// Call your backend
+				jQuery.post("/credit_card.php", {
+					data: {action: save, format: json},
+					type: json,
+					uri: fundingInstrument.href
+				}, function(r) {
+					// Check your backend response
+					if (r.status === 201) {
+						// Your successful logic here from backend ruby
+					} else {
+					// Your failure logic here from backend ruby
+					}
+				});
+			} else {
+			// Failed to tokenize, your error logic here
+			}
+		}
+		$('#cc-submit').click(function (e) {
+			e.preventDefault();
+			console.log("submit");
+			var payload = {
+				name: $('#cc-name').val(),
+				number: $('#cc-number').val(),
+				expiration_month: $('#cc-ex-month').val(),
+				expiration_year: $('#cc-ex-year').val(),
+				cvv: $('#ex-cvv').val(),
+				address: {
+					postal_code: $('#ex-postal-code').val()
+				}
+			};
+		
+			// Create credit card
+			balanced.card.create(payload, handleResponse);
+		});
 	};
 	return {
 		restrict: 'E',
 		scope: true,
-		templateUrl: 'partials/payment_info/credit_card/edit.html',
+		templateUrl: 'partials/payment_method/credit_card/edit.html',
 		compile: function ($element, $attrs)
 		{
 			return linkFunction;
