@@ -236,10 +236,9 @@ agoraApp.controller('CartDetailCtrl', function ($scope, $http, $routeParams) {
 		    },
 		    queryTokenizer: Bloodhound.tokenizers.whitespace,
 		    remote: {
-		        url: 'http://cs.newpaltz.edu/~n02647459/zip.php',
-		        ajax: $.ajax({type:'GET',dataType:'jsonp',jsonp:'jsonp'}),
+		        url: '/zip.php?zip=%QUERY',
 		        filter: function (zips) {
-		            return $.map(zips.results, function (zips) {
+		            return $.map(zips.data, function (zips) {
 		                return {
 		                    value: zips.zip
 		                };
