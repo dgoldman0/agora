@@ -230,6 +230,38 @@ agoraApp.controller('CartDetailCtrl', function ($scope, $http, $routeParams) {
 {
 	var linkFunction = function($scope, $element, $attrs)
 	{
+		var zip_codes = new Bloodhound({
+		    datumTokenizer: function (d) {
+		        return Bloodhound.tokenizers.whitespace(d.value);
+		    },
+		    queryTokenizer: Bloodhound.tokenizers.whitespace,
+		    remote: {
+		        url: 'http://cs.newpaltz.edu/~n02647459/zip.php',
+		        ajax: $.ajax({type:'GET',dataType:'jsonp',jsonp:'jsonp'}),
+		        filter: function (zips) {
+		            return $.map(zips.results, function (zips) {
+		                return {
+		                    value: zips.zip
+		                };
+		            });
+		        }
+		    }
+		});
+		
+		// initialize the bloodhound suggestion engine
+		zip_codes.initialize();
+		$('#auto, #ex-postal-code').typeahead( {			
+		  hint: true,
+		  highlight: true,
+		  minLength: 1
+		},
+		{
+		  name: 'zips',
+		  displayKey: 'value',
+		  // `ttAdapter` wraps the suggestion engine in an adapter that
+		  // is compatible with the typeahead jQuery plugin
+		  source: zip_codes.ttAdapter()
+		});
 		function handleResponse(response) {
 			if (response.status_code === 201) {
 				var fundingInstrument = response.cards != null ? response.cards[0] : response.bank_accounts[0];
