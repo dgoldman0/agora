@@ -1,8 +1,8 @@
 <?php
 define('DB_USERNAME', 'agora');
-define('DB_PASSWORD', 'market');
+define('DB_PASSWORD', '7!6osj8U');
 define('DB_LOCATION', 'localhost');
-define('DB_NAME', 'agora');
+define('DB_NAME', 'wb_agora');
 
 // How often to poll, in microseconds (1,000,000 μs equals 1 s)
 define('MESSAGE_POLL_MICROSECONDS', 500000);
